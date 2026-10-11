@@ -1,3 +1,4 @@
+import type { Action, Attente, Tache } from './actions.ts';
 import type { Couleur } from './materiel/index.ts';
 
 // L'état complet d'une partie. Il contient TOUT, y compris les informations cachées :
@@ -47,8 +48,16 @@ export interface Etat {
   trash: string[];
   /** Cartes Assymétrie non distribuées, écartées de la partie. */
   asymetrieEcartees: string[];
+  /** Le choix attendu d'un joueur. null uniquement quand la partie est finie. */
+  attente: Attente | null;
+  /** Ce qu'il reste à résoudre avant la fin du tour, dans l'ordre. */
+  file: Tache[];
+  /** Nombre de tours que le joueur actif rejouera après celui-ci (Rejouer). */
+  toursSupplementaires: number;
   vainqueur: number | null;
   journal: EntreeJournal[];
+  /** Toutes les actions jouées, dans l'ordre : avec la graine, elles permettent de rejouer la partie. */
+  historique: Action[];
 }
 
 /** Ce qu'il faut pour inscrire un joueur à une partie. */

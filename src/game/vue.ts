@@ -1,3 +1,4 @@
+import type { Attente } from './actions.ts';
 import type { Etat } from './etat.ts';
 import type { Couleur } from './materiel/index.ts';
 
@@ -35,6 +36,9 @@ export interface Vue {
   privilegesVisibles: number[];
   nbPrivilegesPioche: number;
   trash: string[];
+  /** Le choix attendu, et de qui : tout le monde voit qui doit décider quoi. */
+  attente: Attente | null;
+  toursSupplementaires: number;
   vainqueur: number | null;
   journal: { joueur: number | null; texte: string }[];
 }
@@ -65,6 +69,8 @@ export function getPlayerView(etat: Etat, moi: number): Vue {
     privilegesVisibles: [...etat.privilegesVisibles],
     nbPrivilegesPioche: etat.piochePrivileges.length,
     trash: [...etat.trash],
+    attente: etat.attente === null ? null : { ...etat.attente },
+    toursSupplementaires: etat.toursSupplementaires,
     vainqueur: etat.vainqueur,
     journal: etat.journal.map((entree) => ({
       joueur: entree.joueur,

@@ -28,7 +28,7 @@ Chaque décision a été reportée dans `docs/regles_generations.md` ou dans les
 14. « Rejouer » donne un tour complet. Les Effets Rouges sont résolus avant. Les « Rejouer » se cumulent.
 15. Les Privilèges 13 à 15 ne s'utilisent pas en plus du tour : ils constituent l'action du tour (voir 5).
 16. Il est interdit de passer. On peut jouer une carte à vide ; les adversaires peuvent alors utiliser son éventuel Effet Rouge.
-17. Quand la pioche commune est vide, on ne peut plus acheter de cartes.
+17. Quand la pioche commune est vide, la Rivière n'est plus complétée (précisé le 12/10/2026, décision J : les cartes restantes de la Rivière restent achetables).
 
 ### Payer et ressources
 18. Les ressources excédentaires d'une carte défaussée pour payer sont perdues, ainsi que ses Érudits.
@@ -73,6 +73,11 @@ Chaque décision a été reportée dans `docs/regles_generations.md` ou dans les
 - G. Effets en deux parties (« Paye 1 Or pour piocher 1 carte, puis Rejoue », « Trash 1 carte pour 2 Métal, puis Rejoue », « Gagne 2 Or puis Rejouer ») : les deux parties sont indépendantes. Le Rejouer est acquis même si le joueur ne fait pas la première partie.
 - H. Quand un effet donne plusieurs pioches ou trashs (« piocher 2 cartes », « trasher 1 carte par blason »), le joueur peut en faire moins que le maximum.
 - I. Un joueur qui vide entièrement son deck (il trashe sa dernière carte : plus aucune carte en pioche, en main, dans l'aire de jeu ni en défausse) gagne immédiatement la partie.
+- J. Quand la pioche commune est vide, on peut encore acheter les cartes restantes de la Rivière, qui n'est simplement plus complétée.
+- K. Pour un effet « 1 trash / pioche par tranche de ressources » (Forgeron, Ferrailleur…), le nombre de fois est compté une seule fois, au moment où l'effet commence. Trasher ensuite une carte qui portait ces ressources ne réduit pas ce nombre.
+- L. Le trash à 1 Or lors d'un achat est proposé juste après l'achat : le joueur peut trasher la carte qu'il vient d'acheter.
+- M. Pioche : le joueur pioche directement toutes les cartes auxquelles il a droit, sans valider carte par carte. Cela remplace la décision H pour les pioches (H reste valable pour les trashs et les recherches).
+- N. Conséquence de M, acceptée : une pioche sans coût (Ferrailleur, Banque, Ferme, Démolisseur) se fait automatiquement dès que la carte est jouée, sans possibilité d'y renoncer.
 
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ?

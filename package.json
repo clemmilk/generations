@@ -5,13 +5,25 @@
   "type": "module",
   "scripts": {
     "import": "node scripts/import-csv.ts",
+    "predev": "npm run import",
+    "dev": "vite",
+    "prebuild": "npm run import",
+    "build": "vite build",
     "pretest": "npm run import",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
     "typescript": "^7.0.2",
+    "vite": "^8.3.4",
     "vitest": "^5.0.3"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }

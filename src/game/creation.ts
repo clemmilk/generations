@@ -46,8 +46,12 @@ export function createGame(inscriptions: Inscription[], graine: number): Etat {
     privilegesVisibles: [],
     trash: [],
     asymetrieEcartees: [],
+    attente: null,
+    file: [],
+    toursSupplementaires: 0,
     vainqueur: null,
     journal: [],
+    historique: [],
   };
 
   // 1. Deck de départ + 2 cartes Assymétrie au hasard, puis mélange.
@@ -87,6 +91,8 @@ export function createGame(inscriptions: Inscription[], graine: number): Etat {
 
   // 6. Tout le monde débute sa première lignée.
   for (const joueur of ordre) debuterLignee(etat, joueur);
+
+  etat.attente = { type: 'tour', joueur: etat.premierJoueur };
 
   return etat;
 }

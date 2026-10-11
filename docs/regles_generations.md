@@ -84,6 +84,8 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 
 ## Effets des cartes
 - Tous les effets sont facultatifs.
+- Quand un effet comporte plusieurs parties (« Gagne 2 Or puis Rejouer », « Paye 1 Or pour piocher 1 carte, puis Rejoue »), elles sont indépendantes : le joueur peut Rejouer même s'il n'a pas appliqué la première partie.
+- Quand un effet permet de piocher, trasher ou rechercher plusieurs cartes, le joueur peut en faire moins que le maximum.
 - Quand un effet compte quelque chose (ressources, Érudits, blasons), on ne regarde que ce que possède le joueur qui applique l'effet, dans son aire de jeu ou sur son plateau personnel. La carte qui vient d'être jouée est dans l'aire de jeu : elle compte pour son propre effet.
 - « Pioche / Trash / Recherche 1 carte pour chaque X ressources (ou Érudits) dans son aire de jeu » : on compte les ressources présentes, par tranche de X. Elles ne sont pas dépensées.
 - « Paye X pour faire 1 chose par blason » : on paye 1 seule fois, puis on fait la chose autant de fois qu'on a de blasons.

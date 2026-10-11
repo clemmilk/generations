@@ -70,5 +70,8 @@ Chaque décision a été reportée dans `docs/regles_generations.md` ou dans les
 - D. Le bandeau des cartes Avancée est purement visuel. Les personnages ont un bandeau blanc et un effet uniquement pour le joueur actif ; les bâtiments ont un bandeau noir et proposent tous un Effet Rouge.
 - E. `carte_34` (Justice) est utilisée telle quelle, malgré la bande blanche sous l'illustration.
 
+- G. Effets en deux parties (« Paye 1 Or pour piocher 1 carte, puis Rejoue », « Trash 1 carte pour 2 Métal, puis Rejoue », « Gagne 2 Or puis Rejouer ») : les deux parties sont indépendantes. Le Rejouer est acquis même si le joueur ne fait pas la première partie.
+- H. Quand un effet donne plusieurs pioches ou trashs (« piocher 2 cartes », « trasher 1 carte par blason »), le joueur peut en faire moins que le maximum.
+
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ?

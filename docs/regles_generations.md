@@ -113,6 +113,7 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 
 ## Fin de partie
 Quand un joueur pioche la dernière carte de son deck, pour quelque raison que ce soit (y compris en la Recherchant ou lors de la pioche de début de lignée), il remporte immédiatement la partie. Si plusieurs joueurs piochent la dernière carte de leur deck en même temps, c'est le joueur dont c'est le tour qui l'emporte. S'il n'en fait pas partie, c'est le premier d'entre eux dans l'ordre du tour, en partant du joueur qui a joué la carte.
+Un joueur qui trashe la dernière carte de son deck (il ne lui reste plus aucune carte en pioche, en main, dans son aire de jeu ni dans sa défausse) remporte lui aussi immédiatement la partie.
 Il n'y a qu'un vainqueur : les autres joueurs ne sont pas classés.
 
 

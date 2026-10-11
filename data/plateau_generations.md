@@ -1,0 +1,8 @@
+# [GÉNÉRATIONS] Caractéristiques du plateau personnel
+Le plateau personnel n'est pas montré dans l'application. On met en place une petite zone où on voit le niveau de chaque joueur sur les 3 jauges (Noblesse, Économie et Population) avec l'icône correspondant (icone_noblesse, icone_economie, icone_population). Le tableau affiche le statut du niveau en cours : le nombre de cartes à piocher en début de lignée, l'or pris en début de lignée, ainsi que le nombre de blasons de chaque type possédé. Ces blasons sont importants pour certains effets des cartes.
+
+**Dossier :** le dossier où se trouve l'icône correspondante.
+**Identifiant :** le nom du fichier de l'icône dans le dossier correspondant.
+**Piste :** indique la piste concernée : Noblesse, Économie ou Population
+**Coût :** ce que le joueur doit posséder lorsqu'il met fin à sa lignée afin de passer au niveau suivant. Si la case est vide, c'est le niveau de départ. Pour la Noblesse, c'est le nombre d'Érudits requis pour placer une tuile Privilège sur cet emplacement (4 emplacements, donc 4 Privilèges maximum par joueur).
+**Statut :** ce que le joueur obtient à ce niveau là. À chaque fois il y a un nombre de blason correspondant : c'est le nombre affiché au niveau actuel qui compte, pas le cumul des niveaux précédents. L'Économie indique également avec combien d'Or (visuels\plateau\icone_or.png) le joueur commence chaque lignée. La Population indique également combien de cartes ((visuels\plateau\icone_pioche.png)) le joueur pioche de son deck au début de chaque lignée.

@@ -662,7 +662,14 @@ export function applyAction(etat: Etat, action: Action): Etat {
   if (!getLegalActions(etat, action.joueur).some((permise) => cle(permise) === cleAction)) {
     throw new Error(`Action illégale : ${JSON.stringify(action)}`);
   }
-  const suivant = structuredClone(etat);
+  // Le journal et l'historique ne font que s'allonger : on recopie leurs listes sans recopier
+  // chaque entrée, pour que le coût d'une action ne grandisse pas avec la durée de la partie.
+  const { journal, historique, ...reste } = etat;
+  const suivant: Etat = {
+    ...structuredClone(reste),
+    journal: [...journal],
+    historique: [...historique],
+  };
   executer(suivant, suivant.attente!, action);
   suivant.historique.push(action);
   avancer(suivant);

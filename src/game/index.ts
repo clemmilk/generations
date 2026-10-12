@@ -1,6 +1,8 @@
 import type { Etat } from './etat.ts';
 
 export { createGame } from './creation.ts';
+export { exporterPartie, rejouerPartie } from './export.ts';
+export type { PartieExportee } from './export.ts';
 export { applyAction, getLegalActions } from './moteur.ts';
 export { getPlayerView } from './vue.ts';
 export type { Action, Attente } from './actions.ts';

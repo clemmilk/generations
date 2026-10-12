@@ -24,6 +24,7 @@ export function createGame(inscriptions: Inscription[], graine: number): Etat {
   }
 
   const etat: Etat = {
+    graine,
     rng: graine | 0,
     joueurs: inscriptions.map((inscription, id) => ({
       id,

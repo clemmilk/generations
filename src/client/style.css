@@ -96,6 +96,22 @@ header button,
   cursor: pointer;
 }
 
+/* Le bouton d'import est un libellé qui cache le champ de fichier. */
+.import {
+  padding: 8px 14px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--bord);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.import input {
+  display: none;
+}
+
 header button:disabled {
   opacity: 0.5;
   cursor: default;

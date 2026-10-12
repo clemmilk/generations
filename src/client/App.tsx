@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import type { Action } from '../game/actions.ts';
 import { carte, privilege } from '../game/cartes.ts';
-import { applyAction, createGame, getLegalActions, getPlayerView } from '../game/index.ts';
+import {
+  applyAction,
+  createGame,
+  exporterPartie,
+  getLegalActions,
+  getPlayerView,
+  rejouerPartie,
+} from '../game/index.ts';
 import type { Etat, Inscription, Vue, VueJoueur } from '../game/index.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
 import { blasons } from '../game/ressources.ts';
@@ -203,7 +210,24 @@ export function App() {
     setErreur(null);
   };
 
-  const privilegeAPrendre = (numero: number) =>
+  const exporter = () => {
+    const contenu = JSON.stringify(exporterPartie(etat), null, 2);
+    const lien = document.createElement('a');
+    lien.href = URL.createObjectURL(new Blob([contenu], { type: 'application/json' }));
+    lien.download = `generations-graine${etat.graine}-${etat.historique.length}actions.json`;
+    lien.click();
+    URL.revokeObjectURL(lien.href);
+  };
+  const importer = async (fichier: File) => {
+    try {
+      setEtats(rejouerPartie(JSON.parse(await fichier.text())));
+      setErreur(null);
+    } catch (e) {
+      setErreur(`Import impossible : ${(e as Error).message}`);
+    }
+  };
+
+  const privilegeAPrendre =(numero: number) =>
     actions.find((a) => a.type === 'prendrePrivilege' && a.numero === numero);
   const recherche = actions.filter((a) => a.type === 'rechercher');
   const zone = { actionsParCarte, onChoisir: choisirCarte, onSurvol: setSurvol };
@@ -229,6 +253,21 @@ export function App() {
         <button type="button" disabled={etats.length < 2} onClick={() => setEtats(etats.slice(0, -1))}>
           Annuler la dernière action
         </button>
+        <button type="button" onClick={exporter} title="Enregistre la graine et toutes les actions, pour rejouer la partie à l'identique">
+          Exporter la partie
+        </button>
+        <label className="import" title="Recharge une partie exportée">
+          Importer une partie
+          <input
+            type="file"
+            accept="application/json,.json"
+            onChange={(e) => {
+              const fichier = e.target.files?.[0];
+              if (fichier) void importer(fichier);
+              e.target.value = '';
+            }}
+          />
+        </label>
       </header>
 
       <main>

@@ -33,6 +33,8 @@ export interface EntreeJournal {
 }
 
 export interface Etat {
+  /** La graine donnée à la création de la partie. Elle ne change jamais. */
+  graine: number;
   /** État du générateur de hasard. Le même état de départ redonne toujours la même partie. */
   rng: number;
   joueurs: Joueur[];

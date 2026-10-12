@@ -117,6 +117,35 @@ function gainDeVente(joueur: VueJoueur, id: string, gain: Extract<Gain, { type: 
 }
 
 /**
+ * La valeur de « cartes » cartes prises dans sa pioche, l'une après l'autre.
+ * Chaque carte vaut d'autant plus que la pioche est près d'être vide : vider sa pioche, c'est gagner.
+ */
+function valeurDesPioches(
+  joueur: VueJoueur,
+  cartes: number,
+  mode: 'pioche' | 'recherche',
+  p: Poids,
+): number {
+  // Ce qu'apporte la carte elle-même : le bot connaît le contenu de sa pioche, pas son ordre.
+  // En piochant, il peut compter sur une carte moyenne ; en recherchant, sur la meilleure.
+  const valeurs = (joueur.contenuPioche ?? []).map((id) => valeurCarte(joueur, id, p));
+  let apport = 0;
+  if (valeurs.length > 0) {
+    apport =
+      mode === 'recherche'
+        ? Math.max(...valeurs)
+        : valeurs.reduce((total, v) => total + v, 0) / valeurs.length;
+  }
+  const unite = (mode === 'recherche' ? p.recherche : p.pioche) + p.piocheCarte * apport;
+
+  let valeur = 0;
+  for (let i = 0; i < cartes; i++) {
+    valeur += unite + p.piocheProche / Math.max(1, joueur.nbCartesPioche - i);
+  }
+  return valeur;
+}
+
+/**
  * Ce que rapporterait une étape d'effet à ce joueur, dans sa situation actuelle,
  * coût déduit. 0 si l'étape est impossible ou ne vaut pas son coût.
  */
@@ -142,7 +171,7 @@ function valeurEtape(etape: Etape, joueur: VueJoueur, vue: Vue, p: Poids): numbe
       if (cartes <= 0) return 0;
       // Piocher ou rechercher la dernière carte de sa pioche fait gagner.
       if (cartes >= joueur.nbCartesPioche) return VICTOIRE;
-      valeur = cartes * (gain.type === 'pioche' ? p.pioche : p.recherche);
+      valeur = valeurDesPioches(joueur, cartes, gain.type, p);
       break;
     }
     case 'trash': {
@@ -209,7 +238,7 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
       const effet = effetsPrivilege(moi, 'actionPioche').find((e) => e.numero === action.numero);
       if (!effet) return -Infinity;
       if (effet.cartes >= moi.nbCartesPioche) return VICTOIRE;
-      let note = effet.cartes * p.pioche - effet.cout.or * p.or;
+      let note = valeurDesPioches(moi, effet.cartes, 'pioche', p) - effet.cout.or * p.or;
       for (const id of action.paiement) note -= valeurRessources(moi, id, p);
       return note;
     }

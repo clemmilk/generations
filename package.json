@@ -11,6 +11,8 @@
     "build": "vite build",
     "presimulate": "npm run import",
     "simulate": "node scripts/simulate.ts",
+    "pretrain": "npm run import",
+    "train": "node scripts/train.ts",
     "pretest": "npm run import",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"

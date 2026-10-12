@@ -5,8 +5,20 @@
 export interface Poids {
   /** Valeur d'1 Or gagné (et coût d'1 Or dépensé). */
   or: number;
-  /** Valeur d'1 carte piochée. */
+  /** Valeur d'1 carte piochée, quelle qu'elle soit. */
   pioche: number;
+  /**
+   * Part de la valeur des cartes de sa pioche que le bot ajoute à chaque pioche : une carte piochée
+   * apporte des ressources et un effet à jouer. Avec 0.5, piocher dans une pioche dont les cartes
+   * valent 6 en moyenne rapporte 3 de plus. Pour une recherche, c'est la meilleure carte qui compte.
+   */
+  piocheCarte: number;
+  /**
+   * Supplément de valeur d'une pioche quand la pioche se vide : il est divisé par le nombre de cartes
+   * qui restent dans la pioche. Avec 6, une carte piochée vaut 3 de plus quand il en reste 2, 1 de plus quand il en reste 6.
+   * Plus le bot est près de vider sa pioche (donc de gagner), plus il est prêt à payer pour piocher.
+   */
+  piocheProche: number;
   /** Valeur d'1 carte trashée. */
   trash: number;
   /** Valeur d'1 carte recherchée dans son deck. */
@@ -45,6 +57,8 @@ export interface Poids {
 export const POIDS_MANUELS: Poids = {
   or: 1,
   pioche: 4,
+  piocheCarte: 0.5,
+  piocheProche: 6,
   trash: 8,
   recherche: 4,
   lvlupEconomie: 6,

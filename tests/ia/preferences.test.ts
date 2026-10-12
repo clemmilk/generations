@@ -145,6 +145,68 @@ describe('bot à préférences', () => {
     });
   });
 
+  describe('pioche payante quand la pioche se vide', () => {
+    // Pour ce bot, une carte piochée vaut 3 : moins que les 4 Or de l'Effet Rouge du Cachot.
+    const prudent = creerBotPreferences('prudent', { ...POIDS_MANUELS, pioche: 3, piocheCarte: 0, piocheProche: 6 });
+    /** Alice joue Cachot ; Bob peut payer 4 Or pour piocher 1 carte, avec la pioche indiquée. */
+    const effetRouge = (piocheDeBob: string[]) => {
+      const etat = scene({ main: [c('Cachot')] });
+      installer(etat, 1, { or: 4, pioche: piocheDeBob });
+      return faire(etat, { type: 'jouer', carte: c('Cachot') });
+    };
+    const jaune = (...noms: string[]) => noms.map((nom) => c(nom, 'jaune'));
+
+    it('refuse de payer quand sa pioche est encore épaisse', () => {
+      const etat = effetRouge(jaune('Épicerie', 'Marché', 'Forgeron', 'Imprimeur', 'Ferrailleur', 'Colporteur', 'Cachot', 'Tour de guet'));
+      expect(etat.attente).toMatchObject({ type: 'payer', joueur: 1, rouge: true });
+      expect(choisirAction(etat, prudent, des())).toMatchObject({ type: 'passer' });
+    });
+
+    it('paye quand il ne lui reste que 2 cartes à piocher : chaque pioche le rapproche de la victoire', () => {
+      const etat = effetRouge(jaune('Épicerie', 'Marché'));
+      expect(choisirAction(etat, prudent, des())).toMatchObject({ type: 'payer' });
+    });
+
+    it('ne change rien quand le supplément est nul', () => {
+      const sansSupplement = creerBotPreferences('sans', { ...POIDS_MANUELS, pioche: 3, piocheCarte: 0, piocheProche: 0 });
+      expect(choisirAction(effetRouge(jaune('Épicerie', 'Marché')), sansSupplement, des())).toMatchObject({
+        type: 'passer',
+      });
+    });
+  });
+
+  describe('pioche payante selon ce que contient la pioche', () => {
+    // Pour ce bot, une pioche ne vaut que par les cartes qu'elle apporte.
+    const curieux = creerBotPreferences('curieux', {
+      ...POIDS_MANUELS,
+      pioche: 0,
+      piocheProche: 0,
+      piocheCarte: 1,
+    });
+    const effetRouge = (piocheDeBob: string[]) => {
+      const etat = scene({ main: [c('Cachot')] });
+      installer(etat, 1, { or: 4, pioche: piocheDeBob.map((nom) => c(nom, 'jaune')) });
+      return faire(etat, { type: 'jouer', carte: c('Cachot') });
+    };
+
+    it('paye 4 Or pour piocher quand sa pioche contient de bonnes cartes', () => {
+      const etat = effetRouge(['Forgeron', 'Imprimeur', 'Épicerie', 'Salle du trésor']);
+      expect(choisirAction(etat, curieux, des())).toMatchObject({ type: 'payer' });
+    });
+
+    it('refuse quand sa pioche ne contient que des cartes faibles', () => {
+      const etat = effetRouge(['Cachot', 'Colporteur', 'Marché']);
+      expect(choisirAction(etat, curieux, des())).toMatchObject({ type: 'passer' });
+    });
+
+    it('ne connaît que le contenu de sa pioche, pas son ordre', () => {
+      const etat = effetRouge(['Forgeron', 'Cachot', 'Colporteur', 'Marché', 'Imprimeur']);
+      const inverse = structuredClone(etat);
+      inverse.joueurs[1]!.pioche.reverse();
+      expect(choisirAction(inverse, curieux, des())).toEqual(choisirAction(etat, curieux, des()));
+    });
+  });
+
   describe('achat avec trash à 1 Or', () => {
     /** Alice n'a plus de carte en main : elle peut acheter le Remouleur ambulant (2 Or) ou finir sa lignée. */
     const marche = (or: number, defausse: string[]) => {

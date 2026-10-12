@@ -45,6 +45,8 @@ export function installer(etat: Etat, joueurId: number, zones: Zones): void {
 /**
  * Une partie prête pour un test : c'est au joueur 0 (Alice) de jouer, avec les cartes indiquées.
  * Sa pioche garde ses cartes d'origine si elle n'est pas précisée, et son Or vaut 0 par défaut.
+ * Ses adversaires n'ont pas d'Or non plus : ils ne peuvent donc payer aucun Effet Rouge,
+ * sauf si le test leur en donne avec installer().
  */
 export function scene(zones: Zones = {}, nombreDeJoueurs = 2): Etat {
   const etat = createGame(inscriptions(nombreDeJoueurs), 42);
@@ -52,6 +54,7 @@ export function scene(zones: Zones = {}, nombreDeJoueurs = 2): Etat {
   etat.joueurActif = 0;
   etat.attente = { type: 'tour', joueur: 0 };
   etat.journal = [];
+  for (const joueur of etat.joueurs) joueur.or = 0;
   installer(etat, 0, { or: 0, ...zones });
   return etat;
 }

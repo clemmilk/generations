@@ -1,5 +1,6 @@
 import type { Action, Attente, RefEtape, Tache } from './actions.ts';
 import { carte, privilege } from './cartes.ts';
+import { ordreDuTour } from './creation.ts';
 import type { Etat, Joueur } from './etat.ts';
 import { melanger } from './hasard.ts';
 import { debuterLignee, noter, piocher } from './lignee.ts';
@@ -266,8 +267,15 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
       if (r.pierre + r.metal + r.erudit > 0) joueur.aireDeJeu.push(c.id);
       else joueur.defausse.push(c.id);
       noter(etat, joueur, `${joueur.nom} joue ${c.nom}.`);
+      // D'abord l'effet du joueur actif, puis l'Effet Rouge de chaque adversaire dans l'ordre du tour.
+      const adversaires = ordreDuTour(etat, j).slice(1);
       etat.file = [
         ...c.effet.map((_, index): Tache => ({ type: 'etape', joueur: j, carte: c.id, index, rouge: false })),
+        ...adversaires.flatMap((adversaire) =>
+          c.effetRouge.map(
+            (_, index): Tache => ({ type: 'etape', joueur: adversaire.id, carte: c.id, index, rouge: true }),
+          ),
+        ),
         { type: 'finDeTour' },
       ];
       return;

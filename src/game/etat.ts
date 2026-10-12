@@ -50,6 +50,8 @@ export interface Etat {
   trash: string[];
   /** Cartes Assymétrie non distribuées, écartées de la partie. */
   asymetrieEcartees: string[];
+  /** Cartes Assymétrie déjà vues par tous (jouées, défaussées ou trashées au moins une fois). */
+  cartesRevelees: string[];
   /** Le choix attendu d'un joueur. null uniquement quand la partie est finie. */
   attente: Attente | null;
   /** Ce qu'il reste à résoudre avant la fin du tour, dans l'ordre. */

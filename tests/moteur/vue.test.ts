@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { carte } from '../../src/game/cartes.ts';
 import { createGame, getPlayerView } from '../../src/game/index.ts';
-import { inscriptions } from './outils.ts';
+import { c, faire, inscriptions, installer, scene, verifierAucuneFuite } from './outils.ts';
 
 describe('getPlayerView', () => {
   it('montre au joueur sa propre main et le contenu de sa pioche, sans l\'ordre', () => {
@@ -25,21 +26,45 @@ describe('getPlayerView', () => {
     }
   });
 
-  it('ne laisse fuiter aucune carte cachée, pour aucun joueur et aucune graine', () => {
+  it('ne laisse fuiter aucune information cachée, pour aucun joueur et aucune graine', () => {
     for (let graine = 0; graine < 20; graine++) {
-      const etat = createGame(inscriptions(4), graine);
-      for (const moi of etat.joueurs) {
-        const envoye = JSON.stringify(getPlayerView(etat, moi.id));
-        const caches = [
-          ...etat.joueurs.filter((j) => j.id !== moi.id).flatMap((j) => [...j.main, ...j.pioche]),
-          ...etat.piocheCommune,
-          ...etat.asymetrieEcartees,
-        ];
-        for (const id of caches) {
-          expect(envoye.includes(`"${id}"`), `${id} visible par ${moi.nom}`).toBe(false);
-        }
-      }
+      expect(() => verifierAucuneFuite(createGame(inscriptions(4), graine))).not.toThrow();
     }
+  });
+
+  it('donne la composition connue du deck des adversaires, sans dire ce qui est en main', () => {
+    const etat = createGame(inscriptions(2), 42);
+    const bob = getPlayerView(etat, 0).joueurs[1]!;
+    // Les 9 cartes de départ de Bob sont connues de tous ; ses 2 cartes Assymétrie ne le sont pas encore.
+    expect(bob.cartesCacheesConnues).toHaveLength(9);
+    expect(bob.cartesCacheesConnues.every((id) => carte(id).couleur === 'jaune')).toBe(true);
+    expect(bob.nbCartesInconnues).toBe(2);
+    expect(bob.cartesCacheesConnues).toEqual([...bob.cartesCacheesConnues].sort());
+    expect(bob.main).toBeNull();
+  });
+
+  it('fait connaître une carte Assymétrie à tous dès qu\'elle a été jouée', () => {
+    const etat = scene({
+      main: [c('Progrès')],
+      pioche: [c('Justice'), c('Cachot'), c('Épicerie'), c('Marché'), c('Forgeron')],
+    });
+    const avant = getPlayerView(etat, 1).joueurs[0]!;
+    expect(avant.cartesCacheesConnues).not.toContain(c('Progrès'));
+    expect(avant.nbCartesInconnues).toBe(2);
+
+    // Alice joue Progrès, puis remélange son deck en finissant sa lignée.
+    let apres = faire(etat, { type: 'jouer', carte: c('Progrès') });
+    apres.joueurActif = 0;
+    apres.attente = { type: 'tour', joueur: 0 };
+    installer(apres, 0, { aire: [c('Progrès')] });
+    apres = faire(apres, { type: 'finLignee' });
+    while (apres.attente?.joueur === 0 && apres.attente.type !== 'tour') apres = faire(apres, { type: 'passer' });
+
+    const alice = getPlayerView(apres, 1).joueurs[0]!;
+    expect(alice.aireDeJeu).toEqual([]);
+    expect(alice.cartesCacheesConnues).toContain(c('Progrès'));
+    expect(alice.cartesCacheesConnues).not.toContain(c('Justice'));
+    expect(alice.nbCartesInconnues).toBe(1);
   });
 
   it('ne contient ni le générateur de hasard, ni les pioches', () => {

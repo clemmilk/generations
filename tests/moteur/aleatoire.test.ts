@@ -4,14 +4,13 @@ import {
   createGame,
   exporterPartie,
   getLegalActions,
-  getPlayerView,
   isGameOver,
   rejouerPartie,
 } from '../../src/game/index.ts';
 import type { Etat } from '../../src/game/index.ts';
 import { alea } from '../../src/game/hasard.ts';
 import { MATERIEL } from '../../src/game/materiel/index.ts';
-import { inscriptions } from './outils.ts';
+import { inscriptions, verifierAucuneFuite } from './outils.ts';
 
 // Des parties entières jouées au hasard : aucune ne doit planter, perdre une carte ou montrer une carte cachée.
 
@@ -66,21 +65,6 @@ function verifier(etat: Etat): void {
   }
 }
 
-/** Vérifie qu'aucune vue ne contient une carte que son joueur n'a pas le droit de voir. */
-function verifierVues(etat: Etat): void {
-  for (const moi of etat.joueurs) {
-    const envoye = JSON.stringify(getPlayerView(etat, moi.id));
-    const caches = [
-      ...etat.joueurs.filter((j) => j.id !== moi.id).flatMap((j) => [...j.main, ...j.pioche]),
-      ...etat.piocheCommune,
-      ...etat.asymetrieEcartees,
-    ];
-    for (const id of caches) {
-      if (envoye.includes(`"${id}"`)) throw new Error(`${id} est visible par ${moi.nom}`);
-    }
-  }
-}
-
 function jouerAuHasard(nombreDeJoueurs: number, graine: number): Etat {
   let etat = createGame(inscriptions(nombreDeJoueurs), graine);
   const des = { rng: graine * 7919 + 1 };
@@ -89,9 +73,9 @@ function jouerAuHasard(nombreDeJoueurs: number, graine: number): Etat {
     const actions = getLegalActions(etat, etat.attente!.joueur);
     etat = applyAction(etat, actions[Math.floor(alea(des) * actions.length)]!);
     verifier(etat);
-    if (i % 25 === 0) verifierVues(etat);
+    if (i % 25 === 0) verifierAucuneFuite(etat);
   }
-  verifierVues(etat);
+  verifierAucuneFuite(etat);
   return etat;
 }
 

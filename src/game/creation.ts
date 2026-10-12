@@ -47,6 +47,7 @@ export function createGame(inscriptions: Inscription[], graine: number): Etat {
     privilegesVisibles: [],
     trash: [],
     asymetrieEcartees: [],
+    cartesRevelees: [],
     attente: null,
     file: [],
     toursSupplementaires: 0,

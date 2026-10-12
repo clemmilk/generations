@@ -123,4 +123,5 @@ Il n'y a qu'un vainqueur : les autres joueurs ne sont pas classés.
 - La main d'un joueur est secrète. Les autres joueurs voient seulement combien de cartes il a en main.
 - L'ordre de la pioche commune et de chaque joueur sont inconnus de tous.
 - La pioche de tuiles Privilège est inconnue de tous.
+- La composition du deck de chaque joueur est connue de tous : les cartes de départ sont les mêmes pour tous, les achats et les trashs sont publics, et une carte Assymétrie est connue dès qu'elle a été vue une première fois. On ne sait pas, en revanche, quelles cartes un adversaire a en main et lesquelles sont dans sa pioche.
 - Tout le reste est public : l'aire de jeu, la défausse, les cartes trashées, le nombre de cartes restant dans chaque deck, l'Or, les jauges et les Privilèges de chaque joueur.

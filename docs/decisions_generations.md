@@ -81,6 +81,7 @@ Chaque décision a été reportée dans `docs/regles_generations.md` ou dans les
 - O. Privilèges 2, 3 et 4 sur une même carte : chacun regarde ce qui est imprimé sur la carte, indépendamment des autres. Une carte peut donc recevoir 2 bonus (avec les Privilèges 3 et 4, une carte Pierre + Érudit apporte 2 Pierres de plus), mais la ressource ajoutée par un Privilège n'en déclenche pas un autre.
 - P. Privilège 8 : prendre une carte dans son deck est obligatoire. Privilège 12 : la défausse est obligatoire.
 - Q. Privilège 20 : les 2 Or sont gagnés 1 seule fois par tour d'un adversaire, dès que le joueur applique l'Effet Rouge, même s'il le déclenche plusieurs fois (plusieurs ventes au Marché).
+- R. Mémoire des joueurs : la composition du deck de chaque adversaire est connue de tous. Les cartes de départ sont identiques pour tous, les achats et les trashs sont publics, et une carte Assymétrie est connue dès qu'elle a été vue une fois (jouée, défaussée ou trashée). Restent cachés : quelles cartes sont en main et lesquelles sont en pioche, l'ordre des pioches, et les cartes Assymétrie pas encore vues.
 
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ?

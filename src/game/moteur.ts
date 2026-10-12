@@ -31,6 +31,16 @@ function ref(source: RefEtape): RefEtape {
   return { joueur: source.joueur, carte: source.carte, index: source.index, rouge: source.rouge };
 }
 
+/**
+ * Note qu'une carte Assymétrie vient d'être vue par tout le monde (jouée, défaussée ou trashée) :
+ * les joueurs savent désormais qu'elle fait partie de ce deck. Les autres cartes sont toujours connues.
+ */
+function reveler(etat: Etat, id: string): void {
+  if (carte(id).origine === 'asymetrie' && !etat.cartesRevelees.includes(id)) {
+    etat.cartesRevelees.push(id);
+  }
+}
+
 function retirer(liste: string[], id: string): boolean {
   const position = liste.indexOf(id);
   if (position === -1) return false;
@@ -82,6 +92,7 @@ function trasher(etat: Etat, joueur: Joueur, id: string): void {
     throw new Error(`${joueur.nom} ne peut pas trasher ${id}`);
   }
   etat.trash.push(id);
+  reveler(etat, id);
   noter(etat, joueur, `${joueur.nom} trashe ${carte(id).nom}.`);
   const or = totalPrivilege(joueur, 'orParTrash', (effet) => effet.or);
   if (or > 0) {
@@ -325,6 +336,7 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
       // Une carte sans ressource va directement dans la défausse.
       if (r.pierre + r.metal + r.erudit > 0) joueur.aireDeJeu.push(c.id);
       else joueur.defausse.push(c.id);
+      reveler(etat, c.id);
       noter(etat, joueur, `${joueur.nom} joue ${c.nom}.`);
       etat.bonusEffetRouge = [];
       // D'abord l'effet du joueur actif, puis l'Effet Rouge de chaque adversaire dans l'ordre du tour.
@@ -467,6 +479,7 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
     case 'debutDefausse':
       if (action.type !== 'defausser') return;
       if (retirer(joueur.main, action.carte)) joueur.defausse.push(action.carte);
+      reveler(etat, action.carte);
       noter(etat, joueur, `${joueur.nom} défausse 1 carte de sa main.`, `Carte défaussée : ${carte(action.carte).nom}.`);
       etat.file.unshift({ type: 'debutDefausse', joueur: joueur.id, restant: attente.restant - 1 });
       return;

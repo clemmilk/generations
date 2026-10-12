@@ -292,7 +292,7 @@ type Siege = 'humain' | TypeDeBot;
 /** Temps laissé entre deux actions d'une IA, pour qu'on puisse suivre ce qu'elle fait. */
 const PAUSE_IA_MS = 900;
 
-const SIEGES_PAR_DEFAUT: Siege[] = ['humain', 'entrainee', 'entrainee', 'entrainee'];
+const SIEGES_PAR_DEFAUT: Siege[] = ['humain', 'planificatrice', 'planificatrice', 'planificatrice'];
 
 function creerPartie(sieges: Siege[], graine: number): Etat {
   return createGame(

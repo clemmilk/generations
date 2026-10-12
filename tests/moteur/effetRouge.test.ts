@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getPlayerView } from '../../src/game/index.ts';
-import { c, faire, installer, permises, scene } from './outils.ts';
+import { c, faire, installer, permises, scene, verifierAucuneFuite } from './outils.ts';
 
 // Dans ces tests, Alice (joueur 0) joue une carte ; Bob (1), Chloé (2) et David (3) sont ses adversaires.
 
@@ -164,9 +164,16 @@ describe('Effet Rouge', () => {
     installer(etat, 1, { or: 4 });
     const apres = faire(etat, { type: 'jouer', carte: c('Cachot') }, { type: 'payer', paiement: [] });
     const piochee = apres.joueurs[1]!.main[0]!;
-    expect(JSON.stringify(getPlayerView(apres, 0))).not.toContain(`"${piochee}"`);
-    expect(JSON.stringify(getPlayerView(apres, 2))).not.toContain(`"${piochee}"`);
     expect(getPlayerView(apres, 1).joueurs[1]!.main).toEqual([piochee]);
+    for (const temoin of [0, 2]) {
+      const vue = getPlayerView(apres, temoin);
+      expect(vue.joueurs[1]!.main).toBeNull();
+      expect(vue.joueurs[1]!.nbCartesMain).toBe(1);
+      // Le journal du témoin dit que Bob a pioché, sans dire quelle carte.
+      expect(vue.journal.some((ligne) => ligne.texte.includes('Cartes piochées') && ligne.joueur === 1)).toBe(false);
+    }
+    // Les témoins savent que cette carte est dans le deck de Bob, mais pas qu'elle est dans sa main.
+    expect(() => verifierAucuneFuite(apres)).not.toThrow();
   });
 });
 

@@ -1,6 +1,6 @@
 import type { Attente, Tache } from './actions.ts';
 import { carte } from './cartes.ts';
-import type { Etat } from './etat.ts';
+import type { Etat, Statistiques } from './etat.ts';
 import type { Couleur } from './materiel/index.ts';
 
 // Ce qu'un joueur a le droit de voir. C'est la seule forme de l'état envoyée aux joueurs.
@@ -32,6 +32,7 @@ export interface VueJoueur {
   niveauEconomie: number;
   niveauPopulation: number;
   privileges: number[];
+  statistiques: Statistiques;
 }
 
 export interface Vue {
@@ -50,8 +51,8 @@ export interface Vue {
   /** Ce qu'il reste à résoudre avant la fin du tour (effets en cours, Effets Rouges à venir). */
   file: Tache[];
   toursSupplementaires: number;
-  /** Joueurs ayant déjà reçu l'Or du Privilège 20 pendant ce tour. */
-  bonusEffetRouge: number[];
+  /** Joueurs ayant déjà appliqué l'Effet Rouge de la carte jouée pendant ce tour. */
+  effetRougeUtilisePar: number[];
   vainqueur: number | null;
   journal: { joueur: number | null; texte: string }[];
 }
@@ -80,6 +81,7 @@ export function getPlayerView(etat: Etat, moi: number): Vue {
         niveauEconomie: joueur.niveauEconomie,
         niveauPopulation: joueur.niveauPopulation,
         privileges: [...joueur.privileges],
+        statistiques: { ...joueur.statistiques },
       };
     }),
     premierJoueur: etat.premierJoueur,
@@ -92,7 +94,7 @@ export function getPlayerView(etat: Etat, moi: number): Vue {
     attente: etat.attente === null ? null : { ...etat.attente },
     file: etat.file.map((tache) => ({ ...tache })),
     toursSupplementaires: etat.toursSupplementaires,
-    bonusEffetRouge: [...etat.bonusEffetRouge],
+    effetRougeUtilisePar: [...etat.effetRougeUtilisePar],
     vainqueur: etat.vainqueur,
     journal: etat.journal.map((entree) => ({
       joueur: entree.joueur,

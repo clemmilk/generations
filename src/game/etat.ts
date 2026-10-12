@@ -4,6 +4,33 @@ import type { Couleur } from './materiel/index.ts';
 // L'état complet d'une partie. Il contient TOUT, y compris les informations cachées :
 // il ne doit jamais être envoyé tel quel à un joueur (voir vue.ts).
 
+/** Ce qu'un joueur a fait depuis le début de la partie. Tout y est public. */
+export interface Statistiques {
+  /** Tours joués (jouer une carte, acheter, utiliser un Privilège ou finir sa lignée). */
+  tours: number;
+  /** Lignées commencées, la première comprise. */
+  lignees: number;
+  cartesJouees: number;
+  cartesAchetees: number;
+  cartesTrashees: number;
+  /** Cartes piochées ou recherchées grâce à un effet ou un Privilège, hors pioche de début de lignée. */
+  piochesSupplementaires: number;
+  /** Nombre de cartes adverses dont le joueur a appliqué l'Effet Rouge. */
+  effetsRougesUtilises: number;
+}
+
+export function statistiquesVides(): Statistiques {
+  return {
+    tours: 0,
+    lignees: 0,
+    cartesJouees: 0,
+    cartesAchetees: 0,
+    cartesTrashees: 0,
+    piochesSupplementaires: 0,
+    effetsRougesUtilises: 0,
+  };
+}
+
 export interface Joueur {
   /** Numéro de siège, de 0 à (nombre de joueurs - 1). */
   id: number;
@@ -21,6 +48,7 @@ export interface Joueur {
   niveauPopulation: number;
   /** Numéros des Privilèges possédés, dans l'ordre des emplacements de la piste Noblesse. */
   privileges: number[];
+  statistiques: Statistiques;
 }
 
 export interface EntreeJournal {
@@ -58,8 +86,8 @@ export interface Etat {
   file: Tache[];
   /** Nombre de tours que le joueur actif rejouera après celui-ci (Rejouer). */
   toursSupplementaires: number;
-  /** Joueurs ayant déjà reçu l'Or du Privilège 20 pour la carte en cours de résolution. */
-  bonusEffetRouge: number[];
+  /** Joueurs ayant déjà appliqué l'Effet Rouge de la carte en cours de résolution. */
+  effetRougeUtilisePar: number[];
   vainqueur: number | null;
   journal: EntreeJournal[];
   /** Toutes les actions jouées, dans l'ordre : avec la graine, elles permettent de rejouer la partie. */

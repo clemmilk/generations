@@ -286,6 +286,61 @@ function PanneauJoueur(props: {
   );
 }
 
+/** Ce que chaque joueur a fait pendant la partie. Replié en cours de partie, ouvert à la fin. */
+function TableauDesStatistiques(props: { vue: Vue }) {
+  const { vue } = props;
+  const lignes: [string, (joueur: VueJoueur) => string | number][] = [
+    ['Résultat', (j) => (vue.vainqueur === j.id ? 'Vainqueur' : '—')],
+    ['Tours joués', (j) => j.statistiques.tours],
+    ['Lignées', (j) => j.statistiques.lignees],
+    ['Tours par lignée', (j) => (j.statistiques.tours / Math.max(1, j.statistiques.lignees)).toFixed(1)],
+    ['Cartes jouées', (j) => j.statistiques.cartesJouees],
+    ['Cartes achetées', (j) => j.statistiques.cartesAchetees],
+    ['Cartes trashées', (j) => j.statistiques.cartesTrashees],
+    ['Pioches supplémentaires', (j) => j.statistiques.piochesSupplementaires],
+    ['Effets Rouges utilisés', (j) => j.statistiques.effetsRougesUtilises],
+    ['Privilèges', (j) => j.privileges.length],
+    ['Niveau d\'Économie', (j) => j.niveauEconomie],
+    ['Niveau de Population', (j) => j.niveauPopulation],
+    [
+      'Cartes dans le deck',
+      (j) => j.nbCartesPioche + j.nbCartesMain + j.aireDeJeu.length + j.defausse.length,
+    ],
+  ];
+  return (
+    // La clé change à la fin de la partie : le tableau s'ouvre alors tout seul.
+    <details className="statistiques" key={String(vue.vainqueur !== null)} open={vue.vainqueur !== null}>
+      <summary>Statistiques de la partie</summary>
+      <table>
+        <thead>
+          <tr>
+            <th />
+            {vue.joueurs.map((joueur) => (
+              <th key={joueur.id} className={`couleur-${joueur.couleur}`}>
+                {joueur.nom}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {lignes.map(([titre, valeur]) => (
+            <tr key={titre}>
+              <th>{titre}</th>
+              {vue.joueurs.map((joueur) => (
+                <td key={joueur.id}>{valeur(joueur)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="note">
+        Pioches supplémentaires : cartes piochées ou recherchées grâce à un effet ou un Privilège, hors pioche de début
+        de lignée. Effets Rouges utilisés : nombre de cartes adverses dont le joueur a appliqué l'Effet Rouge.
+      </p>
+    </details>
+  );
+}
+
 /** Qui tient un siège : un humain, ou l'un des bots de src/ai. */
 type Siege = 'humain' | TypeDeBot;
 
@@ -547,6 +602,8 @@ export function App() {
             <Zone titre="Cartes de ta pioche" ids={recherche.map((a) => a.carte)} petite {...zone} />
           )}
         </section>
+
+        <TableauDesStatistiques vue={vue} />
 
         {[...vue.joueurs.slice(moi), ...vue.joueurs.slice(0, moi)].map((joueur) => (
           <PanneauJoueur key={joueur.id} joueur={joueur} vue={vue} {...zone} />

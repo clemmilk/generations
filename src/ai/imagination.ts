@@ -59,6 +59,7 @@ export function imaginerEtat(vue: Vue, hasard: () => number): Etat {
       niveauEconomie: joueur.niveauEconomie,
       niveauPopulation: joueur.niveauPopulation,
       privileges: [...joueur.privileges],
+      statistiques: { ...joueur.statistiques },
     };
   });
 
@@ -93,7 +94,7 @@ export function imaginerEtat(vue: Vue, hasard: () => number): Etat {
     attente: vue.attente === null ? null : { ...vue.attente },
     file: vue.file.map((tache) => ({ ...tache })),
     toursSupplementaires: vue.toursSupplementaires,
-    bonusEffetRouge: [...vue.bonusEffetRouge],
+    effetRougeUtilisePar: [...vue.effetRougeUtilisePar],
     vainqueur: vue.vainqueur,
     journal: [],
     historique: [],

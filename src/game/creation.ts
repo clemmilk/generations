@@ -1,3 +1,4 @@
+import { statistiquesVides } from './etat.ts';
 import type { Etat, Inscription, Joueur } from './etat.ts';
 import { entierAleatoire, melanger } from './hasard.ts';
 import { debuterLignee, noter } from './lignee.ts';
@@ -38,6 +39,7 @@ export function createGame(inscriptions: Inscription[], graine: number): Etat {
       niveauEconomie: 0,
       niveauPopulation: 0,
       privileges: [],
+      statistiques: statistiquesVides(),
     })),
     premierJoueur: 0,
     joueurActif: 0,
@@ -51,7 +53,7 @@ export function createGame(inscriptions: Inscription[], graine: number): Etat {
     attente: null,
     file: [],
     toursSupplementaires: 0,
-    bonusEffetRouge: [],
+    effetRougeUtilisePar: [],
     vainqueur: null,
     journal: [],
     historique: [],

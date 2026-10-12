@@ -61,6 +61,7 @@ export function debuterLignee(etat: Etat, joueur: Joueur): void {
     or += bonus.or * (bonus.par ? compter(joueur, bonus.par) : 1);
   }
   joueur.or += or;
+  joueur.statistiques.lignees++;
   noter(etat, joueur, `${joueur.nom} débute une lignée et prend ${or} Or.`);
 
   // Privilège 8 : moins de cartes piochées ; la recherche qui les remplace est gérée par le moteur.

@@ -3,12 +3,15 @@ import { getLegalActions, getPlayerView } from '../game/index.ts';
 import type { Etat } from '../game/index.ts';
 import { botAleatoire } from './aleatoire.ts';
 import type { Bot } from './bot.ts';
+import { POIDS_MANUELS } from './poids.ts';
+import { creerBotPreferences } from './preferences.ts';
 
 export type { Bot } from './bot.ts';
 
 /** Les bots disponibles, par identifiant. L'interface et les simulations choisissent dans cette liste. */
 export const BOTS = {
   aleatoire: botAleatoire,
+  preferences: creerBotPreferences('IA à préférences', POIDS_MANUELS),
 } satisfies Record<string, Bot>;
 
 export type TypeDeBot = keyof typeof BOTS;

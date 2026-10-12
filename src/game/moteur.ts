@@ -20,7 +20,7 @@ const MAX_PRIVILEGES = MATERIEL.plateau.noblesse.length;
 
 // ───────────────────────── Outils ─────────────────────────
 
-function etapeDe(ref: RefEtape): Etape {
+export function etapeDe(ref: Pick<RefEtape, 'carte' | 'index' | 'rouge'>): Etape {
   const c = carte(ref.carte);
   const etape = (ref.rouge ? c.effetRouge : c.effet)[ref.index];
   if (!etape) throw new Error(`Étape ${ref.index} introuvable sur ${c.nom}`);
@@ -113,7 +113,7 @@ function rechercher(etat: Etat, joueur: Joueur, id: string): void {
 }
 
 /** Le coût en Or d'une carte de la Rivière pour ce joueur (Privilège 1 : réduction, jamais sous 0). */
-function coutEnOr(joueur: Joueur, id: string): number {
+export function coutEnOr(joueur: Pick<Joueur, 'privileges'>, id: string): number {
   const reduction = totalPrivilege(joueur, 'reductionAchat', (effet) => effet.or);
   return Math.max(0, carte(id).cout.or - reduction);
 }

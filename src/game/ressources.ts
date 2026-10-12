@@ -84,7 +84,10 @@ export function blasons(
 }
 
 /** Ce que possède le joueur, pour les effets « par Pierre », « par blason », etc. */
-export function compter(joueur: Joueur, compteur: Compteur): number {
+export function compter(
+  joueur: Pick<Joueur, 'privileges' | 'aireDeJeu' | 'niveauEconomie' | 'niveauPopulation'>,
+  compteur: Compteur,
+): number {
   switch (compteur) {
     case 'pierre':
     case 'metal':

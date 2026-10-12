@@ -15,8 +15,10 @@ export interface Statistiques {
   cartesTrashees: number;
   /** Cartes piochées ou recherchées grâce à un effet ou un Privilège, hors pioche de début de lignée. */
   piochesSupplementaires: number;
-  /** Nombre de cartes adverses dont le joueur a appliqué l'Effet Rouge. */
-  effetsRougesUtilises: number;
+  /** Effets Rouges adverses que le joueur a choisi d'appliquer (en payant, en vendant…). 1 au plus par carte adverse. */
+  effetsRougesChoisis: number;
+  /** Effets Rouges adverses reçus sans rien faire (un gain d'Or, par exemple). 1 au plus par carte adverse. */
+  effetsRougesAutomatiques: number;
 }
 
 export function statistiquesVides(): Statistiques {
@@ -27,7 +29,8 @@ export function statistiquesVides(): Statistiques {
     cartesAchetees: 0,
     cartesTrashees: 0,
     piochesSupplementaires: 0,
-    effetsRougesUtilises: 0,
+    effetsRougesChoisis: 0,
+    effetsRougesAutomatiques: 0,
   };
 }
 

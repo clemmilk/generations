@@ -135,10 +135,12 @@ export function coutEnOr(joueur: Pick<Joueur, 'privileges'>, id: string): number
  * À appeler quand un joueur applique réellement une étape : si c'est l'Effet Rouge d'un adversaire,
  * le Privilège 20 lui rapporte de l'Or, 1 seule fois par carte jouée.
  */
-function noterUsage(etat: Etat, joueur: Joueur, etape: RefEtape): void {
+function noterUsage(etat: Etat, joueur: Joueur, etape: RefEtape, choisi: boolean): void {
   if (!etape.rouge || etat.effetRougeUtilisePar.includes(joueur.id)) return;
   etat.effetRougeUtilisePar.push(joueur.id);
-  joueur.statistiques.effetsRougesUtilises++;
+  // « choisi » : le joueur a payé ou fait un choix ; sinon l'effet s'est appliqué tout seul (gain d'Or…).
+  if (choisi) joueur.statistiques.effetsRougesChoisis++;
+  else joueur.statistiques.effetsRougesAutomatiques++;
   const or = totalPrivilege(joueur, 'orParEffetRouge', (effet) => effet.or);
   if (or === 0) return;
   joueur.or += or;
@@ -398,7 +400,7 @@ function executerPaiement(etat: Etat, joueur: Joueur, attente: RefEtape, action:
   const etape = etapeDe(attente);
   joueur.or -= etape.cout?.or ?? 0;
   defausserDeLAire(joueur, action.paiement);
-  noterUsage(etat, joueur, attente);
+  noterUsage(etat, joueur, attente, true);
   const suite: Tache[] = [
     { type: 'gain', ...ref(attente), restant: nombreDeGains(joueur, etape) },
   ];
@@ -442,7 +444,7 @@ function executerGain(
     default:
       return; // « passer » : le joueur s'arrête là.
   }
-  noterUsage(etat, joueur, attente);
+  noterUsage(etat, joueur, attente, true);
   if (encore > 0) etat.file.unshift({ type: 'gain', ...ref(attente), restant: encore });
 }
 
@@ -516,13 +518,13 @@ function traiterGain(etat: Etat, tache: RefEtape & { restant: number }): void {
       const or = gain.montant * tache.restant;
       joueur.or += or;
       noter(etat, joueur, `${joueur.nom} gagne ${or} Or.`);
-      noterUsage(etat, joueur, tache);
+      noterUsage(etat, joueur, tache, false);
       return;
     }
     case 'lvlup':
       if (niveau(joueur, gain.piste) < niveauMax(gain.piste)) {
         monter(etat, joueur, gain.piste);
-        noterUsage(etat, joueur, tache);
+        noterUsage(etat, joueur, tache, false);
       }
       return;
     case 'privilege':
@@ -536,7 +538,7 @@ function traiterGain(etat: Etat, tache: RefEtape & { restant: number }): void {
           joueur,
           `${joueur.nom} pioche au hasard le Privilège ${numero} : ${privilege(numero).texte}.`,
         );
-        noterUsage(etat, joueur, tache);
+        noterUsage(etat, joueur, tache, false);
         return;
       }
       if (etat.privilegesVisibles.length === 0) return;
@@ -545,7 +547,7 @@ function traiterGain(etat: Etat, tache: RefEtape & { restant: number }): void {
       // Le joueur pioche directement tout ce à quoi il a droit.
       const piochees = piocher(etat, joueur, tache.restant).length;
       joueur.statistiques.piochesSupplementaires += piochees;
-      if (piochees > 0) noterUsage(etat, joueur, tache);
+      if (piochees > 0) noterUsage(etat, joueur, tache, false);
       return;
     case 'recherche':
       if (joueur.pioche.length === 0) return;

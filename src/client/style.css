@@ -331,35 +331,19 @@ header button:disabled {
   gap: 3px;
 }
 
-/* Icône provisoire d'une ressource : un carré de couleur avec son initiale. */
+/* L'icône d'une ressource de l'aire de jeu. */
 .ressource {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border: 2px solid #1d1d1d;
+  width: 24px;
+  height: 24px;
   border-radius: 5px;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
   cursor: help;
 }
 
-.ressource.pierre {
-  background: #4d4d5e;
-}
-.ressource.metal {
-  background: #7a2a7a;
-}
-.ressource.erudit {
-  background: #4f8f2c;
-}
-
-/* Ressource ajoutée par un Privilège : contour en pointillés. */
+/* Ressource ajoutée par un Privilège : entourée de pointillés jaunes. */
 .ressource.bonus {
-  border-style: dashed;
-  border-color: #e2c400;
+  outline: 2px dashed #e2c400;
+  outline-offset: 1px;
+  margin-left: 3px;
 }
 
 /* Ce que la piste donne à chaque lignée : une icône et un chiffre bien visibles. */

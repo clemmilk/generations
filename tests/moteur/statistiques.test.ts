@@ -9,7 +9,8 @@ const VIDES = {
   cartesAchetees: 0,
   cartesTrashees: 0,
   piochesSupplementaires: 0,
-  effetsRougesUtilises: 0,
+  effetsRougesChoisis: 0,
+  effetsRougesAutomatiques: 0,
 };
 
 describe('statistiques des joueurs', () => {
@@ -96,7 +97,8 @@ describe('statistiques des joueurs', () => {
   describe('Effets Rouges utilisés', () => {
     it('comptent un Effet Rouge reçu automatiquement (gain d\'Or)', () => {
       const etat = faire(scene({ main: [c('Épicerie')] }, 3), { type: 'jouer', carte: c('Épicerie') });
-      expect(etat.joueurs.map((j) => j.statistiques.effetsRougesUtilises)).toEqual([0, 1, 1]);
+      expect(etat.joueurs.map((j) => j.statistiques.effetsRougesAutomatiques)).toEqual([0, 1, 1]);
+      expect(etat.joueurs.map((j) => j.statistiques.effetsRougesChoisis)).toEqual([0, 0, 0]);
     });
 
     it('comptent un Effet Rouge payé, pas un Effet Rouge refusé', () => {
@@ -110,8 +112,20 @@ describe('statistiques des joueurs', () => {
         { type: 'trasher', carte: c('Cachot', 'jaune') },
         { type: 'passer' }, // … Chloé refuse.
       );
-      expect(apres.joueurs.map((j) => j.statistiques.effetsRougesUtilises)).toEqual([0, 1, 0]);
+      expect(apres.joueurs.map((j) => j.statistiques.effetsRougesChoisis)).toEqual([0, 1, 0]);
+      expect(apres.joueurs.map((j) => j.statistiques.effetsRougesAutomatiques)).toEqual([0, 0, 0]);
       expect(apres.joueurs[1]!.statistiques.cartesTrashees).toBe(1);
+    });
+
+    it('comptent comme choisi un Effet Rouge payé dont le gain s\'applique ensuite tout seul (Cachot)', () => {
+      const depart = scene({ main: [c('Cachot')] });
+      installer(depart, 1, { or: 4 });
+      const apres = faire(depart, { type: 'jouer', carte: c('Cachot') }, { type: 'payer', paiement: [] });
+      expect(apres.joueurs[1]!.statistiques).toMatchObject({
+        effetsRougesChoisis: 1,
+        effetsRougesAutomatiques: 0,
+        piochesSupplementaires: 1,
+      });
     });
 
     it('ne comptent qu\'1 fois une carte, même avec plusieurs ventes au Marché', () => {
@@ -124,7 +138,8 @@ describe('statistiques des joueurs', () => {
         { type: 'vendre', carte: c('Cachot', 'jaune') },
         { type: 'vendre', carte: c('Forgeron', 'jaune') },
       );
-      expect(apres.joueurs[1]!.statistiques.effetsRougesUtilises).toBe(1);
+      expect(apres.joueurs[1]!.statistiques.effetsRougesChoisis).toBe(1);
+      expect(apres.joueurs[1]!.statistiques.effetsRougesAutomatiques).toBe(0);
     });
 
     it('ne comptent pas l\'effet de sa propre carte', () => {
@@ -134,7 +149,8 @@ describe('statistiques des joueurs', () => {
         { type: 'payer', paiement: [] },
         { type: 'trasher', carte: c('Cachot') },
       );
-      expect(etat.joueurs[0]!.statistiques.effetsRougesUtilises).toBe(0);
+      expect(etat.joueurs[0]!.statistiques.effetsRougesChoisis).toBe(0);
+      expect(etat.joueurs[0]!.statistiques.effetsRougesAutomatiques).toBe(0);
     });
 
     it('ne donnent l\'Or du Privilège 20 qu\'à celui qui le possède', () => {
@@ -142,7 +158,7 @@ describe('statistiques des joueurs', () => {
       depart.joueurs[2]!.privileges = [20];
       const apres = faire(depart, { type: 'jouer', carte: c('Épicerie') });
       expect(apres.joueurs.map((j) => j.or)).toEqual([4, 2, 4]);
-      expect(apres.joueurs.map((j) => j.statistiques.effetsRougesUtilises)).toEqual([0, 1, 1]);
+      expect(apres.joueurs.map((j) => j.statistiques.effetsRougesAutomatiques)).toEqual([0, 1, 1]);
     });
   });
 });

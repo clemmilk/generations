@@ -177,9 +177,9 @@ function Jauges(props: { joueur: VueJoueur }) {
 }
 
 const RESSOURCES = [
-  { type: 'pierre', nom: 'Pierre', lettre: 'P' },
-  { type: 'metal', nom: 'Métal', lettre: 'M' },
-  { type: 'erudit', nom: 'Érudit', lettre: 'E' },
+  { type: 'pierre', nom: 'Pierre' },
+  { type: 'metal', nom: 'Métal' },
+  { type: 'erudit', nom: 'Érudit' },
 ] as const;
 
 /** D'où vient une ressource, pour l'infobulle de son icône. */
@@ -195,19 +195,19 @@ function RessourcesEnJeu(props: { joueur: VueJoueur }) {
   return (
     <div className="ressources" title="Ressources disponibles dans l'aire de jeu, bonus des Privilèges compris">
       <span className="piste-nom">Ressources</span>
-      {RESSOURCES.map(({ type, nom, lettre }) => {
+      {RESSOURCES.map(({ type, nom }) => {
         const unites = detail.filter((ressource) => ressource.type === type);
         return (
           <span key={type} className="groupe-ressource">
             <strong>{unites.length}</strong> {nom}
             {unites.map((ressource, i) => (
-              <span
+              <img
                 key={i}
-                className={`ressource ${type}${ressource.privilege === null ? '' : ' bonus'}`}
+                className={ressource.privilege === null ? 'ressource' : 'ressource bonus'}
+                src={`/plateau/icone_${type}.png`}
+                alt={nom}
                 title={`${nom} : ${origine(ressource)}`}
-              >
-                {lettre}
-              </span>
+              />
             ))}
           </span>
         );
@@ -298,7 +298,8 @@ function TableauDesStatistiques(props: { vue: Vue }) {
     ['Cartes achetées', (j) => j.statistiques.cartesAchetees],
     ['Cartes trashées', (j) => j.statistiques.cartesTrashees],
     ['Pioches supplémentaires', (j) => j.statistiques.piochesSupplementaires],
-    ['Effets Rouges utilisés', (j) => j.statistiques.effetsRougesUtilises],
+    ['Effets Rouges choisis', (j) => j.statistiques.effetsRougesChoisis],
+    ['Effets Rouges automatiques', (j) => j.statistiques.effetsRougesAutomatiques],
     ['Privilèges', (j) => j.privileges.length],
     ['Niveau d\'Économie', (j) => j.niveauEconomie],
     ['Niveau de Population', (j) => j.niveauPopulation],
@@ -335,7 +336,8 @@ function TableauDesStatistiques(props: { vue: Vue }) {
       </table>
       <p className="note">
         Pioches supplémentaires : cartes piochées ou recherchées grâce à un effet ou un Privilège, hors pioche de début
-        de lignée. Effets Rouges utilisés : nombre de cartes adverses dont le joueur a appliqué l'Effet Rouge.
+        de lignée. Effets Rouges choisis : le joueur a payé ou fait un choix pour en profiter. Effets Rouges automatiques :
+        reçus sans rien faire, comme un gain d'Or. Chaque carte adverse compte 1 fois au plus.
       </p>
     </details>
   );

@@ -97,7 +97,7 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 ## Effets Rouges
 - Les adversaires du joueur actif appliquent l'Effet Rouge chacun à leur tour, dans l'ordre du tour, en commençant par le joueur qui suit le joueur actif.
 - Chaque adversaire utilise ses propres ressources, son propre Or et son propre plateau.
-- Le Privilège 20 ne rapporte ses 2 Or que si le joueur a réellement appliqué l'Effet Rouge (en payant son coût éventuel).
+- Le Privilège 20 ne rapporte ses 2 Or que si le joueur a réellement appliqué l'Effet Rouge (en payant son coût éventuel). Il ne les rapporte qu'1 seule fois par tour d'un adversaire, même si l'Effet Rouge est déclenché plusieurs fois (plusieurs cartes vendues, par exemple).
 
 
 ## Privilèges
@@ -106,7 +106,8 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 - Sauf mention « au hasard dans la pioche », un Privilège se prend au choix parmi les 4 visibles.
 - Quand la pioche de Privilèges est vide, les Privilèges visibles ne sont plus remplacés et on ne peut plus prendre de Privilège au hasard dans la pioche.
 - Le Privilège 16 compte comme 1 Érudit dans l'aire de jeu, y compris pour obtenir un Privilège en fin de lignée.
-- Les Privilèges 2, 3 et 4 ne se cumulent pas entre eux : la ressource supplémentaire donnée par l'un ne déclenche pas les autres. Les ressources et Érudits qu'ils ajoutent comptent partout : pour payer, pour augmenter sa Population, pour obtenir un Privilège et pour les effets des cartes.
+- Les Privilèges 2, 3 et 4 ne se cumulent pas entre eux : la ressource supplémentaire donnée par l'un ne déclenche pas les autres. Chacun regarde uniquement ce qui est imprimé sur la carte : une même carte peut donc recevoir le bonus de 2 Privilèges différents.
+- Privilège 8 : prendre 1 carte dans son deck est obligatoire. Privilège 12 : défausser 1 carte est obligatoire. Les ressources et Érudits qu'ils ajoutent comptent partout : pour payer, pour augmenter sa Population, pour obtenir un Privilège et pour les effets des cartes.
 - Le Privilège 1 ne réduit que le coût en Or des cartes, qui ne peut pas descendre sous 0.
 - Le Privilège 17 s'applique à chaque carte trashée, y compris lors d'un achat.
 - Le Privilège 12 fait défausser 1 carte (elle n'est pas trashée).

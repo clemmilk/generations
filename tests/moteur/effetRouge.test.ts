@@ -119,8 +119,9 @@ describe('Effet Rouge', () => {
 
   it('compte les blasons et les Érudits de l\'adversaire', () => {
     const etat = scene({ main: [c('Justice'), c('Éducation')] }, 3);
-    etat.joueurs[0]!.privileges = [1, 2, 3, 4]; // 3 blasons Noblesse pour Alice
-    etat.joueurs[1]!.privileges = [5, 6, 7]; // 2 blasons Noblesse pour Bob
+    // Privilèges choisis sans effet sur les blasons ni sur les ressources.
+    etat.joueurs[0]!.privileges = [1, 13, 14, 15]; // 4 Privilèges : 3 blasons Noblesse pour Alice
+    etat.joueurs[1]!.privileges = [8, 12, 17]; // 3 Privilèges : 2 blasons Noblesse pour Bob
     installer(etat, 2, { aire: [c('Hôpital')] }); // 2 Érudits pour Chloé
     let apres = faire(etat, { type: 'jouer', carte: c('Justice') });
     expect(apres.joueurs.map((j) => j.or)).toEqual([6, 2, 0]);

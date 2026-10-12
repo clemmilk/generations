@@ -78,6 +78,9 @@ Chaque décision a été reportée dans `docs/regles_generations.md` ou dans les
 - L. Le trash à 1 Or lors d'un achat est proposé juste après l'achat : le joueur peut trasher la carte qu'il vient d'acheter.
 - M. Pioche : le joueur pioche directement toutes les cartes auxquelles il a droit, sans valider carte par carte. Cela remplace la décision H pour les pioches (H reste valable pour les trashs et les recherches).
 - N. Conséquence de M, acceptée : une pioche sans coût (Ferrailleur, Banque, Ferme, Démolisseur) se fait automatiquement dès que la carte est jouée, sans possibilité d'y renoncer.
+- O. Privilèges 2, 3 et 4 sur une même carte : chacun regarde ce qui est imprimé sur la carte, indépendamment des autres. Une carte peut donc recevoir 2 bonus (avec les Privilèges 3 et 4, une carte Pierre + Érudit apporte 2 Pierres de plus), mais la ressource ajoutée par un Privilège n'en déclenche pas un autre.
+- P. Privilège 8 : prendre une carte dans son deck est obligatoire. Privilège 12 : la défausse est obligatoire.
+- Q. Privilège 20 : les 2 Or sont gagnés 1 seule fois par tour d'un adversaire, dès que le joueur applique l'Effet Rouge, même s'il le déclenche plusieurs fois (plusieurs ventes au Marché).
 
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ?

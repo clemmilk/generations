@@ -6,10 +6,13 @@ export type Action =
   | { type: 'jouer'; joueur: number; carte: string }
   | { type: 'acheter'; joueur: number; carte: string; paiement: string[] }
   | { type: 'finLignee'; joueur: number }
+  /** Privilèges 13, 14 et 15 : payer pour piocher, à la place de l'action du tour. */
+  | { type: 'utiliserPrivilege'; joueur: number; numero: number; paiement: string[] }
   // Les réponses aux choix proposés pendant un effet ou une fin de lignée
   | { type: 'payer'; joueur: number; paiement: string[] }
   | { type: 'trasher'; joueur: number; carte: string }
   | { type: 'rechercher'; joueur: number; carte: string }
+  | { type: 'defausser'; joueur: number; carte: string }
   | { type: 'vendre'; joueur: number; carte: string }
   | { type: 'prendrePrivilege'; joueur: number; numero: number }
   | { type: 'rejouer'; joueur: number }
@@ -38,7 +41,11 @@ export type Attente =
   | { type: 'trashAchat'; joueur: number }
   | { type: 'finNoblesse'; joueur: number }
   | { type: 'finEconomie'; joueur: number }
-  | { type: 'finPopulation'; joueur: number };
+  | { type: 'finPopulation'; joueur: number }
+  /** Début de lignée, Privilège 8 : prendre encore « restant » carte(s) de son choix dans son deck. */
+  | { type: 'debutRecherche'; joueur: number; restant: number }
+  /** Début de lignée, Privilège 12 : défausser encore « restant » carte(s) de sa main. */
+  | { type: 'debutDefausse'; joueur: number; restant: number };
 
 /** Ce que le moteur doit encore résoudre, dans l'ordre, avant la fin du tour. */
 export type Tache =
@@ -49,4 +56,7 @@ export type Tache =
   | { type: 'finEconomie'; joueur: number }
   | { type: 'finPopulation'; joueur: number }
   | { type: 'reformerDeck'; joueur: number }
+  | { type: 'debutRecherche'; joueur: number; restant: number }
+  | { type: 'debutPioche'; joueur: number; cartes: number }
+  | { type: 'debutDefausse'; joueur: number; restant: number }
   | { type: 'finDeTour' };

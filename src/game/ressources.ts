@@ -2,15 +2,29 @@ import { carte } from './cartes.ts';
 import type { Joueur } from './etat.ts';
 import { MATERIEL } from './materiel/index.ts';
 import type { Compteur, Ressources } from './materiel/index.ts';
+import { effetsPrivilege, totalPrivilege } from './privileges.ts';
 
-/** Les ressources qu'une carte apporte à ce joueur quand elle est dans son aire de jeu. */
-export function ressourcesDe(_joueur: Joueur, id: string): Ressources {
-  return carte(id).ressources;
+/**
+ * Les ressources qu'une carte apporte à ce joueur quand elle est dans son aire de jeu.
+ * Les Privilèges 2, 3 et 4 ajoutent des ressources d'après ce qui est imprimé sur la carte :
+ * la ressource ajoutée par l'un ne déclenche pas les autres.
+ */
+export function ressourcesDe(joueur: Pick<Joueur, 'privileges'>, id: string): Ressources {
+  const imprimees = carte(id).ressources;
+  const total = { ...imprimees };
+  for (const bonus of effetsPrivilege(joueur, 'bonusRessource')) {
+    if (imprimees[bonus.si] > 0) total[bonus.donne]++;
+  }
+  return total;
 }
 
-/** Le total des ressources de l'aire de jeu du joueur. */
-export function ressourcesEnJeu(joueur: Joueur): Ressources {
-  const total: Ressources = { pierre: 0, metal: 0, erudit: 0 };
+/** Le total des ressources de l'aire de jeu du joueur, Érudits des Privilèges compris (Privilège 16). */
+export function ressourcesEnJeu(joueur: Pick<Joueur, 'privileges' | 'aireDeJeu'>): Ressources {
+  const total: Ressources = {
+    pierre: 0,
+    metal: 0,
+    erudit: totalPrivilege(joueur, 'erudit', (effet) => effet.nombre),
+  };
   for (const id of joueur.aireDeJeu) {
     const r = ressourcesDe(joueur, id);
     total.pierre += r.pierre;
@@ -20,16 +34,21 @@ export function ressourcesEnJeu(joueur: Joueur): Ressources {
   return total;
 }
 
-/** Les blasons du joueur : ceux affichés à son niveau actuel sur chaque piste (pas de cumul). */
+/**
+ * Les blasons du joueur : ceux affichés à son niveau actuel sur chaque piste (pas de cumul),
+ * plus ceux de ses Privilèges (5, 6 et 7).
+ */
 export function blasons(
   joueur: Pick<Joueur, 'privileges' | 'niveauEconomie' | 'niveauPopulation'>,
 ): { noblesse: number; economie: number; population: number } {
   const { noblesse, economie, population } = MATERIEL.plateau;
-  return {
+  const total = {
     noblesse: noblesse[joueur.privileges.length - 1]?.blasons ?? 0,
     economie: economie[joueur.niveauEconomie]?.blasons ?? 0,
     population: population[joueur.niveauPopulation]?.blasons ?? 0,
   };
+  for (const bonus of effetsPrivilege(joueur, 'blason')) total[bonus.piste]++;
+  return total;
 }
 
 /** Ce que possède le joueur, pour les effets « par Pierre », « par blason », etc. */

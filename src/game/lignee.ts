@@ -1,6 +1,8 @@
 import { nomsDesCartes } from './cartes.ts';
 import type { Etat, Joueur } from './etat.ts';
 import { MATERIEL } from './materiel/index.ts';
+import { effetsPrivilege, totalPrivilege } from './privileges.ts';
+import { compter } from './ressources.ts';
 
 // Ces fonctions modifient l'état qu'on leur donne : le moteur travaille toujours sur une copie.
 
@@ -54,7 +56,14 @@ export function debuterLignee(etat: Etat, joueur: Joueur): void {
     throw new Error(`Niveau de jauge hors du plateau pour ${joueur.nom}`);
   }
 
-  joueur.or += economie.or;
-  noter(etat, joueur, `${joueur.nom} débute une lignée et prend ${economie.or} Or.`);
-  piocher(etat, joueur, population.cartes);
+  let or = economie.or;
+  for (const bonus of effetsPrivilege(joueur, 'orDebutLignee')) {
+    or += bonus.or * (bonus.par ? compter(joueur, bonus.par) : 1);
+  }
+  joueur.or += or;
+  noter(etat, joueur, `${joueur.nom} débute une lignée et prend ${or} Or.`);
+
+  // Privilège 8 : moins de cartes piochées ; la recherche qui les remplace est gérée par le moteur.
+  const enMoins = totalPrivilege(joueur, 'rechercheDebutLignee', (effet) => effet.cartes);
+  piocher(etat, joueur, Math.max(0, population.cartes - enMoins));
 }

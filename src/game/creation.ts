@@ -49,6 +49,7 @@ export function createGame(inscriptions: Inscription[], graine: number): Etat {
     attente: null,
     file: [],
     toursSupplementaires: 0,
+    bonusEffetRouge: [],
     vainqueur: null,
     journal: [],
     historique: [],

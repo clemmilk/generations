@@ -54,6 +54,8 @@ export interface Etat {
   file: Tache[];
   /** Nombre de tours que le joueur actif rejouera après celui-ci (Rejouer). */
   toursSupplementaires: number;
+  /** Joueurs ayant déjà reçu l'Or du Privilège 20 pour la carte en cours de résolution. */
+  bonusEffetRouge: number[];
   vainqueur: number | null;
   journal: EntreeJournal[];
   /** Toutes les actions jouées, dans l'ordre : avec la graine, elles permettent de rejouer la partie. */

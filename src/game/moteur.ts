@@ -5,7 +5,8 @@ import type { Etat, Joueur } from './etat.ts';
 import { melanger } from './hasard.ts';
 import { debuterLignee, noter, piocher } from './lignee.ts';
 import { MATERIEL } from './materiel/index.ts';
-import type { Etape, Piste } from './materiel/index.ts';
+import type { CoutEffet, Etape, Piste } from './materiel/index.ts';
+import { effetsPrivilege, totalPrivilege } from './privileges.ts';
 import { PARAMETRES } from './parametres.ts';
 import { compter, optionsDePaiement, ressourcesDe, ressourcesEnJeu } from './ressources.ts';
 
@@ -82,11 +83,52 @@ function trasher(etat: Etat, joueur: Joueur, id: string): void {
   }
   etat.trash.push(id);
   noter(etat, joueur, `${joueur.nom} trashe ${carte(id).nom}.`);
+  const or = totalPrivilege(joueur, 'orParTrash', (effet) => effet.or);
+  if (or > 0) {
+    joueur.or += or;
+    noter(etat, joueur, `${joueur.nom} gagne ${or} Or grâce à son Privilège.`);
+  }
   const reste = joueur.pioche.length + cartesTrashables(joueur).length;
   if (reste === 0 && etat.vainqueur === null) {
     etat.vainqueur = joueur.id;
     noter(etat, joueur, `${joueur.nom} a vidé entièrement son deck et remporte la partie !`);
   }
+}
+
+/** Le joueur prend dans sa pioche la carte de son choix, puis la pioche est remélangée. */
+function rechercher(etat: Etat, joueur: Joueur, id: string): void {
+  retirer(joueur.pioche, id);
+  joueur.main.push(id);
+  melanger(etat, joueur.pioche);
+  noter(
+    etat,
+    joueur,
+    `${joueur.nom} recherche 1 carte dans son deck.`,
+    `Carte choisie : ${carte(id).nom}.`,
+  );
+  if (joueur.pioche.length === 0 && etat.vainqueur === null) {
+    etat.vainqueur = joueur.id;
+    noter(etat, joueur, `${joueur.nom} a pris la dernière carte de son deck et remporte la partie !`);
+  }
+}
+
+/** Le coût en Or d'une carte de la Rivière pour ce joueur (Privilège 1 : réduction, jamais sous 0). */
+function coutEnOr(joueur: Joueur, id: string): number {
+  const reduction = totalPrivilege(joueur, 'reductionAchat', (effet) => effet.or);
+  return Math.max(0, carte(id).cout.or - reduction);
+}
+
+/**
+ * À appeler quand un joueur applique réellement une étape : si c'est l'Effet Rouge d'un adversaire,
+ * le Privilège 20 lui rapporte de l'Or, 1 seule fois par carte jouée.
+ */
+function noterUsage(etat: Etat, joueur: Joueur, etape: RefEtape): void {
+  if (!etape.rouge || etat.bonusEffetRouge.includes(joueur.id)) return;
+  const or = totalPrivilege(joueur, 'orParEffetRouge', (effet) => effet.or);
+  if (or === 0) return;
+  etat.bonusEffetRouge.push(joueur.id);
+  joueur.or += or;
+  noter(etat, joueur, `${joueur.nom} gagne ${or} Or grâce à son Privilège.`);
 }
 
 function prendrePrivilegeVisible(etat: Etat, joueur: Joueur, numero: number): void {
@@ -142,9 +184,14 @@ function paiementsDeLEtape(joueur: Joueur, etape: Etape): string[][] {
 }
 
 function paiementsDeLAchat(joueur: Joueur, id: string): string[][] {
-  const cout = carte(id).cout;
-  if (joueur.or < cout.or) return [];
-  return optionsDePaiement(joueur, cout);
+  if (joueur.or < coutEnOr(joueur, id)) return [];
+  return optionsDePaiement(joueur, carte(id).cout);
+}
+
+/** Les façons de payer un Privilège d'action (13, 14, 15). Aucune s'il n'y a rien à piocher. */
+function paiementsDuPrivilege(joueur: Joueur, cout: CoutEffet): string[][] {
+  if (joueur.pioche.length === 0 || joueur.or < cout.or) return [];
+  return optionsDePaiement(joueur, { pierre: cout.pierre, metal: cout.metal, ressource: 0 });
 }
 
 // ───────────────────────── Actions permises ─────────────────────────
@@ -155,6 +202,11 @@ function actionsDuTour(etat: Etat, joueur: Joueur): Action[] {
   for (const id of etat.riviere) {
     for (const paiement of paiementsDeLAchat(joueur, id)) {
       actions.push({ type: 'acheter', joueur: j, carte: id, paiement });
+    }
+  }
+  for (const effet of effetsPrivilege(joueur, 'actionPioche')) {
+    for (const paiement of paiementsDuPrivilege(joueur, effet.cout)) {
+      actions.push({ type: 'utiliserPrivilege', joueur: j, numero: effet.numero, paiement });
     }
   }
   if (joueur.main.length <= PARAMETRES.mainMaxPourFinDeLignee) {
@@ -239,6 +291,13 @@ export function getLegalActions(etat: Etat, joueurId: number): Action[] {
       return [{ type: 'monter', joueur: j, piste: 'economie' }, passer];
     case 'finPopulation':
       return [{ type: 'monter', joueur: j, piste: 'population' }, passer];
+    case 'debutRecherche':
+      // Triées : la liste des choix ne doit pas révéler l'ordre de la pioche.
+      return [...joueur.pioche]
+        .sort()
+        .map((id): Action => ({ type: 'rechercher', joueur: j, carte: id }));
+    case 'debutDefausse':
+      return joueur.main.map((id): Action => ({ type: 'defausser', joueur: j, carte: id }));
   }
 }
 
@@ -267,6 +326,7 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
       if (r.pierre + r.metal + r.erudit > 0) joueur.aireDeJeu.push(c.id);
       else joueur.defausse.push(c.id);
       noter(etat, joueur, `${joueur.nom} joue ${c.nom}.`);
+      etat.bonusEffetRouge = [];
       // D'abord l'effet du joueur actif, puis l'Effet Rouge de chaque adversaire dans l'ordre du tour.
       const adversaires = ordreDuTour(etat, j).slice(1);
       etat.file = [
@@ -282,7 +342,7 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
     }
     case 'acheter': {
       const c = carte(action.carte);
-      joueur.or -= c.cout.or;
+      joueur.or -= coutEnOr(joueur, c.id);
       defausserDeLAire(joueur, action.paiement);
       retirer(etat.riviere, c.id);
       joueur.main.push(c.id);
@@ -290,6 +350,16 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
       const suivante = etat.piocheCommune.shift();
       if (suivante !== undefined) etat.riviere.push(suivante);
       etat.file = [{ type: 'trashAchat', joueur: j }, { type: 'finDeTour' }];
+      return;
+    }
+    case 'utiliserPrivilege': {
+      const effet = effetsPrivilege(joueur, 'actionPioche').find((e) => e.numero === action.numero);
+      if (!effet) return;
+      joueur.or -= effet.cout.or;
+      defausserDeLAire(joueur, action.paiement);
+      noter(etat, joueur, `${joueur.nom} utilise son Privilège ${effet.numero}.`);
+      piocher(etat, joueur, effet.cartes);
+      etat.file = [{ type: 'finDeTour' }];
       return;
     }
     case 'finLignee':
@@ -310,6 +380,7 @@ function executerPaiement(etat: Etat, joueur: Joueur, attente: RefEtape, action:
   const etape = etapeDe(attente);
   joueur.or -= etape.cout?.or ?? 0;
   defausserDeLAire(joueur, action.paiement);
+  noterUsage(etat, joueur, attente);
   const suite: Tache[] = [
     { type: 'gain', ...ref(attente), restant: nombreDeGains(joueur, etape) },
   ];
@@ -330,22 +401,9 @@ function executerGain(
     case 'trasher':
       trasher(etat, joueur, action.carte);
       break;
-    case 'rechercher': {
-      retirer(joueur.pioche, action.carte);
-      joueur.main.push(action.carte);
-      melanger(etat, joueur.pioche);
-      noter(
-        etat,
-        joueur,
-        `${joueur.nom} recherche 1 carte dans son deck.`,
-        `Carte choisie : ${carte(action.carte).nom}.`,
-      );
-      if (joueur.pioche.length === 0 && etat.vainqueur === null) {
-        etat.vainqueur = joueur.id;
-        noter(etat, joueur, `${joueur.nom} a pris la dernière carte de son deck et remporte la partie !`);
-      }
+    case 'rechercher':
+      rechercher(etat, joueur, action.carte);
       break;
-    }
     case 'vendre': {
       if (gain.type !== 'vendre') return;
       const r = ressourcesDe(joueur, action.carte);
@@ -366,6 +424,7 @@ function executerGain(
     default:
       return; // « passer » : le joueur s'arrête là.
   }
+  noterUsage(etat, joueur, attente);
   if (encore > 0) etat.file.unshift({ type: 'gain', ...ref(attente), restant: encore });
 }
 
@@ -400,6 +459,17 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
     case 'finPopulation':
       if (action.type === 'monter') monter(etat, joueur, 'population');
       return;
+    case 'debutRecherche':
+      if (action.type !== 'rechercher') return;
+      rechercher(etat, joueur, action.carte);
+      etat.file.unshift({ type: 'debutRecherche', joueur: joueur.id, restant: attente.restant - 1 });
+      return;
+    case 'debutDefausse':
+      if (action.type !== 'defausser') return;
+      if (retirer(joueur.main, action.carte)) joueur.defausse.push(action.carte);
+      noter(etat, joueur, `${joueur.nom} défausse 1 carte de sa main.`, `Carte défaussée : ${carte(action.carte).nom}.`);
+      etat.file.unshift({ type: 'debutDefausse', joueur: joueur.id, restant: attente.restant - 1 });
+      return;
   }
 }
 
@@ -427,10 +497,14 @@ function traiterGain(etat: Etat, tache: RefEtape & { restant: number }): void {
       const or = gain.montant * tache.restant;
       joueur.or += or;
       noter(etat, joueur, `${joueur.nom} gagne ${or} Or.`);
+      noterUsage(etat, joueur, tache);
       return;
     }
     case 'lvlup':
-      if (niveau(joueur, gain.piste) < niveauMax(gain.piste)) monter(etat, joueur, gain.piste);
+      if (niveau(joueur, gain.piste) < niveauMax(gain.piste)) {
+        monter(etat, joueur, gain.piste);
+        noterUsage(etat, joueur, tache);
+      }
       return;
     case 'privilege':
       if (joueur.privileges.length >= MAX_PRIVILEGES) return;
@@ -443,13 +517,14 @@ function traiterGain(etat: Etat, tache: RefEtape & { restant: number }): void {
           joueur,
           `${joueur.nom} pioche au hasard le Privilège ${numero} : ${privilege(numero).texte}.`,
         );
+        noterUsage(etat, joueur, tache);
         return;
       }
       if (etat.privilegesVisibles.length === 0) return;
       break;
     case 'pioche':
       // Le joueur pioche directement tout ce à quoi il a droit.
-      piocher(etat, joueur, tache.restant);
+      if (piocher(etat, joueur, tache.restant).length > 0) noterUsage(etat, joueur, tache);
       return;
     case 'recherche':
       if (joueur.pioche.length === 0) return;
@@ -473,6 +548,18 @@ function reformerDeck(etat: Etat, joueur: Joueur): void {
   joueur.aireDeJeu = [];
   melanger(etat, joueur.pioche);
   debuterLignee(etat, joueur);
+  // Après l'Or et les cartes : le Privilège 8 (recherche), puis le Privilège 12 (pioche et défausse).
+  const recherches = totalPrivilege(joueur, 'rechercheDebutLignee', (effet) => effet.cartes);
+  const enPlus = totalPrivilege(joueur, 'piocheEtDefausseDebutLignee', (effet) => effet.cartes);
+  const suite: Tache[] = [];
+  if (recherches > 0) suite.push({ type: 'debutRecherche', joueur: joueur.id, restant: recherches });
+  if (enPlus > 0) {
+    suite.push(
+      { type: 'debutPioche', joueur: joueur.id, cartes: enPlus },
+      { type: 'debutDefausse', joueur: joueur.id, restant: enPlus },
+    );
+  }
+  etat.file.unshift(...suite);
 }
 
 function traiter(etat: Etat, tache: Tache): void {
@@ -512,8 +599,8 @@ function traiter(etat: Etat, tache: Tache): void {
     }
     case 'finPopulation': {
       const joueur = etat.joueurs[tache.joueur]!;
-      // Le reste de l'Or est défaussé une fois la question de l'Économie réglée.
-      if (joueur.or > 0) {
+      // Le reste de l'Or est défaussé une fois la question de l'Économie réglée (sauf Privilège 18).
+      if (joueur.or > 0 && effetsPrivilege(joueur, 'conserveOr').length === 0) {
         noter(etat, joueur, `${joueur.nom} défausse ses ${joueur.or} Or restants.`);
         joueur.or = 0;
       }
@@ -526,6 +613,19 @@ function traiter(etat: Etat, tache: Tache): void {
     }
     case 'reformerDeck':
       reformerDeck(etat, etat.joueurs[tache.joueur]!);
+      return;
+    case 'debutRecherche':
+      if (tache.restant > 0 && etat.joueurs[tache.joueur]!.pioche.length > 0) {
+        etat.attente = { type: 'debutRecherche', joueur: tache.joueur, restant: tache.restant };
+      }
+      return;
+    case 'debutPioche':
+      piocher(etat, etat.joueurs[tache.joueur]!, tache.cartes);
+      return;
+    case 'debutDefausse':
+      if (tache.restant > 0 && etat.joueurs[tache.joueur]!.main.length > 0) {
+        etat.attente = { type: 'debutDefausse', joueur: tache.joueur, restant: tache.restant };
+      }
       return;
     case 'finDeTour': {
       if (etat.toursSupplementaires > 0) {

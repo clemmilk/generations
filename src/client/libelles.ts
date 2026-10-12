@@ -55,6 +55,10 @@ export function question(vue: Vue): string {
     }
     case 'finPopulation':
       return `${nom}, tu as assez de Ressources : veux-tu monter en Population ?`;
+    case 'debutRecherche':
+      return `${nom}, début de lignée : choisis 1 carte de ton deck à prendre en main (Privilège).`;
+    case 'debutDefausse':
+      return `${nom}, début de lignée : défausse 1 carte de ta main (Privilège).`;
   }
 }
 
@@ -69,6 +73,12 @@ export function libelleAction(action: Action, attente: Attente | null): string {
         : `Acheter ${carte(action.carte).nom}`;
     case 'finLignee':
       return 'Mettre fin à ma lignée';
+    case 'utiliserPrivilege':
+      return action.paiement.length > 0
+        ? `Privilège ${action.numero} : piocher en défaussant ${nomsDesCartes(action.paiement)}`
+        : `Privilège ${action.numero} : payer pour piocher`;
+    case 'defausser':
+      return `Défausser ${carte(action.carte).nom}`;
     case 'payer':
       return action.paiement.length > 0
         ? `Payer en défaussant ${nomsDesCartes(action.paiement)}`

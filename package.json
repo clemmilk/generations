@@ -6,7 +6,8 @@
   "scripts": {
     "import": "node scripts/import-csv.ts",
     "predev": "npm run import",
-    "dev": "vite",
+    "dev": "node scripts/dev.ts",
+    "serveur": "node src/server/index.ts",
     "prebuild": "npm run import",
     "build": "vite build",
     "presimulate": "npm run import",
@@ -28,6 +29,8 @@
   },
   "dependencies": {
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4"
   }
 }

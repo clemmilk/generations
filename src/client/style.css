@@ -26,6 +26,120 @@ p {
   margin: 0;
 }
 
+/* Écrans d'accueil et de salon : une colonne centrée. */
+.accueil {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.accueil h1 {
+  font-size: 28px;
+}
+
+.accueil button,
+.accueil select,
+.accueil input {
+  padding: 8px 12px;
+  min-height: 42px;
+  border: 1px solid var(--bord);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.accueil button {
+  cursor: pointer;
+  border-color: var(--accent);
+}
+
+.accueil button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.accueil button.secondaire {
+  border-color: var(--bord);
+  color: var(--discret);
+}
+
+.choix {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choix button {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  text-align: left;
+}
+
+.choix button strong {
+  font-size: 18px;
+}
+
+.choix button span,
+.note {
+  color: var(--discret);
+  font-size: 14px;
+}
+
+.formulaire {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.invitation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.invitation input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.sieges {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sieges li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--panneau);
+  border: 1px solid var(--bord);
+  border-left: 8px solid var(--bord);
+  border-radius: 8px;
+  min-height: 56px;
+}
+
+.sieges li strong {
+  width: 60px;
+}
+
+.absent {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b00020;
+}
+
 .table {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;

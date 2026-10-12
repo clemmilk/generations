@@ -1,0 +1,14 @@
+# Configuration du serveur multijoueur sur Render (voir docs/mise_en_ligne.md).
+services:
+  - type: web
+    name: generations-serveur
+    runtime: node
+    plan: free
+    # Le serveur n'a besoin que de Socket.io : inutile d'installer les outils de développement.
+    buildCommand: npm install --omit=dev
+    startCommand: node src/server/index.ts
+    healthCheckPath: /
+    envVars:
+      # Le serveur est écrit en TypeScript et lancé tel quel : il faut Node 24 ou plus récent.
+      - key: NODE_VERSION
+        value: 24

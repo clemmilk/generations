@@ -75,6 +75,17 @@ describe('matériel importé', () => {
     }
   });
 
+  it('a une copie allégée de chaque image pour le site (sinon, relancer « npm run images »)', () => {
+    for (const element of [...cartes, ...privileges]) {
+      const copie = element.image.replace(/^visuels\//, 'visuels-web/');
+      expect(existsSync(new URL(copie, racine)), copie).toBe(true);
+    }
+    for (const icone of ['or', 'pioche', 'economie', 'population', 'noblesse', 'pierre', 'metal', 'erudit']) {
+      const copie = `visuels-web/plateau/icone_${icone}.png`;
+      expect(existsSync(new URL(copie, racine)), copie).toBe(true);
+    }
+  });
+
   it('reprend les valeurs du plateau personnel', () => {
     expect(plateau.noblesse).toEqual([
       { erudits: 1, blasons: 0 },

@@ -3,8 +3,12 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "import": "node scripts/import-csv.ts",
+    "images": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/alleger-images.ps1",
     "predev": "npm run import",
     "dev": "node scripts/dev.ts",
     "serveur": "node src/server/index.ts",

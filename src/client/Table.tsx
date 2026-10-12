@@ -275,6 +275,7 @@ function TableauDesStatistiques(props: { vue: Vue }) {
   const lignes: [string, (joueur: VueJoueur) => string | number][] = [
     ['Résultat', (j) => (vue.vainqueur === j.id ? 'Vainqueur' : '—')],
     ['Tours joués', (j) => j.statistiques.tours],
+    ['Tours de table (sans les Rejouer)', (j) => j.statistiques.tours - j.statistiques.toursRejoues],
     ['Lignées', (j) => j.statistiques.lignees],
     ['Tours par lignée', (j) => (j.statistiques.tours / Math.max(1, j.statistiques.lignees)).toFixed(1)],
     ['Cartes jouées', (j) => j.statistiques.cartesJouees],

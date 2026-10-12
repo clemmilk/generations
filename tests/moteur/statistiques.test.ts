@@ -4,6 +4,7 @@ import { c, faire, inscriptions, installer, scene } from './outils.ts';
 
 const VIDES = {
   tours: 0,
+  toursRejoues: 0,
   lignees: 1,
   cartesJouees: 0,
   cartesAchetees: 0,
@@ -55,6 +56,30 @@ describe('statistiques des joueurs', () => {
       { type: 'jouer', carte: c('Forgeron') },
     );
     expect(etat.joueurs[0]!.statistiques.tours).toBe(2);
+    // Un seul de ces deux tours est un tour de table : l'autre vient du Rejouer.
+    expect(etat.joueurs[0]!.statistiques.toursRejoues).toBe(1);
+  });
+
+  it('ne comptent pas de tour rejoué quand le Rejouer est refusé', () => {
+    const etat = faire(
+      scene({ main: [c('Remouleur ambulant'), c('Forgeron')] }),
+      { type: 'jouer', carte: c('Remouleur ambulant') },
+      { type: 'passer' },
+    );
+    expect(etat.joueurs[0]!.statistiques).toMatchObject({ tours: 1, toursRejoues: 0 });
+  });
+
+  it('comptent chaque tour supplémentaire quand les Rejouer se cumulent', () => {
+    const depart = scene({ main: [c('Remouleur ambulant'), c('Contremaître'), c('Forgeron')] });
+    const etat = faire(
+      depart,
+      { type: 'jouer', carte: c('Remouleur ambulant') },
+      { type: 'rejouer' },
+      { type: 'jouer', carte: c('Contremaître') },
+      { type: 'rejouer' },
+      { type: 'jouer', carte: c('Forgeron') },
+    );
+    expect(etat.joueurs[0]!.statistiques).toMatchObject({ tours: 3, toursRejoues: 2 });
   });
 
   describe('pioches supplémentaires', () => {

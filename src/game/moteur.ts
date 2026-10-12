@@ -653,6 +653,7 @@ function traiter(etat: Etat, tache: Tache): void {
     case 'finDeTour': {
       if (etat.toursSupplementaires > 0) {
         etat.toursSupplementaires--;
+        etat.joueurs[etat.joueurActif]!.statistiques.toursRejoues++;
         noter(etat, etat.joueurs[etat.joueurActif]!, `${etat.joueurs[etat.joueurActif]!.nom} rejoue.`);
       } else {
         etat.joueurActif = (etat.joueurActif + 1) % etat.joueurs.length;

@@ -8,6 +8,8 @@ import type { Couleur } from './materiel/index.ts';
 export interface Statistiques {
   /** Tours joués (jouer une carte, acheter, utiliser un Privilège ou finir sa lignée). */
   tours: number;
+  /** Parmi ces tours, ceux qui sont des tours supplémentaires obtenus par « Rejouer ». */
+  toursRejoues: number;
   /** Lignées commencées, la première comprise. */
   lignees: number;
   cartesJouees: number;
@@ -24,6 +26,7 @@ export interface Statistiques {
 export function statistiquesVides(): Statistiques {
   return {
     tours: 0,
+    toursRejoues: 0,
     lignees: 0,
     cartesJouees: 0,
     cartesAchetees: 0,

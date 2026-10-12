@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Action } from '../game/actions.ts';
-import { carte, privilege } from '../game/cartes.ts';
+import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
 import {
   applyAction,
   createGame,
@@ -72,32 +72,98 @@ function Icone(props: { nom: string; titre: string }) {
   return <img className="icone" src={`/plateau/icone_${props.nom}.png`} alt={props.titre} title={props.titre} />;
 }
 
+/** Une piste du plateau : des cases remplies jusqu'au niveau atteint, ce qu'elle rapporte, le coût suivant, les blasons. */
+function Piste(props: {
+  nom: string;
+  icone: string;
+  niveau: number;
+  niveauMax: number;
+  /** Ce que la piste donne à chaque début de lignée : une icône et un nombre. null si elle ne donne rien. */
+  rapporte: { icone: string; valeur: number; titre: string } | null;
+  /** Ce qu'il faut pour passer au niveau suivant, ou null au niveau maximum. */
+  prochain: string | null;
+  blasons: number;
+}) {
+  return (
+    <div className="piste" title={`${props.nom} : niveau ${props.niveau} sur ${props.niveauMax}`}>
+      <span className="piste-nom">{props.nom}</span>
+      <span className="cases">
+        {Array.from({ length: props.niveauMax }, (_, i) => (
+          <span key={i} className={`case${i < props.niveau ? ' remplie' : ''}`} />
+        ))}
+      </span>
+      <span className="rapporte" title={props.rapporte?.titre}>
+        {props.rapporte && (
+          <>
+            <Icone nom={props.rapporte.icone} titre={props.rapporte.titre} />
+            <strong>{props.rapporte.valeur}</strong>
+          </>
+        )}
+      </span>
+      <span className="piste-texte">
+        {props.prochain === null ? 'niveau maximum' : `prochain : ${props.prochain}`}
+      </span>
+      <span className="blasons">
+        {Array.from({ length: props.blasons }, (_, i) => (
+          <Icone key={i} nom={props.icone} titre={`Blason ${props.nom}`} />
+        ))}
+      </span>
+    </div>
+  );
+}
+
 function Jauges(props: { joueur: VueJoueur }) {
   const j = props.joueur;
   const { economie, population, noblesse } = MATERIEL.plateau;
   const b = blasons(j);
-  const eco = economie[j.niveauEconomie];
-  const pop = population[j.niveauPopulation];
+  const prochaineEconomie = economie[j.niveauEconomie + 1]?.cout;
+  const prochainePopulation = population[j.niveauPopulation + 1]?.cout;
   const prochainErudits = noblesse[j.privileges.length]?.erudits;
   return (
     <div className="jauges">
-      <span title="Or en réserve">
-        <Icone nom="or" titre="Or" /> <strong>{j.or}</strong>
-      </span>
-      <span title="Économie : Or reçu à chaque début de lignée">
-        <Icone nom="economie" titre="Économie" /> niv. {j.niveauEconomie} · {eco?.or} Or/lignée · {b.economie} blason(s)
-      </span>
-      <span title="Population : cartes piochées à chaque début de lignée">
-        <Icone nom="population" titre="Population" /> niv. {j.niveauPopulation} · {pop?.cartes} cartes/lignée ·{' '}
-        {b.population} blason(s)
-      </span>
-      <span title="Noblesse : Privilèges possédés">
-        <Icone nom="noblesse" titre="Noblesse" /> {j.privileges.length}/4 Privilèges · {b.noblesse} blason(s)
-        {prochainErudits !== undefined && ` · prochain : ${prochainErudits} Érudit(s)`}
-      </span>
-      <span title="Cartes restantes dans la pioche">
-        <Icone nom="pioche" titre="Pioche" /> <strong>{j.nbCartesPioche}</strong> en pioche
-      </span>
+      <div className="reserves">
+        <span title="Or en réserve">
+          <Icone nom="or" titre="Or" /> <strong>{j.or}</strong> Or
+        </span>
+        <span title="Cartes restantes dans la pioche">
+          <Icone nom="pioche" titre="Pioche" /> <strong>{j.nbCartesPioche}</strong> en pioche
+        </span>
+      </div>
+      <Piste
+        nom="Économie"
+        icone="economie"
+        niveau={j.niveauEconomie}
+        niveauMax={economie.length - 1}
+        rapporte={{
+          icone: 'or',
+          valeur: economie[j.niveauEconomie]?.or ?? 0,
+          titre: 'Or pris à chaque début de lignée',
+        }}
+        prochain={prochaineEconomie === undefined ? null : `${prochaineEconomie} Or`}
+        blasons={b.economie}
+      />
+      <Piste
+        nom="Population"
+        icone="population"
+        niveau={j.niveauPopulation}
+        niveauMax={population.length - 1}
+        rapporte={{
+          icone: 'pioche',
+          valeur: population[j.niveauPopulation]?.cartes ?? 0,
+          titre: 'Cartes piochées à chaque début de lignée',
+        }}
+        prochain={prochainePopulation === undefined ? null : `${prochainePopulation} Ressource(s)`}
+        blasons={b.population}
+      />
+      <Piste
+        nom="Noblesse"
+        icone="noblesse"
+        niveau={j.privileges.length}
+        niveauMax={noblesse.length}
+        rapporte={null}
+        prochain={prochainErudits === undefined ? null : `${prochainErudits} Érudit(s)`}
+        blasons={b.noblesse}
+      />
     </div>
   );
 }
@@ -178,6 +244,8 @@ export function App() {
   const [etats, setEtats] = useState<Etat[]>(() => [createGame(JOUEURS.slice(0, 2), 1)]);
   const [survol, setSurvol] = useState<string | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
+  /** La carte de la Rivière que le joueur est en train d'acheter, en attendant qu'il choisisse comment payer. */
+  const [achat, setAchat] = useState<string | null>(null);
 
   const etat = etats[etats.length - 1]!;
   // On regarde la partie avec les yeux du joueur qui doit choisir.
@@ -192,23 +260,39 @@ export function App() {
     }
   }
 
+  /** Change l'état affiché, et oublie l'achat en cours de préparation. */
+  const afficher = (suivants: Etat[]) => {
+    setEtats(suivants);
+    setAchat(null);
+    setErreur(null);
+  };
   const appliquer = (action: Action) => {
     try {
-      setEtats([...etats, applyAction(etat, action)]);
-      setErreur(null);
+      afficher([...etats, applyAction(etat, action)]);
     } catch (e) {
       setErreur((e as Error).message);
     }
   };
+
+  // Achat en deux temps : on choisit d'abord la carte, puis les cartes à défausser pour la payer.
+  const achats = actions.filter((a) => a.type === 'acheter');
+  const cartesAchetables = [...new Set(achats.map((a) => a.carte))];
+  const paiementsPossibles = achats.filter((a) => a.carte === achat);
+  const choisirAchat = (id: string) => {
+    const possibles = achats.filter((a) => a.carte === id);
+    const seul = possibles.length === 1 ? possibles[0]! : null;
+    // Rien à défausser : on achète directement.
+    if (seul && seul.paiement.length === 0) appliquer(seul);
+    else setAchat(id);
+  };
+
   // Un clic sur une carte applique son action quand il n'y en a qu'une ; sinon il faut passer par les boutons.
   const choisirCarte: ChoisirCarte = (id) => {
     const possibles = actionsParCarte.get(id) ?? [];
-    if (possibles.length === 1) appliquer(possibles[0]!);
+    if (possibles[0]?.type === 'acheter') choisirAchat(id);
+    else if (possibles.length === 1) appliquer(possibles[0]!);
   };
-  const nouvellePartie = () => {
-    setEtats([createGame(JOUEURS.slice(0, nombre), graine)]);
-    setErreur(null);
-  };
+  const nouvellePartie = () => afficher([createGame(JOUEURS.slice(0, nombre), graine)]);
 
   const exporter = () => {
     const contenu = JSON.stringify(exporterPartie(etat), null, 2);
@@ -220,8 +304,7 @@ export function App() {
   };
   const importer = async (fichier: File) => {
     try {
-      setEtats(rejouerPartie(JSON.parse(await fichier.text())));
-      setErreur(null);
+      afficher(rejouerPartie(JSON.parse(await fichier.text())));
     } catch (e) {
       setErreur(`Import impossible : ${(e as Error).message}`);
     }
@@ -230,7 +313,12 @@ export function App() {
   const privilegeAPrendre =(numero: number) =>
     actions.find((a) => a.type === 'prendrePrivilege' && a.numero === numero);
   const recherche = actions.filter((a) => a.type === 'rechercher');
-  const zone = { actionsParCarte, onChoisir: choisirCarte, onSurvol: setSurvol };
+  // Pendant le choix du paiement d'un achat, les cartes ne sont plus cliquables : on répond d'abord à la question.
+  const zone = {
+    actionsParCarte: paiementsPossibles.length > 0 ? new Map<string, Action[]>() : actionsParCarte,
+    onChoisir: choisirCarte,
+    onSurvol: setSurvol,
+  };
 
   return (
     <div className="table">
@@ -250,7 +338,7 @@ export function App() {
         <button type="button" onClick={nouvellePartie}>
           Nouvelle partie
         </button>
-        <button type="button" disabled={etats.length < 2} onClick={() => setEtats(etats.slice(0, -1))}>
+        <button type="button" disabled={etats.length < 2} onClick={() => afficher(etats.slice(0, -1))}>
           Annuler la dernière action
         </button>
         <button type="button" onClick={exporter} title="Enregistre la graine et toutes les actions, pour rejouer la partie à l'identique">
@@ -281,23 +369,56 @@ export function App() {
               ))}
             </div>
           </div>
-          {vue.trash.length > 0 && <Zone titre="Cartes trashées" ids={vue.trash} petite {...zone} actionsParCarte={new Map()} />}
+          {vue.trash.length > 0 && (
+            <details className="trash">
+              <summary>Cartes trashées ({vue.trash.length}) — cliquer pour afficher ou masquer</summary>
+              <div className="rangee">
+                {vue.trash.map((id) => (
+                  <ImageCarte key={id} id={id} petite onSurvol={setSurvol} />
+                ))}
+              </div>
+            </details>
+          )}
         </section>
 
         <section className="decision">
           {vue.vainqueur !== null ? (
             <p className="question victoire">{vue.joueurs[vue.vainqueur]?.nom} remporte la partie !</p>
+          ) : paiementsPossibles.length > 0 ? (
+            <p className="question">
+              Achat de {carte(achat!).nom} : quelles cartes de ton aire de jeu veux-tu défausser pour payer ?
+            </p>
           ) : (
             <p className="question">{question(vue)}</p>
           )}
           {erreur && <p className="erreur">{erreur}</p>}
-          <div className="boutons">
-            {actions.map((action, i) => (
-              <button type="button" key={i} onClick={() => appliquer(action)}>
-                {libelleAction(action, vue.attente)}
+          {paiementsPossibles.length > 0 ? (
+            <div className="boutons">
+              {paiementsPossibles.map((action, i) => (
+                <button type="button" key={i} onClick={() => appliquer(action)}>
+                  {action.paiement.length > 0 ? `Défausser ${nomsDesCartes(action.paiement)}` : 'Ne rien défausser'}
+                </button>
+              ))}
+              <button type="button" className="secondaire" onClick={() => setAchat(null)}>
+                Annuler l'achat
               </button>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="boutons">
+              {actions
+                .filter((action) => action.type !== 'acheter')
+                .map((action, i) => (
+                  <button type="button" key={i} onClick={() => appliquer(action)}>
+                    {libelleAction(action, vue.attente)}
+                  </button>
+                ))}
+              {cartesAchetables.map((id) => (
+                <button type="button" key={id} onClick={() => choisirAchat(id)}>
+                  Acheter {carte(id).nom}
+                </button>
+              ))}
+            </div>
+          )}
           {recherche.length > 0 && (
             <Zone titre="Cartes de ta pioche" ids={recherche.map((a) => a.carte)} petite {...zone} />
           )}

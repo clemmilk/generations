@@ -263,16 +263,102 @@ header button:disabled {
 
 .jauges {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 18px;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
   font-size: 14px;
 }
 
-.jauges span {
+.reserves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.reserves span {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+}
+
+.piste {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  min-height: 28px;
+}
+
+.piste-nom {
+  width: 84px;
+  font-weight: 600;
+}
+
+.cases {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.case {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--discret);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.case.remplie {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Ce que la piste donne à chaque lignée : une icône et un chiffre bien visibles. */
+.rapporte {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 62px;
+}
+
+.rapporte:not(:empty) {
+  padding: 1px 10px 1px 5px;
+  border: 1px solid var(--bord);
+  border-radius: 999px;
+  background: #fff;
+}
+
+.rapporte strong {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.trash {
+  flex-basis: 100%;
+}
+
+.trash summary {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--discret);
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.trash .rangee {
+  margin-top: 4px;
+}
+
+.piste-texte {
+  color: var(--discret);
+}
+
+.blasons {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.boutons button.secondaire {
+  border-color: var(--bord);
+  color: var(--discret);
 }
 
 .icone {

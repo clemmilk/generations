@@ -311,6 +311,52 @@ header button:disabled {
   border-color: var(--accent);
 }
 
+.ressources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  min-height: 28px;
+}
+
+.groupe-ressource {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Icône provisoire d'une ressource : un carré de couleur avec son initiale. */
+.ressource {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #1d1d1d;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: help;
+}
+
+.ressource.pierre {
+  background: #4d4d5e;
+}
+.ressource.metal {
+  background: #7a2a7a;
+}
+.ressource.erudit {
+  background: #4f8f2c;
+}
+
+/* Ressource ajoutée par un Privilège : contour en pointillés. */
+.ressource.bonus {
+  border-style: dashed;
+  border-color: #e2c400;
+}
+
 /* Ce que la piste donne à chaque lignée : une icône et un chiffre bien visibles. */
 .rapporte {
   display: inline-flex;

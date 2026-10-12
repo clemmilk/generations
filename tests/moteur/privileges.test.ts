@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Etat } from '../../src/game/index.ts';
 import { MATERIEL } from '../../src/game/materiel/index.ts';
 import { EFFETS_PRIVILEGES } from '../../src/game/privileges.ts';
-import { blasons, ressourcesDe, ressourcesEnJeu } from '../../src/game/ressources.ts';
+import { blasons, detailDesRessources, ressourcesDe, ressourcesEnJeu } from '../../src/game/ressources.ts';
 import { c, faire, installer, permises, scene, typesPermis } from './outils.ts';
 import type { Zones } from './outils.ts';
 
@@ -117,6 +117,36 @@ describe('Privilèges 2, 3 et 4 : ressources supplémentaires', () => {
     const noblesse = avec([2], { aire: [c('Forgeron'), c('Épicerie')] });
     apres = faire(noblesse, { type: 'finLignee' });
     expect(apres.attente?.type).toBe('finNoblesse');
+  });
+});
+
+describe('détail des ressources de l\'aire de jeu', () => {
+  it('indique la carte d\'origine de chaque ressource imprimée', () => {
+    const joueur = avec([], { aire: [c('Ferme'), c('Épicerie')] }).joueurs[0]!;
+    expect(detailDesRessources(joueur)).toEqual([
+      { type: 'pierre', carte: c('Ferme'), privilege: null },
+      { type: 'metal', carte: c('Ferme'), privilege: null },
+      { type: 'erudit', carte: c('Épicerie'), privilege: null },
+    ]);
+  });
+
+  it('indique le Privilège qui ajoute une ressource, et la carte concernée', () => {
+    const joueur = avec([3, 16], { aire: [c('Cachot')] }).joueurs[0]!;
+    expect(detailDesRessources(joueur)).toEqual([
+      { type: 'pierre', carte: c('Cachot'), privilege: null },
+      { type: 'pierre', carte: c('Cachot'), privilege: 3 },
+      { type: 'erudit', carte: null, privilege: 16 },
+    ]);
+  });
+
+  it('donne toujours le même total que ressourcesEnJeu', () => {
+    const aire = [c('Ferme'), c('Épicerie'), c('Cour du roi'), c('Hôpital'), c('Contremaître'), c('Justice')];
+    for (const privileges of [[], [2], [3], [4], [16], [2, 3, 4, 16]]) {
+      const joueur = avec(privileges, { aire }).joueurs[0]!;
+      const total = { pierre: 0, metal: 0, erudit: 0 };
+      for (const ressource of detailDesRessources(joueur)) total[ressource.type]++;
+      expect(total, `Privilèges ${privileges.join(', ')}`).toEqual(ressourcesEnJeu(joueur));
+    }
   });
 });
 

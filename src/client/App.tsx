@@ -11,7 +11,8 @@ import {
 } from '../game/index.ts';
 import type { Etat, Inscription, Vue, VueJoueur } from '../game/index.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
-import { blasons } from '../game/ressources.ts';
+import { blasons, detailDesRessources } from '../game/ressources.ts';
+import type { OrigineRessource } from '../game/ressources.ts';
 import { libelleAction, question, urlImage } from './libelles.ts';
 
 // Interface locale : tous les joueurs sont sur le même écran.
@@ -128,6 +129,10 @@ function Jauges(props: { joueur: VueJoueur }) {
         <span title="Cartes restantes dans la pioche">
           <Icone nom="pioche" titre="Pioche" /> <strong>{j.nbCartesPioche}</strong> en pioche
         </span>
+        <span title="Toutes les cartes du deck : pioche, main, aire de jeu et défausse">
+          <strong>{j.nbCartesPioche + j.nbCartesMain + j.aireDeJeu.length + j.defausse.length}</strong> cartes dans le
+          deck
+        </span>
       </div>
       <Piste
         nom="Économie"
@@ -164,6 +169,47 @@ function Jauges(props: { joueur: VueJoueur }) {
         prochain={prochainErudits === undefined ? null : `${prochainErudits} Érudit(s)`}
         blasons={b.noblesse}
       />
+      <RessourcesEnJeu joueur={j} />
+    </div>
+  );
+}
+
+const RESSOURCES = [
+  { type: 'pierre', nom: 'Pierre', lettre: 'P' },
+  { type: 'metal', nom: 'Métal', lettre: 'M' },
+  { type: 'erudit', nom: 'Érudit', lettre: 'E' },
+] as const;
+
+/** D'où vient une ressource, pour l'infobulle de son icône. */
+function origine(ressource: OrigineRessource): string {
+  if (ressource.carte === null) return `Privilège ${ressource.privilege}`;
+  const nom = carte(ressource.carte).nom;
+  return ressource.privilege === null ? nom : `${nom}, grâce au Privilège ${ressource.privilege}`;
+}
+
+/** Les ressources de l'aire de jeu, bonus des Privilèges compris : une icône par ressource. */
+function RessourcesEnJeu(props: { joueur: VueJoueur }) {
+  const detail = detailDesRessources(props.joueur);
+  return (
+    <div className="ressources" title="Ressources disponibles dans l'aire de jeu, bonus des Privilèges compris">
+      <span className="piste-nom">Ressources</span>
+      {RESSOURCES.map(({ type, nom, lettre }) => {
+        const unites = detail.filter((ressource) => ressource.type === type);
+        return (
+          <span key={type} className="groupe-ressource">
+            <strong>{unites.length}</strong> {nom}
+            {unites.map((ressource, i) => (
+              <span
+                key={i}
+                className={`ressource ${type}${ressource.privilege === null ? '' : ' bonus'}`}
+                title={`${nom} : ${origine(ressource)}`}
+              >
+                {lettre}
+              </span>
+            ))}
+          </span>
+        );
+      })}
     </div>
   );
 }

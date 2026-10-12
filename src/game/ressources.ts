@@ -34,6 +34,38 @@ export function ressourcesEnJeu(joueur: Pick<Joueur, 'privileges' | 'aireDeJeu'>
   return total;
 }
 
+/** Une ressource disponible dans l'aire de jeu, et d'où elle vient. */
+export interface OrigineRessource {
+  type: 'pierre' | 'metal' | 'erudit';
+  /** La carte qui apporte la ressource, ou null si elle vient directement d'un Privilège (Privilège 16). */
+  carte: string | null;
+  /** Le Privilège qui ajoute cette ressource, ou null si elle est imprimée sur la carte. */
+  privilege: number | null;
+}
+
+/**
+ * Le détail, ressource par ressource, de ce que le joueur a dans son aire de jeu.
+ * Sert à l'affichage ; le total est toujours égal à ressourcesEnJeu().
+ */
+export function detailDesRessources(joueur: Pick<Joueur, 'privileges' | 'aireDeJeu'>): OrigineRessource[] {
+  const detail: OrigineRessource[] = [];
+  for (const id of joueur.aireDeJeu) {
+    const imprimees = carte(id).ressources;
+    for (const type of ['pierre', 'metal', 'erudit'] as const) {
+      for (let i = 0; i < imprimees[type]; i++) detail.push({ type, carte: id, privilege: null });
+    }
+    for (const bonus of effetsPrivilege(joueur, 'bonusRessource')) {
+      if (imprimees[bonus.si] > 0) detail.push({ type: bonus.donne, carte: id, privilege: bonus.numero });
+    }
+  }
+  for (const bonus of effetsPrivilege(joueur, 'erudit')) {
+    for (let i = 0; i < bonus.nombre; i++) {
+      detail.push({ type: 'erudit', carte: null, privilege: bonus.numero });
+    }
+  }
+  return detail;
+}
+
 /**
  * Les blasons du joueur : ceux affichés à son niveau actuel sur chaque piste (pas de cumul),
  * plus ceux de ses Privilèges (5, 6 et 7).

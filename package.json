@@ -9,6 +9,8 @@
     "dev": "vite",
     "prebuild": "npm run import",
     "build": "vite build",
+    "presimulate": "npm run import",
+    "simulate": "node scripts/simulate.ts",
     "pretest": "npm run import",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"

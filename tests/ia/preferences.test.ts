@@ -145,6 +145,38 @@ describe('bot à préférences', () => {
     });
   });
 
+  describe('achat avec trash à 1 Or', () => {
+    /** Alice n'a plus de carte en main : elle peut acheter le Remouleur ambulant (2 Or) ou finir sa lignée. */
+    const marche = (or: number, defausse: string[]) => {
+      const etat = scene({ defausse, or });
+      etat.riviere = [c('Remouleur ambulant')];
+      etat.joueurs[0]!.niveauEconomie = 4; // rien à gagner en Économie en finissant sa lignée
+      return etat;
+    };
+    const achat = { type: 'acheter' as const, carte: c('Remouleur ambulant'), paiement: [] as string[] };
+
+    it('achète quand il lui reste 1 Or pour trasher une carte faible : son deck ne grossit pas', () => {
+      const etat = marche(3, [c('Cachot')]);
+      expect(choix(etat)).toEqual(achat);
+      expect(choix(faire(etat, achat))).toEqual({ type: 'trasher', carte: c('Cachot') });
+    });
+
+    it('n\'achète pas la même carte s\'il n\'a pas l\'Or du trash', () => {
+      expect(choix(marche(2, [c('Cachot')]))).toEqual({ type: 'finLignee' });
+    });
+
+    it('n\'achète pas s\'il n\'a aucune carte dont il veut se séparer', () => {
+      expect(choix(marche(3, [c('Forgeron')]))).toEqual({ type: 'finLignee' });
+    });
+
+    it('ne trashe jamais la carte qu\'il vient d\'acheter', () => {
+      // Le Remouleur ambulant est sa carte la moins utile, mais il vient de l'acheter.
+      const etat = faire(marche(3, [c('Forgeron'), c('Cour du roi')]), achat);
+      expect(etat.attente).toEqual({ type: 'trashAchat', joueur: 0 });
+      expect(choix(etat)).toEqual({ type: 'passer' });
+    });
+  });
+
   describe('choix courants', () => {
     it('joue ses cartes avant de mettre fin à sa lignée', () => {
       const etat = scene({ main: [c('Épicerie')] });

@@ -3,6 +3,7 @@ import { carte } from '../game/cartes.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
 import type { CoutEffet, Etape, Gain } from '../game/materiel/index.ts';
 import { coutEnOr, etapeDe } from '../game/moteur.ts';
+import { PARAMETRES } from '../game/parametres.ts';
 import { effetsPrivilege, totalPrivilege } from '../game/privileges.ts';
 import { compter, ressourcesDe, ressourcesEnJeu } from '../game/ressources.ts';
 import type { Vue, VueJoueur } from '../game/vue.ts';
@@ -87,6 +88,25 @@ function cartesFaibles(joueur: VueJoueur, p: Poids): string[] {
   const cartes = [...(joueur.main ?? []), ...joueur.aireDeJeu, ...joueur.defausse];
   if (presDuBut(joueur, p)) return cartes;
   return cartes.filter((id) => valeurCarte(joueur, id, p) < p.seuilTrash);
+}
+
+/** Le bot accepte-t-il de trasher cette carte lors d'un achat, pour 1 Or de plus ? */
+function trashAchatAccepte(joueur: VueJoueur, id: string, p: Poids): boolean {
+  if (presDuBut(joueur, p)) return true;
+  return valeurCarte(joueur, id, p) + PARAMETRES.surcoutTrashAchat * p.or < p.seuilTrash;
+}
+
+/**
+ * La carte que le bot trasherait après un achat, s'il lui reste « orRestant » Or une fois la carte payée.
+ * null s'il n'a pas de quoi payer le trash, ou s'il ne veut se séparer d'aucune carte.
+ */
+function carteARemplacer(joueur: VueJoueur, p: Poids, orRestant: number): string | null {
+  if (orRestant < PARAMETRES.surcoutTrashAchat) return null;
+  let pire: string | null = null;
+  for (const id of [...(joueur.main ?? []), ...joueur.aireDeJeu, ...joueur.defausse]) {
+    if (pire === null || valeurCarte(joueur, id, p) < valeurCarte(joueur, pire, p)) pire = id;
+  }
+  return pire !== null && trashAchatAccepte(joueur, pire, p) ? pire : null;
 }
 
 /** Ce que vendre cette carte rapporte, une fois retirée la valeur des ressources perdues. */
@@ -174,8 +194,15 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
       return note;
     }
     case 'acheter': {
-      let note = valeurCarte(moi, action.carte, p) + p.achat - coutEnOr(moi, action.carte) * p.or;
+      const cout = coutEnOr(moi, action.carte);
+      // Une carte de plus dans le deck…
+      let note = valeurCarte(moi, action.carte, p) + p.achat - cout * p.or;
       for (const id of action.paiement) note -= valeurRessources(moi, id, p);
+      // … sauf que, pour 1 Or de plus, l'achat permet de trasher une carte : le deck ne grossit pas.
+      // Ce trash vaut autant qu'un trash obtenu par un effet de carte, pour bien moins cher.
+      if (carteARemplacer(moi, p, moi.or - cout) !== null) {
+        note += p.trash - PARAMETRES.surcoutTrashAchat * p.or;
+      }
       return note;
     }
     case 'utiliserPrivilege': {
@@ -285,8 +312,12 @@ function choisir(vue: Vue, actions: Action[], p: Poids, hasard: () => number): A
       }
     }
 
-    case 'trashAchat':
-      return choisirTrash(actions, moi, p, p.or, hasard);
+    case 'trashAchat': {
+      // La carte qu'il vient d'acheter est la dernière de sa main : il ne la trashe pas aussitôt.
+      const achetee = moi.main?.at(-1);
+      const autres = actions.filter((a) => !(a.type === 'trasher' && a.carte === achetee));
+      return choisirTrash(autres, moi, p, PARAMETRES.surcoutTrashAchat * p.or, hasard);
+    }
 
     case 'finNoblesse':
       return choisirPrivilege(actions, p, hasard);

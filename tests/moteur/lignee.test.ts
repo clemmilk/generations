@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createGame } from '../../src/game/index.ts';
-import { debuterLignee, piocher } from '../../src/game/lignee.ts';
+import { debuterLignee, gainsDeLignee, piocher } from '../../src/game/lignee.ts';
 import { inscriptions } from './outils.ts';
 
 /** Une partie à 2 où le joueur 0 a tout son deck dans sa pioche, sans Or. */
@@ -61,6 +61,50 @@ describe('piocher', () => {
     expect(etat.journal).toHaveLength(1);
     expect(etat.journal[0]).toMatchObject({ joueur: 0, texte: 'Alice pioche 2 carte(s).' });
     expect(etat.journal[0]?.detail).toMatch(/^Cartes piochées : /);
+  });
+});
+
+describe('gainsDeLignee', () => {
+  it('donne l\'Or et les cartes du niveau de chaque jauge', () => {
+    const { joueur } = partieRemiseAZero();
+    expect(gainsDeLignee(joueur)).toEqual({
+      orDeLaJauge: 3,
+      orDesPrivileges: 0,
+      cartesPiochees: 3,
+      cartesChoisies: 0,
+      cartesPiocheesPuisDefaussees: 0,
+    });
+    joueur.niveauEconomie = 4;
+    joueur.niveauPopulation = 4;
+    expect(gainsDeLignee(joueur)).toMatchObject({ orDeLaJauge: 10, cartesPiochees: 5 });
+  });
+
+  it('ajoute l\'Or des Privilèges 19 et 9', () => {
+    const { joueur } = partieRemiseAZero();
+    joueur.niveauPopulation = 4; // 3 blasons Population
+    joueur.privileges = [19, 9];
+    expect(gainsDeLignee(joueur)).toMatchObject({ orDeLaJauge: 3, orDesPrivileges: 3 + 2 * 3 });
+  });
+
+  it('détaille les cartes des Privilèges 8 et 12', () => {
+    const { joueur } = partieRemiseAZero();
+    joueur.privileges = [8, 12];
+    expect(gainsDeLignee(joueur)).toMatchObject({
+      cartesPiochees: 2,
+      cartesChoisies: 1,
+      cartesPiocheesPuisDefaussees: 1,
+    });
+  });
+
+  it('annonce exactement ce que debuterLignee donne', () => {
+    const { etat, joueur } = partieRemiseAZero();
+    joueur.niveauEconomie = 2;
+    joueur.niveauPopulation = 3;
+    joueur.privileges = [19, 8];
+    const gains = gainsDeLignee(joueur);
+    debuterLignee(etat, joueur);
+    expect(joueur.or).toBe(gains.orDeLaJauge + gains.orDesPrivileges);
+    expect(joueur.main).toHaveLength(gains.cartesPiochees);
   });
 });
 

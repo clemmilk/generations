@@ -30,6 +30,11 @@ type Siege = 'humain' | TypeDeBot;
 
 const SIEGES_PAR_DEFAUT: Siege[] = ['humain', 'planificatrice', 'planificatrice', 'planificatrice'];
 
+/** Une graine tirée au hasard : chaque nouvelle partie est différente, mais son numéro permet de la rejouer. */
+function graineAuHasard(): number {
+  return 1 + Math.floor(Math.random() * 999_999);
+}
+
 function creerPartie(sieges: Siege[], graine: number): Etat {
   return createGame(
     sieges.map((siege, i) => ({
@@ -46,12 +51,13 @@ function creerPartie(sieges: Siege[], graine: number): Etat {
  */
 function PartieLocale(props: { onRetour: () => void }) {
   const [nombre, setNombre] = useState(2);
-  const [graine, setGraine] = useState(1);
+  /** La graine demandée pour la prochaine partie. Vide : elle sera tirée au hasard. */
+  const [graineVoulue, setGraineVoulue] = useState('');
   /** Le réglage des sièges pour la prochaine partie. */
   const [sieges, setSieges] = useState<Siege[]>(SIEGES_PAR_DEFAUT);
   /** Qui tient chaque siège dans la partie en cours. */
   const [enJeu, setEnJeu] = useState<Siege[]>(() => SIEGES_PAR_DEFAUT.slice(0, 2));
-  const [etats, setEtats] = useState<Etat[]>(() => [creerPartie(SIEGES_PAR_DEFAUT.slice(0, 2), 1)]);
+  const [etats, setEtats] = useState<Etat[]>(() => [creerPartie(SIEGES_PAR_DEFAUT.slice(0, 2), graineAuHasard())]);
   const [erreur, setErreur] = useState<string | null>(null);
 
   const etat = etats[etats.length - 1]!;
@@ -101,6 +107,8 @@ function PartieLocale(props: { onRetour: () => void }) {
   const nouvellePartie = () => {
     const choisis = sieges.slice(0, nombre);
     setEnJeu(choisis);
+    const demandee = Number(graineVoulue);
+    const graine = graineVoulue.trim() !== '' && Number.isInteger(demandee) ? demandee : graineAuHasard();
     afficher([creerPartie(choisis, graine)]);
   };
   const importer = async (fichier: File) => {
@@ -144,12 +152,21 @@ function PartieLocale(props: { onRetour: () => void }) {
           </select>
         </label>
       ))}
-      <label>
-        Graine <input type="number" value={graine} onChange={(e) => setGraine(Number(e.target.value))} />
+      <label title="Laisse vide pour une partie au hasard. Pour rejouer une partie, indique son numéro.">
+        Graine{' '}
+        <input
+          type="number"
+          value={graineVoulue}
+          placeholder="au hasard"
+          onChange={(e) => setGraineVoulue(e.target.value)}
+        />
       </label>
       <button type="button" onClick={nouvellePartie}>
         Nouvelle partie
       </button>
+      <span className="graine" title="Le numéro de cette partie : indique-le dans « Graine » pour la rejouer à l'identique.">
+        Partie n° <strong>{etat.graine}</strong>
+      </span>
       <button type="button" disabled={retour === -1} onClick={() => afficher(etats.slice(0, retour + 1))}>
         Annuler la dernière action
       </button>

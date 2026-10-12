@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { Action } from '../game/actions.ts';
 import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
 import type { Vue, VueJoueur } from '../game/index.ts';
+import { gainsDeLignee } from '../game/lignee.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
 import { blasons, detailDesRessources } from '../game/ressources.ts';
 import type { OrigineRessource } from '../game/ressources.ts';
@@ -178,11 +179,13 @@ function RessourcesEnJeu(props: { joueur: VueJoueur }) {
   return (
     <div className="ressources" title="Ressources disponibles dans l'aire de jeu, bonus des Privilèges compris">
       <span className="piste-nom">Ressources</span>
+      {detail.length === 0 && <span className="vide">—</span>}
       {RESSOURCES.map(({ type, nom }) => {
         const unites = detail.filter((ressource) => ressource.type === type);
+        if (unites.length === 0) return null;
+        // Une icône par ressource, regroupées par type : ni chiffre ni nom.
         return (
-          <span key={type} className="groupe-ressource">
-            <strong>{unites.length}</strong> {nom}
+          <span key={type} className="groupe-ressource" title={`${unites.length} ${nom}`}>
             {unites.map((ressource, i) => (
               <img
                 key={i}
@@ -269,6 +272,25 @@ function PanneauJoueur(props: {
   );
 }
 
+/** L'Or que ce joueur reçoit à chaque début de lignée, en détaillant la part de ses Privilèges. */
+function orParLignee(joueur: VueJoueur): string {
+  const gains = gainsDeLignee(joueur);
+  if (gains.orDesPrivileges === 0) return String(gains.orDeLaJauge);
+  return `${gains.orDeLaJauge + gains.orDesPrivileges} (${gains.orDeLaJauge} + ${gains.orDesPrivileges} par Privilège)`;
+}
+
+/** Les cartes que ce joueur prend à chaque début de lignée, en détaillant l'effet de ses Privilèges. */
+function cartesParLignee(joueur: VueJoueur): string {
+  const gains = gainsDeLignee(joueur);
+  const details: string[] = [];
+  if (gains.cartesChoisies > 0) details.push(`${gains.cartesChoisies} au choix`);
+  if (gains.cartesPiocheesPuisDefaussees > 0) {
+    details.push(`${gains.cartesPiocheesPuisDefaussees} piochée puis défaussée`);
+  }
+  if (details.length === 0) return String(gains.cartesPiochees);
+  return `${gains.cartesPiochees} piochées + ${details.join(' + ')}`;
+}
+
 /** Ce que chaque joueur a fait pendant la partie. Replié en cours de partie, ouvert à la fin. */
 function TableauDesStatistiques(props: { vue: Vue }) {
   const { vue } = props;
@@ -286,7 +308,9 @@ function TableauDesStatistiques(props: { vue: Vue }) {
     ['Effets Rouges automatiques', (j) => j.statistiques.effetsRougesAutomatiques],
     ['Privilèges', (j) => j.privileges.length],
     ['Niveau d\'Économie', (j) => j.niveauEconomie],
+    ['Or à chaque début de lignée', orParLignee],
     ['Niveau de Population', (j) => j.niveauPopulation],
+    ['Cartes à chaque début de lignée', cartesParLignee],
     [
       'Cartes dans le deck',
       (j) => j.nbCartesPioche + j.nbCartesMain + j.aireDeJeu.length + j.defausse.length,

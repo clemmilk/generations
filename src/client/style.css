@@ -144,6 +144,11 @@ header button:disabled {
   font-weight: 600;
 }
 
+.question.ia {
+  color: var(--discret);
+  font-style: italic;
+}
+
 .victoire {
   font-size: 20px;
   color: var(--accent);

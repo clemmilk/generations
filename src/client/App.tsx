@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { BOTS, choisirAction } from '../ai/index.ts';
+import type { TypeDeBot } from '../ai/index.ts';
 import type { Action } from '../game/actions.ts';
 import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
 import {
@@ -284,20 +286,71 @@ function PanneauJoueur(props: {
   );
 }
 
+/** Qui tient un siège : un humain, ou l'un des bots de src/ai. */
+type Siege = 'humain' | TypeDeBot;
+
+/** Temps laissé entre deux actions d'une IA, pour qu'on puisse suivre ce qu'elle fait. */
+const PAUSE_IA_MS = 900;
+
+const SIEGES_PAR_DEFAUT: Siege[] = ['humain', 'aleatoire', 'aleatoire', 'aleatoire'];
+
+function creerPartie(sieges: Siege[], graine: number): Etat {
+  return createGame(
+    sieges.map((siege, i) => ({
+      ...JOUEURS[i]!,
+      nom: siege === 'humain' ? JOUEURS[i]!.nom : `${JOUEURS[i]!.nom} (IA)`,
+    })),
+    graine,
+  );
+}
+
 export function App() {
   const [nombre, setNombre] = useState(2);
   const [graine, setGraine] = useState(1);
-  const [etats, setEtats] = useState<Etat[]>(() => [createGame(JOUEURS.slice(0, 2), 1)]);
+  /** Le réglage des sièges pour la prochaine partie. */
+  const [sieges, setSieges] = useState<Siege[]>(SIEGES_PAR_DEFAUT);
+  /** Qui tient chaque siège dans la partie en cours. */
+  const [enJeu, setEnJeu] = useState<Siege[]>(() => SIEGES_PAR_DEFAUT.slice(0, 2));
+  const [etats, setEtats] = useState<Etat[]>(() => [creerPartie(SIEGES_PAR_DEFAUT.slice(0, 2), 1)]);
   const [survol, setSurvol] = useState<string | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
   /** La carte de la Rivière que le joueur est en train d'acheter, en attendant qu'il choisisse comment payer. */
   const [achat, setAchat] = useState<string | null>(null);
 
   const etat = etats[etats.length - 1]!;
-  // On regarde la partie avec les yeux du joueur qui doit choisir.
-  const moi = etat.attente?.joueur ?? etat.vainqueur ?? 0;
+  const estHumain = (joueur: number) => (enJeu[joueur] ?? 'humain') === 'humain';
+  const decideur = etat.attente?.joueur ?? null;
+  const iaEnTrainDeJouer = decideur !== null && !estHumain(decideur);
+
+  // On regarde la partie avec les yeux de l'humain qui doit choisir. Pendant le tour d'une IA,
+  // on reste sur le dernier humain qui a joué : la main des IA n'est jamais montrée.
+  const dernierHumain = [...etat.historique].reverse().find((action) => estHumain(action.joueur))?.joueur;
+  const premierHumain = etat.joueurs.find((joueur) => estHumain(joueur.id))?.id;
+  const moi = decideur !== null && estHumain(decideur) ? decideur : (dernierHumain ?? premierHumain ?? 0);
   const vue = getPlayerView(etat, moi);
   const actions = getLegalActions(etat, moi);
+
+  // Quand c'est à une IA de choisir, elle joue toute seule après une courte pause.
+  useEffect(() => {
+    if (decideur === null) return;
+    const siege = enJeu[decideur];
+    if (!siege || siege === 'humain') return;
+    const minuterie = setTimeout(() => {
+      const action = choisirAction(etat, BOTS[siege], Math.random);
+      if (!action) return;
+      setEtats((courants) =>
+        courants[courants.length - 1] === etat ? [...courants, applyAction(etat, action)] : courants,
+      );
+    }, PAUSE_IA_MS);
+    return () => clearTimeout(minuterie);
+  }, [etat, enJeu, decideur]);
+
+  // Annuler revient au dernier choix d'un humain, en effaçant aussi ce que les IA ont joué depuis.
+  let retour = -1;
+  for (let i = etats.length - 2; i >= 0 && retour === -1; i--) {
+    const precedent = etats[i]!.attente?.joueur;
+    if (precedent !== undefined && estHumain(precedent)) retour = i;
+  }
 
   const actionsParCarte = new Map<string, Action[]>();
   for (const action of actions) {
@@ -338,7 +391,11 @@ export function App() {
     if (possibles[0]?.type === 'acheter') choisirAchat(id);
     else if (possibles.length === 1) appliquer(possibles[0]!);
   };
-  const nouvellePartie = () => afficher([createGame(JOUEURS.slice(0, nombre), graine)]);
+  const nouvellePartie = () => {
+    const choisis = sieges.slice(0, nombre);
+    setEnJeu(choisis);
+    afficher([creerPartie(choisis, graine)]);
+  };
 
   const exporter = () => {
     const contenu = JSON.stringify(exporterPartie(etat), null, 2);
@@ -350,7 +407,10 @@ export function App() {
   };
   const importer = async (fichier: File) => {
     try {
-      afficher(rejouerPartie(JSON.parse(await fichier.text())));
+      const rejoues = rejouerPartie(JSON.parse(await fichier.text()));
+      // Une partie importée est reprise à la main sur tous les sièges, pour pouvoir l'examiner tranquillement.
+      setEnJeu(rejoues[0]!.joueurs.map(() => 'humain'));
+      afficher(rejoues);
     } catch (e) {
       setErreur(`Import impossible : ${(e as Error).message}`);
     }
@@ -378,13 +438,29 @@ export function App() {
             <option value={4}>4</option>
           </select>
         </label>
+        {JOUEURS.slice(0, nombre).map((joueur, i) => (
+          <label key={joueur.couleur}>
+            {joueur.nom}{' '}
+            <select
+              value={sieges[i]}
+              onChange={(e) => setSieges(sieges.map((siege, j) => (j === i ? (e.target.value as Siege) : siege)))}
+            >
+              <option value="humain">Humain</option>
+              {Object.entries(BOTS).map(([type, bot]) => (
+                <option key={type} value={type}>
+                  {bot.nom}
+                </option>
+              ))}
+            </select>
+          </label>
+        ))}
         <label>
           Graine <input type="number" value={graine} onChange={(e) => setGraine(Number(e.target.value))} />
         </label>
         <button type="button" onClick={nouvellePartie}>
           Nouvelle partie
         </button>
-        <button type="button" disabled={etats.length < 2} onClick={() => afficher(etats.slice(0, -1))}>
+        <button type="button" disabled={retour === -1} onClick={() => afficher(etats.slice(0, retour + 1))}>
           Annuler la dernière action
         </button>
         <button type="button" onClick={exporter} title="Enregistre la graine et toutes les actions, pour rejouer la partie à l'identique">
@@ -434,6 +510,8 @@ export function App() {
             <p className="question">
               Achat de {carte(achat!).nom} : quelles cartes de ton aire de jeu veux-tu défausser pour payer ?
             </p>
+          ) : iaEnTrainDeJouer ? (
+            <p className="question ia">{etat.joueurs[decideur]?.nom} est en train de jouer…</p>
           ) : (
             <p className="question">{question(vue)}</p>
           )}

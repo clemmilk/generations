@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { entrainer, mesurer, muter } from '../../src/ai/entrainement.ts';
+import { borner, entrainer, entrainerContre, mesurer, muter } from '../../src/ai/entrainement.ts';
 import { BOTS } from '../../src/ai/index.ts';
 import { POIDS_MANUELS } from '../../src/ai/poids.ts';
 import { simulerPartie } from '../../src/ai/simulation.ts';
@@ -113,6 +113,49 @@ describe('entrainer', () => {
 
   it('redonne le même entraînement avec la même graine', () => {
     expect(entrainer(options)).toEqual(entrainer(options));
+  });
+});
+
+describe('borner', () => {
+  it('ramène les poids dans les bornes, sans toucher aux autres ni à l\'original', () => {
+    const copie = structuredClone(POIDS_MANUELS);
+    const borne = borner(POIDS_MANUELS, { achat: { min: 2 }, trash: { max: 5 }, pioche: { min: 1, max: 100 } });
+    expect(borne.achat).toBe(2);
+    expect(borne.trash).toBe(5);
+    expect(borne.pioche).toBe(POIDS_MANUELS.pioche);
+    expect(borne.or).toBe(POIDS_MANUELS.or);
+    expect(POIDS_MANUELS).toEqual(copie);
+  });
+});
+
+describe('entrainerContre', () => {
+  const options = {
+    depart: { ...POIDS_MANUELS, achat: -4 },
+    bornes: { achat: { min: 2 } },
+    adversaire: POIDS_MANUELS,
+    generations: 2,
+    variantes: 2,
+    graines: 4,
+    grainesDeConfirmation: 6,
+    progres: 0.03,
+    graine: 5,
+  };
+
+  it('respecte les bornes de la stratégie à chaque génération, dès le départ', () => {
+    const etapes = entrainerContre(options);
+    expect(etapes).toHaveLength(2);
+    for (const etape of etapes) expect(etape.champion.achat).toBeGreaterThanOrEqual(2);
+  });
+
+  it('n\'adopte une variante que si elle progresse contre l\'adversaire', () => {
+    const etapes = entrainerContre({ ...options, progres: 99 });
+    expect(etapes.every((etape) => !etape.adoptee)).toBe(true);
+    // Le champion reste le point de départ, ramené dans les bornes.
+    expect(etapes.at(-1)?.champion).toEqual({ ...POIDS_MANUELS, achat: 2 });
+  });
+
+  it('redonne le même entraînement avec la même graine', () => {
+    expect(entrainerContre(options)).toEqual(entrainerContre(options));
   });
 });
 

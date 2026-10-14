@@ -26,7 +26,7 @@ function meilleur(choix: Choix[], hasard: () => number): Action {
   return ex[Math.floor(hasard() * ex.length)]!.action;
 }
 
-function valeurRessources(joueur: VueJoueur, id: string, p: Poids): number {
+function valeurRessources(joueur: Pick<VueJoueur, 'privileges'>, id: string, p: Poids): number {
   const r = ressourcesDe(joueur, id);
   return r.pierre * p.pierre + r.metal * p.metal + r.erudit * p.erudit;
 }
@@ -60,7 +60,7 @@ function valeurGain(gain: Gain, p: Poids): number {
 }
 
 /** La valeur d'une carte hors contexte : sert à choisir quoi acheter, trasher, rechercher ou défausser. */
-function valeurCarte(joueur: VueJoueur, id: string, p: Poids): number {
+export function valeurCarte(joueur: Pick<VueJoueur, 'privileges'>, id: string, p: Poids): number {
   let valeur = valeurRessources(joueur, id, p);
   for (const etape of carte(id).effet) {
     const gain = valeurGain(etape.gain, p) * (etape.par ? p.parTranche : 1) - valeurCout(etape.cout, p);

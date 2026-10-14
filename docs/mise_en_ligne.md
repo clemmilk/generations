@@ -30,7 +30,15 @@ L'ordre compte : GitHub, puis Render, puis Vercel, car le site a besoin de l'adr
 
 ## 2. Le serveur de jeu, sur Render
 
-1. Sur render.com, crée un compte ou connecte-toi avec GitHub, et autorise Render à lire le dépôt `generations`.
+1. Sur render.com, connecte-toi, puis relie ton compte GitHub à ton compte Render (inutile si tu te connectes
+   déjà à Render avec GitHub) :
+   - ouvre les réglages de ton compte (**Account Settings**) et descends jusqu'à **Account Security** ;
+   - sous **Git Deployment Credentials**, clique sur **Add credential** et choisis GitHub ;
+   - GitHub te demande alors à quels dépôts Render a accès : choisis « seulement certains dépôts » et
+     sélectionne `generations`, puis valide.
+
+   Si le dépôt n'apparaît pas ensuite dans Render, c'est que cet accès ne l'inclut pas : rouvre
+   https://github.com/apps/render/installations/new et ajoute `generations` dans « Repository access ».
 2. Crée un nouveau **Blueprint** et choisis ce dépôt. Render lit le fichier `render.yaml` du projet, qui
    contient déjà tous les réglages : un service web gratuit nommé `generations-serveur`.
 3. Valide. Le premier déploiement prend quelques minutes.

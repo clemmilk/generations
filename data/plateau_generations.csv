@@ -3,13 +3,13 @@ visuels\plateau,icone_noblesse.png,Noblesse,1 Érudit,
 visuels\plateau,icone_noblesse.png,Noblesse,2 Érudits,1 blason Noblesse
 visuels\plateau,icone_noblesse.png,Noblesse,3 Érudits,2 blasons Noblesse
 visuels\plateau,icone_noblesse.png,Noblesse,4 Érudits,3 blasons Noblesse
-visuels\plateau,icone_economie.png,Économie,,3 Or en début de lignée
-visuels\plateau,icone_economie.png,Économie,2 Or,4 Or en début de lignée + 1 blason Économie
-visuels\plateau,icone_economie.png,Économie,3 Or,7 Or en début de lignée + 1 blason Économie
-visuels\plateau,icone_economie.png,Économie,4 Or,8 Or en début de lignée + 2 blasons Économie
-visuels\plateau,icone_economie.png,Économie,5 Or,10 Or en début de lignée + 3 blasons Économie
+visuels\plateau,icone_economie.png,Économie,,4 Or en début de lignée
+visuels\plateau,icone_economie.png,Économie,1 Pierre / Métal,4 Or en début de lignée + 1 blason Économie
+visuels\plateau,icone_economie.png,Économie,1 Pierre / Métal,7 Or en début de lignée + 1 blason Économie
+visuels\plateau,icone_economie.png,Économie,2 Pierre / Métal,8 Or en début de lignée + 2 blasons Économie
+visuels\plateau,icone_economie.png,Économie,2 Pierre / Métal,10 Or en début de lignée + 3 blasons Économie
 visuels\plateau,icone_population.png,Population,,Pioche 3 cartes en début de lignée
-visuels\plateau,icone_population.png,Population,1 Pierre / Métal,Pioche 3 cartes en début de lignée + 1 blason Population
-visuels\plateau,icone_population.png,Population,2 Pierre / Métal,Pioche 4 cartes en début de lignée + 1 blason Population
-visuels\plateau,icone_population.png,Population,3 Pierre / Métal,Pioche 4 cartes en début de lignée + 2 blasons Population
-visuels\plateau,icone_population.png,Population,4 Pierre / Métal,Pioche 5 cartes en début de lignée + 3 blasons Population
+visuels\plateau,icone_population.png,Population,2 Or,Pioche 3 cartes en début de lignée + 1 blason Population
+visuels\plateau,icone_population.png,Population,5 Or,Pioche 4 cartes en début de lignée + 1 blason Population
+visuels\plateau,icone_population.png,Population,8 Or,Pioche 4 cartes en début de lignée + 2 blasons Population
+visuels\plateau,icone_population.png,Population,12 Or,Pioche 5 cartes en début de lignée + 3 blasons Population

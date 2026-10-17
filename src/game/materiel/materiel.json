@@ -13,24 +13,16 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
+        "pierre": 1,
         "metal": 0,
-        "erudit": 1
+        "erudit": 0
       },
       "effet": [
         {
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
-          },
-          "par": null,
-          "repetable": false
-        },
-        {
-          "cout": null,
-          "gain": {
-            "type": "rejouer"
+            "montant": 3
           },
           "par": null,
           "repetable": false
@@ -47,7 +39,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or puis Rejouer",
+      "texteEffet": "Gagne 3 Or",
       "texteEffetRouge": "Gagne 1 Or"
     },
     {
@@ -72,7 +64,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 4
+            "montant": 2
           },
           "par": null,
           "repetable": false
@@ -83,119 +75,19 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 4 Or",
-      "texteEffetRouge": "Gagne 2 Or"
+      "texteEffet": "Gagne 2 Or",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_73",
       "nom": "Tour de guet",
       "image": "visuels/cartes/jbleu/carte_73.jpg",
-      "origine": "depart",
-      "couleur": "bleu",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 0,
-        "metal": 1,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "trash",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 5,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "trash",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 4 Or pour trasher 1 carte",
-      "texteEffetRouge": "Paye 5 Or pour trasher 1 carte"
-    },
-    {
-      "id": "carte_74",
-      "nom": "Cachot",
-      "image": "visuels/cartes/jbleu/carte_74.jpg",
-      "origine": "depart",
-      "couleur": "bleu",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 1,
-        "metal": 0,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": {
-            "or": 3,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 3 Or pour piocher 1 carte",
-      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
-    },
-    {
-      "id": "carte_75",
-      "nom": "Forgeron",
-      "image": "visuels/cartes/jbleu/carte_75.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -223,14 +115,77 @@
           "repetable": false
         }
       ],
-      "effetRouge": [],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 7,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "trash",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
       "texteEffet": "Trash 1 carte pour 2 Métal dans son aire de jeu",
-      "texteEffetRouge": ""
+      "texteEffetRouge": "Paye 7 Or pour trasher 1 carte"
     },
     {
-      "id": "carte_76",
-      "nom": "Marché",
-      "image": "visuels/cartes/jbleu/carte_76.jpg",
+      "id": "carte_74",
+      "nom": "Cachot",
+      "image": "visuels/cartes/jbleu/carte_74.jpg",
+      "origine": "depart",
+      "couleur": "bleu",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": {
+            "compteur": "pierre",
+            "tranche": 2
+          },
+          "repetable": false
+        }
+      ],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 4,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
+    },
+    {
+      "id": "carte_75",
+      "nom": "Forgeron",
+      "image": "visuels/cartes/jbleu/carte_75.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -248,9 +203,41 @@
         {
           "cout": null,
           "gain": {
+            "type": "or",
+            "montant": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [],
+      "texteEffet": "Gagne 1 Or",
+      "texteEffetRouge": ""
+    },
+    {
+      "id": "carte_76",
+      "nom": "Marché",
+      "image": "visuels/cartes/jbleu/carte_76.jpg",
+      "origine": "depart",
+      "couleur": "bleu",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
             "type": "vendre",
-            "orParPierre": 2,
-            "orParMetal": 3
+            "orParPierre": 3,
+            "orParMetal": 4
           },
           "par": null,
           "repetable": false
@@ -268,7 +255,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal",
+      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal",
       "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
     },
     {
@@ -327,18 +314,15 @@
         {
           "cout": null,
           "gain": {
-            "type": "pioche",
-            "nombre": 1
+            "type": "or",
+            "montant": 2
           },
-          "par": {
-            "compteur": "pierre",
-            "tranche": 2
-          },
+          "par": null,
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffet": "Gagne 2 Or",
       "texteEffetRouge": ""
     },
     {
@@ -347,51 +331,6 @@
       "image": "visuels/cartes/jbleu/carte_79.jpg",
       "origine": "depart",
       "couleur": "bleu",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 1,
-        "metal": 0,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 2
-          },
-          "par": null,
-          "repetable": false
-        },
-        {
-          "cout": {
-            "or": 8,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": true
-        }
-      ],
-      "effetRouge": [],
-      "texteEffet": "Gagne 2 Or, puis peut dépenser 8 Or pour piocher 1 carte, autant de fois qu'il le veut",
-      "texteEffetRouge": ""
-    },
-    {
-      "id": "carte_44",
-      "nom": "Salle du trésor",
-      "image": "visuels/cartes/jjaune/carte_44.jpg",
-      "origine": "depart",
-      "couleur": "jaune",
       "cout": {
         "or": 0,
         "pierre": 0,
@@ -408,7 +347,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
           },
           "par": null,
           "repetable": false
@@ -416,7 +355,40 @@
         {
           "cout": null,
           "gain": {
-            "type": "rejouer"
+            "type": "achat",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [],
+      "texteEffet": "Gagne 1 Or puis Achète 1 carte",
+      "texteEffetRouge": ""
+    },
+    {
+      "id": "carte_44",
+      "nom": "Salle du trésor",
+      "image": "visuels/cartes/jjaune/carte_44.jpg",
+      "origine": "depart",
+      "couleur": "jaune",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
+            "montant": 3
           },
           "par": null,
           "repetable": false
@@ -433,7 +405,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or puis Rejouer",
+      "texteEffet": "Gagne 3 Or",
       "texteEffetRouge": "Gagne 1 Or"
     },
     {
@@ -458,7 +430,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 4
+            "montant": 2
           },
           "par": null,
           "repetable": false
@@ -469,119 +441,19 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 4 Or",
-      "texteEffetRouge": "Gagne 2 Or"
+      "texteEffet": "Gagne 2 Or",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_46",
       "nom": "Tour de guet",
       "image": "visuels/cartes/jjaune/carte_46.jpg",
-      "origine": "depart",
-      "couleur": "jaune",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 0,
-        "metal": 1,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "trash",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 5,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "trash",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 4 Or pour trasher 1 carte",
-      "texteEffetRouge": "Paye 5 Or pour trasher 1 carte"
-    },
-    {
-      "id": "carte_47",
-      "nom": "Cachot",
-      "image": "visuels/cartes/jjaune/carte_47.jpg",
-      "origine": "depart",
-      "couleur": "jaune",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 1,
-        "metal": 0,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": {
-            "or": 3,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 3 Or pour piocher 1 carte",
-      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
-    },
-    {
-      "id": "carte_48",
-      "nom": "Forgeron",
-      "image": "visuels/cartes/jjaune/carte_48.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -609,14 +481,77 @@
           "repetable": false
         }
       ],
-      "effetRouge": [],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 7,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "trash",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
       "texteEffet": "Trash 1 carte pour 2 Métal dans son aire de jeu",
-      "texteEffetRouge": ""
+      "texteEffetRouge": "Paye 7 Or pour trasher 1 carte"
     },
     {
-      "id": "carte_49",
-      "nom": "Marché",
-      "image": "visuels/cartes/jjaune/carte_49.jpg",
+      "id": "carte_47",
+      "nom": "Cachot",
+      "image": "visuels/cartes/jjaune/carte_47.jpg",
+      "origine": "depart",
+      "couleur": "jaune",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": {
+            "compteur": "pierre",
+            "tranche": 2
+          },
+          "repetable": false
+        }
+      ],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 4,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
+    },
+    {
+      "id": "carte_48",
+      "nom": "Forgeron",
+      "image": "visuels/cartes/jjaune/carte_48.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -634,9 +569,41 @@
         {
           "cout": null,
           "gain": {
+            "type": "or",
+            "montant": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [],
+      "texteEffet": "Gagne 1 Or",
+      "texteEffetRouge": ""
+    },
+    {
+      "id": "carte_49",
+      "nom": "Marché",
+      "image": "visuels/cartes/jjaune/carte_49.jpg",
+      "origine": "depart",
+      "couleur": "jaune",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
             "type": "vendre",
-            "orParPierre": 2,
-            "orParMetal": 3
+            "orParPierre": 3,
+            "orParMetal": 4
           },
           "par": null,
           "repetable": false
@@ -654,7 +621,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal",
+      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal",
       "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
     },
     {
@@ -713,18 +680,15 @@
         {
           "cout": null,
           "gain": {
-            "type": "pioche",
-            "nombre": 1
+            "type": "or",
+            "montant": 2
           },
-          "par": {
-            "compteur": "pierre",
-            "tranche": 2
-          },
+          "par": null,
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffet": "Gagne 2 Or",
       "texteEffetRouge": ""
     },
     {
@@ -733,51 +697,6 @@
       "image": "visuels/cartes/jjaune/carte_52.jpg",
       "origine": "depart",
       "couleur": "jaune",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 1,
-        "metal": 0,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 2
-          },
-          "par": null,
-          "repetable": false
-        },
-        {
-          "cout": {
-            "or": 8,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": true
-        }
-      ],
-      "effetRouge": [],
-      "texteEffet": "Gagne 2 Or, puis peut dépenser 8 Or pour piocher 1 carte, autant de fois qu'il le veut",
-      "texteEffetRouge": ""
-    },
-    {
-      "id": "carte_53",
-      "nom": "Salle du trésor",
-      "image": "visuels/cartes/jrouge/carte_53.jpg",
-      "origine": "depart",
-      "couleur": "rouge",
       "cout": {
         "or": 0,
         "pierre": 0,
@@ -794,7 +713,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
           },
           "par": null,
           "repetable": false
@@ -802,7 +721,40 @@
         {
           "cout": null,
           "gain": {
-            "type": "rejouer"
+            "type": "achat",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [],
+      "texteEffet": "Gagne 1 Or puis Achète 1 carte",
+      "texteEffetRouge": ""
+    },
+    {
+      "id": "carte_53",
+      "nom": "Salle du trésor",
+      "image": "visuels/cartes/jrouge/carte_53.jpg",
+      "origine": "depart",
+      "couleur": "rouge",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
+            "montant": 3
           },
           "par": null,
           "repetable": false
@@ -819,7 +771,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or puis Rejouer",
+      "texteEffet": "Gagne 3 Or",
       "texteEffetRouge": "Gagne 1 Or"
     },
     {
@@ -844,7 +796,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 4
+            "montant": 2
           },
           "par": null,
           "repetable": false
@@ -855,119 +807,19 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 4 Or",
-      "texteEffetRouge": "Gagne 2 Or"
+      "texteEffet": "Gagne 2 Or",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_55",
       "nom": "Tour de guet",
       "image": "visuels/cartes/jrouge/carte_55.jpg",
-      "origine": "depart",
-      "couleur": "rouge",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 0,
-        "metal": 1,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "trash",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 5,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "trash",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 4 Or pour trasher 1 carte",
-      "texteEffetRouge": "Paye 5 Or pour trasher 1 carte"
-    },
-    {
-      "id": "carte_56",
-      "nom": "Cachot",
-      "image": "visuels/cartes/jrouge/carte_56.jpg",
-      "origine": "depart",
-      "couleur": "rouge",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 1,
-        "metal": 0,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": {
-            "or": 3,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 3 Or pour piocher 1 carte",
-      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
-    },
-    {
-      "id": "carte_57",
-      "nom": "Forgeron",
-      "image": "visuels/cartes/jrouge/carte_57.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -995,14 +847,77 @@
           "repetable": false
         }
       ],
-      "effetRouge": [],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 7,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "trash",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
       "texteEffet": "Trash 1 carte pour 2 Métal dans son aire de jeu",
-      "texteEffetRouge": ""
+      "texteEffetRouge": "Paye 7 Or pour trasher 1 carte"
     },
     {
-      "id": "carte_58",
-      "nom": "Marché",
-      "image": "visuels/cartes/jrouge/carte_58.jpg",
+      "id": "carte_56",
+      "nom": "Cachot",
+      "image": "visuels/cartes/jrouge/carte_56.jpg",
+      "origine": "depart",
+      "couleur": "rouge",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": {
+            "compteur": "pierre",
+            "tranche": 2
+          },
+          "repetable": false
+        }
+      ],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 4,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
+    },
+    {
+      "id": "carte_57",
+      "nom": "Forgeron",
+      "image": "visuels/cartes/jrouge/carte_57.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -1020,9 +935,41 @@
         {
           "cout": null,
           "gain": {
+            "type": "or",
+            "montant": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [],
+      "texteEffet": "Gagne 1 Or",
+      "texteEffetRouge": ""
+    },
+    {
+      "id": "carte_58",
+      "nom": "Marché",
+      "image": "visuels/cartes/jrouge/carte_58.jpg",
+      "origine": "depart",
+      "couleur": "rouge",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
             "type": "vendre",
-            "orParPierre": 2,
-            "orParMetal": 3
+            "orParPierre": 3,
+            "orParMetal": 4
           },
           "par": null,
           "repetable": false
@@ -1040,7 +987,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal",
+      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal",
       "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
     },
     {
@@ -1099,18 +1046,15 @@
         {
           "cout": null,
           "gain": {
-            "type": "pioche",
-            "nombre": 1
+            "type": "or",
+            "montant": 2
           },
-          "par": {
-            "compteur": "pierre",
-            "tranche": 2
-          },
+          "par": null,
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffet": "Gagne 2 Or",
       "texteEffetRouge": ""
     },
     {
@@ -1119,51 +1063,6 @@
       "image": "visuels/cartes/jrouge/carte_61.jpg",
       "origine": "depart",
       "couleur": "rouge",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 1,
-        "metal": 0,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 2
-          },
-          "par": null,
-          "repetable": false
-        },
-        {
-          "cout": {
-            "or": 8,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": true
-        }
-      ],
-      "effetRouge": [],
-      "texteEffet": "Gagne 2 Or, puis peut dépenser 8 Or pour piocher 1 carte, autant de fois qu'il le veut",
-      "texteEffetRouge": ""
-    },
-    {
-      "id": "carte_62",
-      "nom": "Salle du trésor",
-      "image": "visuels/cartes/jvert/carte_62.jpg",
-      "origine": "depart",
-      "couleur": "vert",
       "cout": {
         "or": 0,
         "pierre": 0,
@@ -1180,7 +1079,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
           },
           "par": null,
           "repetable": false
@@ -1188,7 +1087,40 @@
         {
           "cout": null,
           "gain": {
-            "type": "rejouer"
+            "type": "achat",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [],
+      "texteEffet": "Gagne 1 Or puis Achète 1 carte",
+      "texteEffetRouge": ""
+    },
+    {
+      "id": "carte_62",
+      "nom": "Salle du trésor",
+      "image": "visuels/cartes/jvert/carte_62.jpg",
+      "origine": "depart",
+      "couleur": "vert",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
+            "montant": 3
           },
           "par": null,
           "repetable": false
@@ -1205,7 +1137,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or puis Rejouer",
+      "texteEffet": "Gagne 3 Or",
       "texteEffetRouge": "Gagne 1 Or"
     },
     {
@@ -1230,7 +1162,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 4
+            "montant": 2
           },
           "par": null,
           "repetable": false
@@ -1241,119 +1173,19 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 4 Or",
-      "texteEffetRouge": "Gagne 2 Or"
+      "texteEffet": "Gagne 2 Or",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_64",
       "nom": "Tour de guet",
       "image": "visuels/cartes/jvert/carte_64.jpg",
-      "origine": "depart",
-      "couleur": "vert",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 0,
-        "metal": 1,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "trash",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 5,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "trash",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 4 Or pour trasher 1 carte",
-      "texteEffetRouge": "Paye 5 Or pour trasher 1 carte"
-    },
-    {
-      "id": "carte_65",
-      "nom": "Cachot",
-      "image": "visuels/cartes/jvert/carte_65.jpg",
-      "origine": "depart",
-      "couleur": "vert",
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 1,
-        "metal": 0,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": {
-            "or": 3,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "pioche",
-            "nombre": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 3 Or pour piocher 1 carte",
-      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
-    },
-    {
-      "id": "carte_66",
-      "nom": "Forgeron",
-      "image": "visuels/cartes/jvert/carte_66.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1381,14 +1213,77 @@
           "repetable": false
         }
       ],
-      "effetRouge": [],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 7,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "trash",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
       "texteEffet": "Trash 1 carte pour 2 Métal dans son aire de jeu",
-      "texteEffetRouge": ""
+      "texteEffetRouge": "Paye 7 Or pour trasher 1 carte"
     },
     {
-      "id": "carte_67",
-      "nom": "Marché",
-      "image": "visuels/cartes/jvert/carte_67.jpg",
+      "id": "carte_65",
+      "nom": "Cachot",
+      "image": "visuels/cartes/jvert/carte_65.jpg",
+      "origine": "depart",
+      "couleur": "vert",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": {
+            "compteur": "pierre",
+            "tranche": 2
+          },
+          "repetable": false
+        }
+      ],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 4,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
+    },
+    {
+      "id": "carte_66",
+      "nom": "Forgeron",
+      "image": "visuels/cartes/jvert/carte_66.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1406,9 +1301,41 @@
         {
           "cout": null,
           "gain": {
+            "type": "or",
+            "montant": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [],
+      "texteEffet": "Gagne 1 Or",
+      "texteEffetRouge": ""
+    },
+    {
+      "id": "carte_67",
+      "nom": "Marché",
+      "image": "visuels/cartes/jvert/carte_67.jpg",
+      "origine": "depart",
+      "couleur": "vert",
+      "cout": {
+        "or": 0,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 0
+      },
+      "ressources": {
+        "pierre": 1,
+        "metal": 0,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": null,
+          "gain": {
             "type": "vendre",
-            "orParPierre": 2,
-            "orParMetal": 3
+            "orParPierre": 3,
+            "orParMetal": 4
           },
           "par": null,
           "repetable": false
@@ -1426,7 +1353,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal",
+      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal",
       "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
     },
     {
@@ -1485,18 +1412,15 @@
         {
           "cout": null,
           "gain": {
-            "type": "pioche",
-            "nombre": 1
+            "type": "or",
+            "montant": 2
           },
-          "par": {
-            "compteur": "pierre",
-            "tranche": 2
-          },
+          "par": null,
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffet": "Gagne 2 Or",
       "texteEffetRouge": ""
     },
     {
@@ -1512,42 +1436,38 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 0,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
           },
           "par": null,
           "repetable": false
         },
         {
-          "cout": {
-            "or": 8,
-            "pierre": 0,
-            "metal": 0
-          },
+          "cout": null,
           "gain": {
-            "type": "pioche",
+            "type": "achat",
             "nombre": 1
           },
           "par": null,
-          "repetable": true
+          "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Gagne 2 Or, puis peut dépenser 8 Or pour piocher 1 carte, autant de fois qu'il le veut",
+      "texteEffet": "Gagne 1 Or puis Achète 1 carte",
       "texteEffetRouge": ""
     },
     {
-      "id": "carte_34",
+      "id": "carte_35",
       "nom": "Justice",
-      "image": "visuels/cartes/domaines/carte_34.jpg",
+      "image": "visuels/cartes/domaines/carte_35.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1558,7 +1478,7 @@
       },
       "ressources": {
         "pierre": 0,
-        "metal": 1,
+        "metal": 0,
         "erudit": 1
       },
       "effet": [
@@ -1593,50 +1513,6 @@
       "texteEffetRouge": "Gagne 1 Or par Blason Noblesse"
     },
     {
-      "id": "carte_35",
-      "nom": "Commerce",
-      "image": "visuels/cartes/domaines/carte_35.jpg",
-      "origine": "asymetrie",
-      "couleur": null,
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 1,
-        "metal": 1,
-        "erudit": 0
-      },
-      "effet": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "vendre",
-            "orParPierre": 2,
-            "orParMetal": 3
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "vendre",
-            "orParPierre": 2,
-            "orParMetal": 3
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal",
-      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
-    },
-    {
       "id": "carte_36",
       "nom": "Diplomatie",
       "image": "visuels/cartes/domaines/carte_36.jpg",
@@ -1649,7 +1525,7 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 0,
         "erudit": 1
       },
@@ -1697,15 +1573,15 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
-        "metal": 1,
+        "pierre": 1,
+        "metal": 0,
         "erudit": 0
       },
       "effet": [
         {
           "cout": {
-            "or": 0,
-            "pierre": 1,
+            "or": 2,
+            "pierre": 0,
             "metal": 0
           },
           "gain": {
@@ -1731,7 +1607,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 1 Pierre pour Lvl up Économie",
+      "texteEffet": "Paye 2 Or pour Lvl up Économie",
       "texteEffetRouge": "Paye 4 Or pour Lvl up Économie"
     },
     {
@@ -1749,7 +1625,7 @@
       "ressources": {
         "pierre": 0,
         "metal": 1,
-        "erudit": 1
+        "erudit": 0
       },
       "effet": [
         {
@@ -1760,14 +1636,6 @@
           },
           "par": null,
           "repetable": false
-        },
-        {
-          "cout": null,
-          "gain": {
-            "type": "rejouer"
-          },
-          "par": null,
-          "repetable": false
         }
       ],
       "effetRouge": [
@@ -1781,56 +1649,8 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 3 Or puis Rejouer",
+      "texteEffet": "Gagne 3 Or",
       "texteEffetRouge": "Gagne 1 Or"
-    },
-    {
-      "id": "carte_39",
-      "nom": "Éducation",
-      "image": "visuels/cartes/domaines/carte_39.jpg",
-      "origine": "asymetrie",
-      "couleur": null,
-      "cout": {
-        "or": 0,
-        "pierre": 0,
-        "metal": 0,
-        "ressource": 0
-      },
-      "ressources": {
-        "pierre": 0,
-        "metal": 0,
-        "erudit": 1
-      },
-      "effet": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 2
-          },
-          "par": {
-            "compteur": "erudit",
-            "tranche": 1
-          },
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 1
-          },
-          "par": {
-            "compteur": "erudit",
-            "tranche": 1
-          },
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Gagne 2 Or par Érudit",
-      "texteEffetRouge": "Gagne 1 Or par Érudit"
     },
     {
       "id": "carte_40",
@@ -1895,7 +1715,7 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 0,
         "erudit": 1
       },
@@ -1943,15 +1763,15 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
-        "metal": 0,
+        "pierre": 0,
+        "metal": 1,
         "erudit": 0
       },
       "effet": [
         {
           "cout": {
-            "or": 5,
-            "pierre": 0,
+            "or": 0,
+            "pierre": 2,
             "metal": 0
           },
           "gain": {
@@ -1977,7 +1797,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 5 Or pour Lvl up Population",
+      "texteEffet": "Paye 2 Pierre pour Lvl up Population",
       "texteEffetRouge": "Paye 6 Or pour Lvl up Population"
     },
     {
@@ -1993,9 +1813,9 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
+        "pierre": 1,
         "metal": 0,
-        "erudit": 1
+        "erudit": 0
       },
       "effet": [
         {
@@ -2043,14 +1863,15 @@
         {
           "cout": null,
           "gain": {
-            "type": "rejouer"
+            "type": "or",
+            "montant": 3
           },
           "par": null,
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Rejouer",
+      "texteEffet": "Gagne 3 Or",
       "texteEffetRouge": ""
     },
     {
@@ -2115,7 +1936,7 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 0,
         "erudit": 1
       },
@@ -2123,9 +1944,8 @@
         {
           "cout": null,
           "gain": {
-            "type": "vendre",
-            "orParPierre": 2,
-            "orParMetal": 3
+            "type": "or",
+            "montant": 3
           },
           "par": null,
           "repetable": false
@@ -2133,26 +1953,16 @@
         {
           "cout": null,
           "gain": {
-            "type": "rejouer"
+            "type": "achat",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "vendre",
-            "orParPierre": 2,
-            "orParMetal": 3
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal, puis Rejoue",
-      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
+      "effetRouge": [],
+      "texteEffet": "Gagne 3 Or puis Achète 1 carte",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_4",
@@ -2161,15 +1971,15 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 2,
+        "or": 3,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
       },
       "ressources": {
         "pierre": 0,
-        "metal": 0,
-        "erudit": 1
+        "metal": 1,
+        "erudit": 0
       },
       "effet": [
         {
@@ -2188,7 +1998,7 @@
       "effetRouge": [
         {
           "cout": {
-            "or": 5,
+            "or": 7,
             "pierre": 0,
             "metal": 0
           },
@@ -2201,7 +2011,7 @@
         }
       ],
       "texteEffet": "Trash 1 carte pour 2 Métal dans son aire de jeu",
-      "texteEffetRouge": "Paye 5 Or pour trasher 1 carte"
+      "texteEffetRouge": "Paye 7 Or pour trasher 1 carte"
     },
     {
       "id": "carte_5",
@@ -2210,15 +2020,15 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 0,
+        "or": 2,
         "pierre": 0,
         "metal": 0,
         "ressource": 1
       },
       "ressources": {
-        "pierre": 0,
+        "pierre": 1,
         "metal": 1,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
@@ -2274,14 +2084,15 @@
         {
           "cout": null,
           "gain": {
-            "type": "rejouer"
+            "type": "or",
+            "montant": 3
           },
           "par": null,
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Rejouer",
+      "texteEffet": "Gagne 3 Or",
       "texteEffetRouge": ""
     },
     {
@@ -2345,7 +2156,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 3
+            "montant": 5
           },
           "par": null,
           "repetable": false
@@ -2356,14 +2167,14 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 1
+            "montant": 2
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 3 Or",
-      "texteEffetRouge": "Gagne 1 Or"
+      "texteEffet": "Gagne 5 Or",
+      "texteEffetRouge": "Gagne 2 Or"
     },
     {
       "id": "carte_9",
@@ -2387,7 +2198,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 4
           },
           "par": null,
           "repetable": false
@@ -2398,14 +2209,14 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 1
+            "montant": 2
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or",
-      "texteEffetRouge": "Gagne 1 Or"
+      "texteEffet": "Gagne 4 Or",
+      "texteEffetRouge": "Gagne 2 Or"
     },
     {
       "id": "carte_10",
@@ -2414,7 +2225,7 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 3,
+        "or": 4,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -2429,11 +2240,11 @@
           "cout": null,
           "gain": {
             "type": "pioche",
-            "nombre": 1
+            "nombre": 2
           },
           "par": {
             "compteur": "pierre",
-            "tranche": 2
+            "tranche": 3
           },
           "repetable": false
         }
@@ -2453,7 +2264,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu",
+      "texteEffet": "Pioche 2 cartes pour chaque 3 Pierre dans son aire de jeu",
       "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
     },
     {
@@ -2463,13 +2274,13 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 4,
+        "or": 3,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
+        "pierre": 1,
         "metal": 0,
         "erudit": 1
       },
@@ -2513,7 +2324,7 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 4,
+        "or": 3,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -2544,7 +2355,7 @@
       "effetRouge": [
         {
           "cout": {
-            "or": 5,
+            "or": 7,
             "pierre": 0,
             "metal": 0
           },
@@ -2557,7 +2368,7 @@
         }
       ],
       "texteEffet": "Paye 2 Métal pour trasher 1 carte par blason Noblesse",
-      "texteEffetRouge": "Paye 5 Or pour trasher 1 carte"
+      "texteEffetRouge": "Paye 7 Or pour trasher 1 carte"
     },
     {
       "id": "carte_13",
@@ -2578,14 +2389,19 @@
       },
       "effet": [
         {
-          "cout": {
-            "or": 6,
-            "pierre": 0,
-            "metal": 0
-          },
+          "cout": null,
           "gain": {
-            "type": "pioche",
-            "nombre": 2
+            "type": "or",
+            "montant": 4
+          },
+          "par": null,
+          "repetable": false
+        },
+        {
+          "cout": null,
+          "gain": {
+            "type": "achat",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
@@ -2593,21 +2409,17 @@
       ],
       "effetRouge": [
         {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
+          "cout": null,
           "gain": {
-            "type": "pioche",
-            "nombre": 1
+            "type": "or",
+            "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 6 Or pour piocher 2 cartes",
-      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
+      "texteEffet": "Gagne 4 Or puis Achète 1",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_14",
@@ -2616,14 +2428,14 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 2,
+        "or": 1,
         "pierre": 0,
         "metal": 0,
         "ressource": 1
       },
       "ressources": {
-        "pierre": 0,
-        "metal": 1,
+        "pierre": 1,
+        "metal": 0,
         "erudit": 1
       },
       "effet": [
@@ -2667,7 +2479,7 @@
         "or": 0,
         "pierre": 0,
         "metal": 0,
-        "ressource": 2
+        "ressource": 1
       },
       "ressources": {
         "pierre": 2,
@@ -2677,19 +2489,17 @@
       "effet": [
         {
           "cout": {
-            "or": 9,
+            "or": 5,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
             "type": "trash",
-            "nombre": 2
+            "nombre": 1
           },
           "par": null,
           "repetable": false
-        }
-      ],
-      "effetRouge": [
+        },
         {
           "cout": {
             "or": 5,
@@ -2704,8 +2514,23 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 9 Or pour trasher 2 cartes",
-      "texteEffetRouge": "Paye 5 Or pour trasher 1 carte"
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 7,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "trash",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "texteEffet": "Paye 5 Or pour trasher 1 carte puis 5 Or pour trasher 1 carte",
+      "texteEffetRouge": "Paye 7 Or pour trasher 1 carte"
     },
     {
       "id": "carte_16",
@@ -2722,32 +2547,24 @@
       "ressources": {
         "pierre": 0,
         "metal": 1,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
           "cout": null,
           "gain": {
             "type": "trash",
-            "nombre": 1
+            "nombre": 2
           },
           "par": {
             "compteur": "metal",
-            "tranche": 2
+            "tranche": 3
           },
-          "repetable": false
-        },
-        {
-          "cout": null,
-          "gain": {
-            "type": "rejouer"
-          },
-          "par": null,
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Trash 1 carte pour 2 Métal dans son aire de jeu, puis Rejoue",
+      "texteEffet": "Trash 2 cartes pour 3 Métal dans son aire de jeu",
       "texteEffetRouge": ""
     },
     {
@@ -2763,9 +2580,9 @@
         "ressource": 2
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 1,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
@@ -2776,13 +2593,13 @@
           },
           "par": {
             "compteur": "erudit",
-            "tranche": 3
+            "tranche": 2
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu",
+      "texteEffet": "Recherche 1 carte pour chaque 2 Érudits dans son aire de jeu",
       "texteEffetRouge": ""
     },
     {
@@ -2792,7 +2609,7 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 5,
+        "or": 6,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -2805,8 +2622,8 @@
       "effet": [
         {
           "cout": {
-            "or": 0,
-            "pierre": 1,
+            "or": 2,
+            "pierre": 0,
             "metal": 0
           },
           "gain": {
@@ -2832,7 +2649,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 1 Pierre pour Lvl up Économie",
+      "texteEffet": "Paye 2Or pour Lvl up Économie",
       "texteEffetRouge": "Paye 4 Or pour Lvl up Économie"
     },
     {
@@ -2848,7 +2665,7 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 2,
+        "pierre": 1,
         "metal": 0,
         "erudit": 1
       },
@@ -2890,13 +2707,13 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 5,
+        "or": 4,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 2,
         "metal": 0,
         "erudit": 1
       },
@@ -2953,7 +2770,7 @@
       "effet": [
         {
           "cout": {
-            "or": 1,
+            "or": 3,
             "pierre": 0,
             "metal": 0
           },
@@ -2965,9 +2782,14 @@
           "repetable": false
         },
         {
-          "cout": null,
+          "cout": {
+            "or": 3,
+            "pierre": 0,
+            "metal": 0
+          },
           "gain": {
-            "type": "rejouer"
+            "type": "pioche",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
@@ -2988,7 +2810,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 1 Or pour piocher 1 carte, puis Rejoue",
+      "texteEffet": "Paye 3 Or pour piocher 1 puis Paye 3 Or pour piocher 1 carte",
       "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
     },
     {
@@ -3004,9 +2826,9 @@
         "ressource": 1
       },
       "ressources": {
-        "pierre": 2,
+        "pierre": 1,
         "metal": 0,
-        "erudit": 1
+        "erudit": 2
       },
       "effet": [
         {
@@ -3033,7 +2855,7 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 5,
+        "or": 4,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -3120,7 +2942,7 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 6,
+        "or": 5,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -3134,7 +2956,7 @@
         {
           "cout": {
             "or": 0,
-            "pierre": 3,
+            "pierre": 2,
             "metal": 0
           },
           "gain": {
@@ -3149,7 +2971,7 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Pierre pour Trasher 1 carte par blason Population",
+      "texteEffet": "Paye 2 Pierre pour Trasher 1 carte par blason Population",
       "texteEffetRouge": ""
     },
     {
@@ -3277,7 +3099,7 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 7,
+        "or": 5,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -3289,11 +3111,16 @@
       },
       "effet": [
         {
-          "cout": {
-            "or": 1,
-            "pierre": 0,
-            "metal": 0
+          "cout": null,
+          "gain": {
+            "type": "or",
+            "montant": 2
           },
+          "par": null,
+          "repetable": false
+        },
+        {
+          "cout": null,
           "gain": {
             "type": "lvlup",
             "piste": "economie"
@@ -3317,7 +3144,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 1 Or pour Lvl up Économie",
+      "texteEffet": "Gagne 2 Or puis Lvl up Économie",
       "texteEffetRouge": "Paye 4 Or pour Lvl up Économie"
     },
     {
@@ -3327,15 +3154,15 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 7,
+        "or": 3,
         "pierre": 0,
         "metal": 0,
-        "ressource": 0
+        "ressource": 1
       },
       "ressources": {
         "pierre": 1,
         "metal": 0,
-        "erudit": 2
+        "erudit": 1
       },
       "effet": [
         {
@@ -3346,13 +3173,13 @@
           },
           "par": {
             "compteur": "erudit",
-            "tranche": 3
+            "tranche": 2
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu",
+      "texteEffet": "Recherche 1 carte pour chaque 2 Érudits dans son aire de jeu",
       "texteEffetRouge": ""
     },
     {
@@ -3362,10 +3189,10 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 3,
+        "or": 4,
         "pierre": 0,
         "metal": 0,
-        "ressource": 2
+        "ressource": 1
       },
       "ressources": {
         "pierre": 3,
@@ -3456,7 +3283,7 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 8,
+        "or": 7,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -3471,7 +3298,7 @@
           "cout": {
             "or": 0,
             "pierre": 0,
-            "metal": 2
+            "metal": 1
           },
           "gain": {
             "type": "pioche",
@@ -3485,7 +3312,46 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 2 Métal pour piocher 1 carte par blason Économie",
+      "texteEffet": "Paye 1 Métal pour piocher 1 carte par blason Économie",
+      "texteEffetRouge": ""
+    },
+    {
+      "id": "carte_34",
+      "nom": "Chambellan",
+      "image": "visuels/cartes/avancées/carte_34.jpg",
+      "origine": "avancee",
+      "couleur": null,
+      "cout": {
+        "or": 5,
+        "pierre": 0,
+        "metal": 0,
+        "ressource": 1
+      },
+      "ressources": {
+        "pierre": 2,
+        "metal": 2,
+        "erudit": 0
+      },
+      "effet": [
+        {
+          "cout": {
+            "or": 9,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "pioche",
+            "nombre": 1
+          },
+          "par": {
+            "compteur": "blason_population",
+            "tranche": 1
+          },
+          "repetable": false
+        }
+      ],
+      "effetRouge": [],
+      "texteEffet": "Paye 9 Or pour piocher 1 carte par  symbole Population",
       "texteEffetRouge": ""
     }
   ],
@@ -3500,19 +3366,19 @@
       "id": "privilege_2",
       "numero": 2,
       "image": "visuels/tuiles/privilege_2.jpg",
-      "texte": "Chaque carte qui rapporte au moins 1 Métal, rapporte également 1 Érudit"
+      "texte": "Chaque carte avancée rapporte également 1 Érudit"
     },
     {
       "id": "privilege_3",
       "numero": 3,
       "image": "visuels/tuiles/privilege_3.jpg",
-      "texte": "Chaque carte qui rapporte au moins 1 Pierre, rapporte 1 Pierre supplémentaire"
+      "texte": "Chaque carte avancée rapporte également 1 Pierre"
     },
     {
       "id": "privilege_4",
       "numero": 4,
       "image": "visuels/tuiles/privilege_4.jpg",
-      "texte": "Chaque carte qui rapporte au moins 1 Érudit, rapporte également 1 Pierre"
+      "texte": "Chaque carte avancée rapporte également 1 Metal"
     },
     {
       "id": "privilege_5",
@@ -3566,7 +3432,7 @@
       "id": "privilege_13",
       "numero": 13,
       "image": "visuels/tuiles/privilege_13.jpg",
-      "texte": "À son tour, à la place de son action, le joueur peut payer 3 Pierres pour piocher 1 carte (1 fois par tour)"
+      "texte": "À son tour, à la place de son action, le joueur peut payer 3 Pierres pour trasher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_14",
@@ -3608,7 +3474,7 @@
       "id": "privilege_20",
       "numero": 20,
       "image": "visuels/tuiles/privilege_20.jpg",
-      "texte": "Chaque fois que le joueur utilise un Effet rouge d'un adversaire, il gagne, en plus, 2 Or"
+      "texte": "Chaque fois que le joueur joue 1 carte avancée, il gagne 1 Or"
     }
   ],
   "plateau": {
@@ -3633,26 +3499,31 @@
     "economie": [
       {
         "cout": 0,
-        "or": 3,
+        "paiement": "or",
+        "or": 4,
         "blasons": 0
       },
       {
-        "cout": 2,
+        "cout": 1,
+        "paiement": "ressources",
         "or": 4,
         "blasons": 1
       },
       {
-        "cout": 3,
+        "cout": 1,
+        "paiement": "ressources",
         "or": 7,
         "blasons": 1
       },
       {
-        "cout": 4,
+        "cout": 2,
+        "paiement": "ressources",
         "or": 8,
         "blasons": 2
       },
       {
-        "cout": 5,
+        "cout": 2,
+        "paiement": "ressources",
         "or": 10,
         "blasons": 3
       }
@@ -3660,26 +3531,31 @@
     "population": [
       {
         "cout": 0,
+        "paiement": "or",
         "cartes": 3,
         "blasons": 0
       },
       {
-        "cout": 1,
+        "cout": 2,
+        "paiement": "or",
         "cartes": 3,
         "blasons": 1
       },
       {
-        "cout": 2,
+        "cout": 5,
+        "paiement": "or",
         "cartes": 4,
         "blasons": 1
       },
       {
-        "cout": 3,
+        "cout": 8,
+        "paiement": "or",
         "cartes": 4,
         "blasons": 2
       },
       {
-        "cout": 4,
+        "cout": 12,
+        "paiement": "or",
         "cartes": 5,
         "blasons": 3
       }

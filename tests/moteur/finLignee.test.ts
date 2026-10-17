@@ -90,17 +90,18 @@ describe('mettre fin à sa lignée', () => {
         etat.privilegesVisibles = [17, 18, 19, 20];
         return faire(etat, { type: 'finLignee' }).attente?.type === 'finNoblesse';
       };
+      // Privilèges sans effet sur les Érudits (les 2, 3 et 4 en ajoutent aux cartes Avancée).
       expect(avec([1], [c('Épicerie')])).toBe(false);
       expect(avec([1], [c('Épicerie'), c('Imprimeur')])).toBe(true);
-      expect(avec([1, 2], [c('Épicerie'), c('Imprimeur')])).toBe(false);
-      expect(avec([1, 2], [c('Hôpital'), c('Imprimeur')])).toBe(true);
-      expect(avec([1, 2, 3], [c('Hôpital'), c('Imprimeur')])).toBe(false);
-      expect(avec([1, 2, 3], [c('Hôpital'), c('Archiviste royale')])).toBe(true);
+      expect(avec([1, 5], [c('Épicerie'), c('Imprimeur')])).toBe(false);
+      expect(avec([1, 5], [c('Hôpital'), c('Imprimeur')])).toBe(true);
+      expect(avec([1, 5, 6], [c('Hôpital'), c('Imprimeur')])).toBe(false);
+      expect(avec([1, 5, 6], [c('Hôpital'), c('Archiviste royale')])).toBe(true);
     });
 
     it('ne propose plus rien au joueur qui a 4 Privilèges', () => {
       const etat = scene({ aire: [c('Hôpital'), c('Archiviste royale'), c('Épicerie')] });
-      etat.joueurs[0]!.privileges = [1, 2, 3, 4];
+      etat.joueurs[0]!.privileges = [1, 5, 6, 7];
       expect(faire(etat, { type: 'finLignee' }).attente?.type).not.toBe('finNoblesse');
     });
 
@@ -115,7 +116,7 @@ describe('mettre fin à sa lignée', () => {
   describe('Économie', () => {
     it('propose de monter d\'un niveau avec assez d\'Or, et fait payer le coût', () => {
       const etat = faire(scene({ or: 5 }), { type: 'finLignee' });
-      expect(etat.attente).toEqual({ type: 'finEconomie', joueur: 0 });
+      expect(etat.attente).toMatchObject({ type: 'finJauges', joueur: 0, seule: 'economie' });
       expect(permises(etat)).toEqual([{ type: 'monter', piste: 'economie' }, { type: 'passer' }]);
       const apres = faire(etat, { type: 'monter', piste: 'economie' });
       expect(apres.joueurs[0]!.niveauEconomie).toBe(1);
@@ -146,7 +147,8 @@ describe('mettre fin à sa lignée', () => {
       const propose = (niveau: number, or: number) => {
         const etat = scene({ or });
         etat.joueurs[0]!.niveauEconomie = niveau;
-        return faire(etat, { type: 'finLignee' }).attente?.type === 'finEconomie';
+        const attente = faire(etat, { type: 'finLignee' }).attente;
+        return attente?.type === 'finJauges' && attente.seule === 'economie';
       };
       expect(propose(0, 1)).toBe(false);
       expect(propose(0, 2)).toBe(true);
@@ -162,7 +164,7 @@ describe('mettre fin à sa lignée', () => {
   describe('Population', () => {
     it('propose de monter d\'un niveau avec 1 Ressource dans l\'aire de jeu', () => {
       const etat = faire(scene({ aire: [c('Cachot')] }), { type: 'finLignee' });
-      expect(etat.attente).toEqual({ type: 'finPopulation', joueur: 0 });
+      expect(etat.attente).toMatchObject({ type: 'finJauges', joueur: 0, seule: 'population' });
       const apres = faire(etat, { type: 'monter', piste: 'population' });
       expect(apres.joueurs[0]!.niveauPopulation).toBe(1);
     });
@@ -179,7 +181,7 @@ describe('mettre fin à sa lignée', () => {
         etat.joueurs[0]!.niveauPopulation = niveau;
         const apres = faire(etat, { type: 'finLignee' });
         const suite = apres.attente?.type === 'finNoblesse' ? faire(apres, { type: 'passer' }) : apres;
-        return suite.attente?.type === 'finPopulation';
+        return suite.attente?.type === 'finJauges' && suite.attente.seule === 'population';
       };
       expect(propose(0, [c('Épicerie')])).toBe(false);
       expect(propose(1, [c('Cachot')])).toBe(false);
@@ -199,13 +201,13 @@ describe('mettre fin à sa lignée', () => {
     });
   });
 
-  it('enchaîne Noblesse, Économie puis Population', () => {
+  it('enchaîne Noblesse, Population puis Économie (décision DD)', () => {
     let etat = faire(scene({ aire: [c('Épicerie'), c('Cachot')], or: 2 }), { type: 'finLignee' });
     expect(etat.attente?.type).toBe('finNoblesse');
     etat = faire(etat, { type: 'passer' });
-    expect(etat.attente?.type).toBe('finEconomie');
+    expect(etat.attente).toMatchObject({ type: 'finJauges', seule: 'population' });
     etat = faire(etat, { type: 'passer' });
-    expect(etat.attente?.type).toBe('finPopulation');
+    expect(etat.attente).toMatchObject({ type: 'finJauges', seule: 'economie' });
     etat = faire(etat, { type: 'passer' });
     expect(etat.attente).toEqual({ type: 'tour', joueur: 1 });
   });

@@ -1,0 +1,21 @@
+Dossier,Identifiant,Effet
+visuels\tuiles,privilege_1,Toutes les cartes de la pioche commune coûtent 2 Or de moins
+visuels\tuiles,privilege_2,"Chaque carte qui rapporte au moins 1 Métal, rapporte également 1 Érudit"
+visuels\tuiles,privilege_3,"Chaque carte qui rapporte au moins 1 Pierre, rapporte 1 Pierre supplémentaire"
+visuels\tuiles,privilege_4,"Chaque carte qui rapporte au moins 1 Érudit, rapporte également 1 Pierre"
+visuels\tuiles,privilege_5,1 blason Population supplémentaire
+visuels\tuiles,privilege_6,1 blason Économie supplémentaire
+visuels\tuiles,privilege_7,1 blason Noblesse supplémentaire
+visuels\tuiles,privilege_8,"Au début de chaque nouvelle lignée, le joueur pioche 1 carte de moins que prévu, puis prend 1 carte de son choix dans son deck, avant de le remélanger"
+visuels\tuiles,privilege_9,"Au début de chaque nouvelle lignée, le joueur gagne 2 or supplémentaire pour chaque blason Population qu'il possède"
+visuels\tuiles,privilege_10,"Au début de chaque nouvelle lignée, le joueur gagne 2 or supplémentaire pour chaque blason Noblesse qu'il possède"
+visuels\tuiles,privilege_11,"Au début de chaque nouvelle lignée, le joueur gagne 2 or supplémentaire pour chaque blason Économie qu'il possède"
+visuels\tuiles,privilege_12,"Au début de chaque nouvelle lignée, le joueur pioche 1 carte supplémentaire puis en défausse 1 de sa main (défaussée, pas trashée)"
+visuels\tuiles,privilege_13,"À son tour, à la place de son action, le joueur peut payer 3 Pierres pour piocher 1 carte (1 fois par tour)"
+visuels\tuiles,privilege_14,"À son tour, à la place de son action, le joueur peut payer 2 Métal pour piocher 1 carte (1 fois par tour)"
+visuels\tuiles,privilege_15,"À son tour, à la place de son action, le joueur peut payer 7 Or pour piocher 1 carte (1 fois par tour)"
+visuels\tuiles,privilege_16,"1 symbole Érudit, valable pour toutes les effets demandant des Érudit, comme si elle était sur une carte de sa zone de jeu"
+visuels\tuiles,privilege_17,"Chaque fois que le joueur trash 1 carte, il gagne 2 Or"
+visuels\tuiles,privilege_18,"Chaque fois que le joueur met fin à sa lignée, après avoir augmenté sa jauge d'Économie, il conserve son Or restant"
+visuels\tuiles,privilege_19,"Au début de chaque nouvelle lignée, le joueur gagne 3 Or supplémentaires"
+visuels\tuiles,privilege_20,"Chaque fois que le joueur utilise un Effet rouge d'un adversaire, il gagne, en plus, 2 Or"

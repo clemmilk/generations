@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Etat } from '../../src/game/index.ts';
 import { optionsDePaiement } from '../../src/game/ressources.ts';
-import { c, faire, permises, scene } from './outils.ts';
+import { avecReglage, c, faire, permises, scene } from './outils.ts';
 import type { Zones } from './outils.ts';
 
 /** Une scène dont la Rivière contient exactement les cartes indiquées. */
@@ -23,13 +23,15 @@ describe('acheter une carte', () => {
     ]);
   });
 
-  it('fait payer l\'Or, met la carte en main et complète la Rivière', () => {
-    const etat = marche(['Remouleur ambulant', 'Contremaître', 'Carrière', 'Assassin'], { or: 2 });
+  it('fait payer l\'Or, complète la Rivière, puis fait choisir la carte remplacée', () => {
+    const etat = marche(['Remouleur ambulant', 'Contremaître', 'Carrière', 'Assassin'], { main: [c('Épicerie')], or: 2 });
     const prochaine = etat.piocheCommune[0]!;
-    const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] });
+    let apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] });
     expect(apres.joueurs[0]!.or).toBe(0);
-    expect(apres.joueurs[0]!.main).toEqual([c('Remouleur ambulant')]);
     expect(apres.riviere).toEqual([c('Contremaître'), c('Carrière'), c('Assassin'), prochaine]);
+    expect(apres.attente).toEqual({ type: 'remplacementAchat', joueur: 0, carte: c('Remouleur ambulant') });
+    apres = faire(apres, { type: 'remplacer', carte: c('Épicerie') });
+    expect(apres.joueurs[0]!.main).toEqual([c('Remouleur ambulant')]);
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
   });
 
@@ -42,7 +44,7 @@ describe('acheter une carte', () => {
     const apres = faire(etat, { type: 'acheter', carte: c('Carrière'), paiement: [c('Forgeron')] });
     expect(apres.joueurs[0]!.aireDeJeu).toEqual([c('Cachot'), c('Épicerie')]);
     expect(apres.joueurs[0]!.defausse).toEqual([c('Forgeron')]);
-    expect(apres.joueurs[0]!.main).toEqual([c('Carrière')]);
+    expect(apres.attente).toMatchObject({ type: 'remplacementAchat', carte: c('Carrière') });
   });
 
   it('accepte une seule carte Pierre + Métal pour payer 2 Ressources', () => {
@@ -74,7 +76,7 @@ describe('acheter une carte', () => {
       carte: c('Moulin'),
       paiement: [c('Forgeron'), c('Cachot')],
     });
-    expect(apres.joueurs[0]!.main).toEqual([c('Moulin')]);
+    expect(apres.attente).toMatchObject({ type: 'remplacementAchat', carte: c('Moulin') });
   });
 
   it('refuse un paiement insuffisant ou avec une carte superflue', () => {
@@ -88,7 +90,11 @@ describe('acheter une carte', () => {
   it('ne complète plus la Rivière quand la pioche commune est vide, mais ses cartes restent achetables', () => {
     const etat = marche(['Remouleur ambulant', 'Contremaître'], { or: 10 });
     etat.piocheCommune = [c('Carrière')];
-    const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'passer' });
+    const apres = faire(
+      etat,
+      { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] },
+      { type: 'remplacerPioche' },
+    );
     expect(apres.riviere).toEqual([c('Contremaître'), c('Carrière')]);
     expect(apres.piocheCommune).toEqual([]);
     apres.attente = { type: 'tour', joueur: 0 };
@@ -100,7 +106,10 @@ describe('acheter une carte', () => {
     expect(achats(apres)).toEqual([]);
   });
 
-  describe('trasher 1 carte pour 1 Or de plus', () => {
+  // Règle de la carte achetée en main (réglage carteAcheteeVa : 'main'), avec le trash à 1 Or.
+  describe('trasher 1 carte pour 1 Or de plus (carte achetée en main)', () => {
+    avecReglage('carteAcheteeVa', 'main');
+
     const depart = () =>
       faire(
         marche(['Remouleur ambulant'], { main: [c('Cachot')], aire: [c('Épicerie')], or: 3 }),

@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-15",
+  "generations": 60,
+  "championsSuccessifs": 6,
+  "contreReglagesManuels": {
+    "victoiresA2": "90.5 %",
+    "victoiresA4": "71.0 %"
+  },
+  "poids": {
+    "or": 1,
+    "pioche": -0.12,
+    "piocheCarte": -0.33,
+    "piocheProche": 1.87,
+    "trash": 14.45,
+    "recherche": 3.32,
+    "lvlupEconomie": 1.98,
+    "lvlupPopulation": 1.62,
+    "privilege": -0.58,
+    "rejouer": -0.36,
+    "pierre": 1.06,
+    "metal": 2.6,
+    "erudit": 0.51,
+    "achat": -15.96,
+    "achatEffet": 1.21,
+    "finLignee": 5.1,
+    "effetRouge": 0.79,
+    "seuilTrash": 12.88,
+    "margeFinale": 1,
+    "parTranche": 1.51,
+    "privileges": {
+      "1": 1.22,
+      "2": 1.34,
+      "3": 2.6,
+      "4": 1.43,
+      "5": 4.45,
+      "6": 0.44,
+      "7": 0,
+      "8": 5.24,
+      "9": 0.46,
+      "10": 0,
+      "11": 2.96,
+      "12": 1.79,
+      "13": 1.87,
+      "14": 1.07,
+      "15": 0.29,
+      "16": 0,
+      "17": 1.6,
+      "18": 2.78,
+      "19": 3.74,
+      "20": 0.79
+    }
+  }
+}

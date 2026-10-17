@@ -1,0 +1,71 @@
+{
+  "strategie": "population",
+  "description": "Monte la Population en priorité absolue, et garde des ressources pour cela.",
+  "bornes": {
+    "lvlupPopulation": {
+      "min": 14
+    },
+    "pierre": {
+      "min": 3
+    },
+    "metal": {
+      "min": 3
+    }
+  },
+  "contreLeChampion": {
+    "avantEntrainement": {
+      "force": 0.78,
+      "victoiresA2": 40.3,
+      "victoiresA4": 18.6
+    },
+    "apresEntrainement": {
+      "force": 0.78,
+      "victoiresA2": 40.3,
+      "victoiresA4": 18.6
+    }
+  },
+  "adoptions": 0,
+  "poids": {
+    "or": 1,
+    "pioche": 0.82,
+    "piocheCarte": -0.79,
+    "piocheProche": 5.3,
+    "trash": 9.74,
+    "recherche": 2.74,
+    "lvlupEconomie": 3.66,
+    "lvlupPopulation": 20,
+    "privilege": 1.19,
+    "rejouer": 0.13,
+    "pierre": 4,
+    "metal": 4,
+    "erudit": 0.36,
+    "achat": -13.11,
+    "finLignee": 1.11,
+    "effetRouge": -0.22,
+    "seuilTrash": 10.02,
+    "margeFinale": 2,
+    "parTranche": 0.87,
+    "privileges": {
+      "1": 0,
+      "2": 0.15,
+      "3": 2.6,
+      "4": 1.81,
+      "5": 2.6,
+      "6": 0,
+      "7": 0.86,
+      "8": 4.16,
+      "9": 1.02,
+      "10": 0.9,
+      "11": 1.84,
+      "12": 2.78,
+      "13": 1.23,
+      "14": 0,
+      "15": 0.43,
+      "16": 1.48,
+      "17": 3.62,
+      "18": 3.25,
+      "19": 0.35,
+      "20": 0.72
+    }
+  }
+}

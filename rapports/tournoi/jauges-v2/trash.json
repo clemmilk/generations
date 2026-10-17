@@ -1,0 +1,69 @@
+{
+  "strategie": "trash",
+  "description": "Épure son deck avant tout : trashe beaucoup et tôt, achète peu.",
+  "bornes": {
+    "trash": {
+      "min": 12
+    },
+    "seuilTrash": {
+      "min": 10
+    }
+  },
+  "contreLeChampion": {
+    "avantEntrainement": {
+      "force": 0.8,
+      "victoiresA2": 42.2,
+      "victoiresA4": 19.1
+    },
+    "apresEntrainement": {
+      "force": 0.9,
+      "victoiresA2": 45.7,
+      "victoiresA4": 22.3
+    }
+  },
+  "adoptions": 2,
+  "poids": {
+    "or": 1,
+    "pioche": 9.5,
+    "piocheCarte": 0.12,
+    "piocheProche": 5.96,
+    "trash": 12,
+    "recherche": 0.07,
+    "lvlupEconomie": 0.25,
+    "lvlupPopulation": 0.5,
+    "privilege": -0.12,
+    "rejouer": 0.58,
+    "pierre": 0.87,
+    "metal": 0.39,
+    "erudit": -0.19,
+    "achat": -16.24,
+    "achatEffet": 4.09,
+    "finLignee": -0.45,
+    "effetRouge": 4.99,
+    "seuilTrash": 10,
+    "margeFinale": 0,
+    "parTranche": 1.87,
+    "privileges": {
+      "1": 0.89,
+      "2": 2.3,
+      "3": 2.41,
+      "4": 1.16,
+      "5": 6.21,
+      "6": 0.79,
+      "7": 0,
+      "8": 4.68,
+      "9": 0.11,
+      "10": 0,
+      "11": 3.06,
+      "12": 3.27,
+      "13": 3.94,
+      "14": 1.08,
+      "15": 2.26,
+      "16": 0.72,
+      "17": 1.59,
+      "18": 2.07,
+      "19": 6.3,
+      "20": 1.37
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import { afterEach, beforeEach } from 'vitest';
+import { PARAMETRES } from '../../src/game/parametres.ts';
 import type { Action } from '../../src/game/actions.ts';
 import { applyAction, createGame, getLegalActions, getPlayerView } from '../../src/game/index.ts';
 import type { Etat, Inscription } from '../../src/game/index.ts';
@@ -159,4 +161,20 @@ export function permises(etat: Etat): SansJoueur<Action>[] {
 /** Les types d'actions permises, sans doublon. */
 export function typesPermis(etat: Etat): string[] {
   return [...new Set(permises(etat).map((a) => a.type))];
+}
+
+/**
+ * Change un réglage de src/game/parametres.ts le temps d'un groupe de tests (règles d'essai encore
+ * disponibles), puis le remet comme avant. S'utilise dans un describe : avecReglage('carteAcheteeVa', 'main').
+ */
+export function avecReglage<K extends keyof typeof PARAMETRES>(cle: K, valeur: (typeof PARAMETRES)[K]): void {
+  const reglages = PARAMETRES as Record<string, unknown>;
+  let avant: unknown;
+  beforeEach(() => {
+    avant = reglages[cle];
+    reglages[cle] = valeur;
+  });
+  afterEach(() => {
+    reglages[cle] = avant;
+  });
 }

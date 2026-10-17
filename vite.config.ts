@@ -12,5 +12,6 @@ export default defineConfig({
   // très rapprochées d'un même fichier étaient parfois manquées et la page restait sur une ancienne version.
   server: { watch: { usePolling: true, interval: 300 } },
   // Les tests sont dans tests/, à la racine du projet.
-  test: { root: '.' },
+  // Le matériel des tests est fixe (tests/donnees/) : voir tests/setup.ts.
+  test: { root: '.', setupFiles: ['tests/setup.ts'] },
 });

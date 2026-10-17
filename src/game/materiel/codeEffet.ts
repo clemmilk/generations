@@ -58,6 +58,8 @@ function lireGain(texte: string, code: string): Gain {
       case 'trash':
       case 'recherche':
         return { type: nom, nombre: entier(argument, code) };
+      case 'achete':
+        return { type: 'achat', nombre: entier(argument, code) };
       case 'lvlup':
         if (argument !== 'economie' && argument !== 'population') {
           throw new Error(`Piste inconnue « ${argument} » dans « ${code} »`);
@@ -116,8 +118,11 @@ function lireEtape(texteEtape: string, code: string): Etape {
   return { cout, gain, par, repetable };
 }
 
-/** Transforme un code d'effet (ex. « or+2 ; rejouer ») en liste d'étapes. Un code vide donne une liste vide. */
+/**
+ * Transforme un code d'effet (ex. « or+2 ; rejouer ») en liste d'étapes. Un code vide donne une liste vide.
+ * Les majuscules sont ignorées : « Or+3 » se lit comme « or+3 » (Excel en ajoute parfois toutes seules).
+ */
 export function lireCodeEffet(code: string): Etape[] {
   if (code.trim() === '') return [];
-  return code.split(';').map((etape) => lireEtape(etape, code));
+  return code.toLowerCase().split(';').map((etape) => lireEtape(etape, code));
 }

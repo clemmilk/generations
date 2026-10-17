@@ -83,5 +83,41 @@ Chaque décision a été reportée dans `docs/regles_generations.md` ou dans les
 - Q. Privilège 20 : les 2 Or sont gagnés 1 seule fois par tour d'un adversaire, dès que le joueur applique l'Effet Rouge, même s'il le déclenche plusieurs fois (plusieurs ventes au Marché).
 - R. Mémoire des joueurs : la composition du deck de chaque adversaire est connue de tous. Les cartes de départ sont identiques pour tous, les achats et les trashs sont publics, et une carte Assymétrie est connue dès qu'elle a été vue une fois (jouée, défaussée ou trashée). Restent cachés : quelles cartes sont en main et lesquelles sont en pioche, l'ordre des pioches, et les cartes Assymétrie pas encore vues.
 
+- X. Effet « paye … pour obtenir … par tranche » (ex. « Paye 1 Métal pour trasher 1 carte par 2 Métal ») : le nombre de fois est compté AVANT le paiement. Les ressources défaussées pour payer comptent encore pour cet effet, plus pour les suivants. (Décidé le 15/10.)
+
+## Version d'essai du 15/10 (tests par les IA, pas encore dans les règles)
+Changements faits seulement dans les codes des csv et dans `src/game/privileges.ts`, pour voir comment jouent les IA. Les visuels et le fichier de règles ne sont pas à jour.
+- S. Nouveau gain `achete(N)` : acheter 1 carte de la Rivière exactement comme l'action Acheter (coût normal en Or et en Ressources, 1 Or de plus pour trasher 1 carte, la carte va en main, facultatif). Avec deux achats (Moulin), la carte achetée est remplacée dans la Rivière avant le second.
+- T. Les jauges se payent selon la colonne Coût du plateau : en Or (dépensé), ou en Pierre/Métal (seulement comptés dans l'aire de jeu, pas dépensés). Dans cette version, la Population se paye en Or et l'Économie en Ressources.
+- U. Ordre de fin de lignée : Noblesse, puis Population, puis Économie, puis on défausse l'Or restant (réglé dans `src/game/parametres.ts`). Avec le Privilège 18, l'Or qui reste après avoir payé la Population est conservé.
+- V. Privilège 20 (nouveau) : les cartes de la Rivière coûtent 1 Ressource de moins. Il se cumule avec le Privilège 1, s'applique aussi aux achats des effets `achete`, et le coût d'une carte peut tomber à 0.
+- W. Privilège 13 : payer 3 Pierres pour trasher 1 carte (au lieu de piocher), à la place de son action, comme les trashs des cartes (main, aire de jeu ou défausse ; trasher la dernière carte de son deck fait gagner).
+
+## Version d'essai du 16/10 (tests par les IA, pas encore dans les règles)
+Deck de départ de 9 cartes sans trash, sans cartes Assymétrie, 20 cartes Avancée proposées le 15/10.
+- Y. Fin de lignée : après la Noblesse, le joueur choisit quelle(s) jauge(s) monter (1 niveau au plus chacune), dans l'ordre qu'il veut. Les deux jauges se payent en Ressources (Pierre/Métal) comptées dans l'aire de jeu, sans être dépensées, sur un budget commun : ce qu'une jauge utilise ne compte plus pour l'autre. Coûts 2/4/6/8 pour les deux ; la Population pioche 3/4/5/6/7 cartes.
+- Z. L'Or achète les cartes et active des effets ; les Ressources activent des effets, alimentent les effets par tranche et montent les jauges. Les cartes Avancée ne coûtent plus de Ressources (Carrière 4 Or, Fonderie 5 Or).
+- Le Privilège 20 est retiré (19 Privilèges).
+- Essai sans Or de compensation au départ (0 Or pour tous les joueurs, au lieu de 0/1/2/3), pour mesurer l'effet de l'ordre des sièges.
+
+## Essai du 16/10 : version du 14/10, cartes achetées dans la défausse
+- Reprise des cartes de la version d'essai du 14/10 (plateau et Privilèges d'origine), avec une seule règle changée : une carte achetée va dans la défausse, pas dans la main (réglage `carteAcheteeVa` dans `src/game/parametres.ts`). Il faut donc commencer une nouvelle lignée pour la revoir.
+
+## Essai du 16/10 : version du 14/10, achat par remplacement
+- AA. Une carte achetée remplace obligatoirement une carte du deck du joueur, trashée gratuitement (le trash à 1 Or disparaît). La carte achetée prend la place de la carte trashée :
+  - main → elle va en main et peut être jouée ensuite ;
+  - aire de jeu → elle va dans l'aire de jeu : ses ressources sont disponibles (celles de la carte trashée sont perdues), mais son effet ne se déclenche pas ;
+  - défausse → elle va dans la défausse ;
+  - pioche → la première carte de la pioche (inconnue) est trashée, et la carte achetée est posée à sa place, sur le dessus.
+  Le prix de la carte et le Privilège 1 sont inchangés ; le Privilège 17 s'applique à la carte remplacée. Un achat ne change pas la taille du deck : on gagne toujours avec les autres trashs ou en piochant sa dernière carte. Réglage `carteAcheteeVa: 'remplacement'` dans `src/game/parametres.ts`.
+
+## Version du 17/10 (version active)
+Fichiers `data/*_essai-17-10.csv` installés comme version active ; la version « reboot » du 16/10 est conservée dans `data/versions/reboot-16-10/`.
+- BB. Achat par remplacement (décision AA), y compris pour les effets « Achète 1 carte ».
+- CC. Économie payée en Ressources comptées (1 / 1 / 2 / 2), Population payée en Or (2 / 5 / 8 / 12) : coûts et valeurs voulus, y compris le niveau 1 d'Économie qui donne 4 Or comme le niveau 0.
+- DD. Fin de lignée dans cet ordre : Noblesse, Population, Économie, puis on défausse l'Or restant (sauf Privilège 18). Réglage `ordreDesJauges` dans `src/game/parametres.ts`.
+- EE. Privilèges 2, 3 et 4 : chaque carte Avancée de l'aire de jeu rapporte 1 Érudit / Pierre / Métal de plus, qui compte partout. Privilège 20 : +1 Or chaque fois que le joueur joue une carte Avancée, même sans appliquer son effet. Privilège 13 : 3 Pierres pour trasher 1 carte.
+- FF. Or de compensation au départ : 0 / 1 / 2 / 3. 2 cartes Assymétrie par joueur (8 Domaines : toutes distribuées à 4 joueurs).
+
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ?

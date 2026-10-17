@@ -6,16 +6,22 @@ import { effetsPrivilege, totalPrivilege } from './privileges.ts';
 
 /**
  * Les ressources qu'une carte apporte à ce joueur quand elle est dans son aire de jeu.
- * Les Privilèges 2, 3 et 4 ajoutent des ressources d'après ce qui est imprimé sur la carte :
+ * Les Privilèges 2, 3 et 4 ajoutent des ressources d'après la carte (ce qui y est imprimé, ou son origine) :
  * la ressource ajoutée par l'un ne déclenche pas les autres.
  */
 export function ressourcesDe(joueur: Pick<Joueur, 'privileges'>, id: string): Ressources {
   const imprimees = carte(id).ressources;
   const total = { ...imprimees };
   for (const bonus of effetsPrivilege(joueur, 'bonusRessource')) {
-    if (imprimees[bonus.si] > 0) total[bonus.donne]++;
+    if (bonusApplicable(id, bonus.si)) total[bonus.donne]++;
   }
   return total;
+}
+
+/** La carte remplit-elle la condition d'un Privilège 2, 3 ou 4 ? */
+function bonusApplicable(id: string, si: 'pierre' | 'metal' | 'erudit' | 'avancee'): boolean {
+  const c = carte(id);
+  return si === 'avancee' ? c.origine === 'avancee' : c.ressources[si] > 0;
 }
 
 /** Le total des ressources de l'aire de jeu du joueur, Érudits des Privilèges compris (Privilège 16). */
@@ -55,7 +61,7 @@ export function detailDesRessources(joueur: Pick<Joueur, 'privileges' | 'aireDeJ
       for (let i = 0; i < imprimees[type]; i++) detail.push({ type, carte: id, privilege: null });
     }
     for (const bonus of effetsPrivilege(joueur, 'bonusRessource')) {
-      if (imprimees[bonus.si] > 0) detail.push({ type: bonus.donne, carte: id, privilege: bonus.numero });
+      if (bonusApplicable(id, bonus.si)) detail.push({ type: bonus.donne, carte: id, privilege: bonus.numero });
     }
   }
   for (const bonus of effetsPrivilege(joueur, 'erudit')) {

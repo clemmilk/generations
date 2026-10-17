@@ -1,0 +1,66 @@
+{
+  "strategie": "acheteuse",
+  "description": "Aime acheter : une carte de plus dans le deck est vue comme un gain, jamais comme une gêne.",
+  "bornes": {
+    "achat": {
+      "min": 2
+    }
+  },
+  "contreLeChampion": {
+    "avantEntrainement": {
+      "force": 0.19,
+      "victoiresA2": 13.7,
+      "victoiresA4": 2.6
+    },
+    "apresEntrainement": {
+      "force": 0.61,
+      "victoiresA2": 31.1,
+      "victoiresA4": 15
+    }
+  },
+  "adoptions": 7,
+  "poids": {
+    "or": 1,
+    "pioche": 9.42,
+    "piocheCarte": 0.52,
+    "piocheProche": 3.88,
+    "trash": 1.75,
+    "recherche": 0.86,
+    "lvlupEconomie": 0.41,
+    "lvlupPopulation": 1.57,
+    "privilege": 0.29,
+    "rejouer": 1.21,
+    "pierre": 1.67,
+    "metal": 0.44,
+    "erudit": 0.35,
+    "achat": 2,
+    "achatEffet": 4.01,
+    "finLignee": 0.96,
+    "effetRouge": 0.06,
+    "seuilTrash": 3.63,
+    "margeFinale": 0,
+    "parTranche": 1.68,
+    "privileges": {
+      "1": 0.94,
+      "2": 3.02,
+      "3": 2.92,
+      "4": 1.1,
+      "5": 6,
+      "6": 0.18,
+      "7": 0,
+      "8": 5.09,
+      "9": 0,
+      "10": 0,
+      "11": 1.95,
+      "12": 3.55,
+      "13": 2.17,
+      "14": 1.05,
+      "15": 3.36,
+      "16": 0.65,
+      "17": 0.98,
+      "18": 0.92,
+      "19": 6.23,
+      "20": 1.37
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "strategie": "pioche",
+  "description": "Mise sur la pioche plutôt que sur l'épuration : trashe peu, valorise fortement pioches et Pierre.",
+  "bornes": {
+    "seuilTrash": {
+      "max": 4
+    },
+    "trash": {
+      "max": 5
+    },
+    "pioche": {
+      "min": 5
+    },
+    "achat": {
+      "min": -2
+    },
+    "margeFinale": {
+      "max": 1
+    }
+  },
+  "contreLeChampion": {
+    "avantEntrainement": {
+      "force": 0.42,
+      "victoiresA2": 22,
+      "victoiresA4": 9.8
+    },
+    "apresEntrainement": {
+      "force": 0.8,
+      "victoiresA2": 43.7,
+      "victoiresA4": 18
+    }
+  },
+  "adoptions": 7,
+  "poids": {
+    "or": 1,
+    "pioche": 5.33,
+    "piocheCarte": 1.43,
+    "piocheProche": 4.58,
+    "trash": 1.95,
+    "recherche": -0.4,
+    "lvlupEconomie": 0.6,
+    "lvlupPopulation": 4.41,
+    "privilege": 0.46,
+    "rejouer": 0.37,
+    "pierre": 1.14,
+    "metal": 0.89,
+    "erudit": 1.32,
+    "achat": -0.04,
+    "achatEffet": 2.8,
+    "finLignee": -2.08,
+    "effetRouge": 1.48,
+    "seuilTrash": 4,
+    "margeFinale": 1,
+    "parTranche": 1.28,
+    "privileges": {
+      "1": 0,
+      "2": 2.78,
+      "3": 2.67,
+      "4": 0.05,
+      "5": 5.73,
+      "6": 0.83,
+      "7": 0,
+      "8": 4.5,
+      "9": 0.72,
+      "10": 0,
+      "11": 3.27,
+      "12": 3.54,
+      "13": 2.5,
+      "14": 2.15,
+      "15": 0.37,
+      "16": 0.24,
+      "17": 0.43,
+      "18": 1.68,
+      "19": 5.55,
+      "20": 1.37
+    }
+  }
+}

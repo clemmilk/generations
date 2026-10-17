@@ -99,12 +99,17 @@ function Piste(props: {
   );
 }
 
+/** Le coût du prochain niveau d'une jauge, avec son unité lue dans le plateau (Or ou Ressources). */
+function texteCoutJauge(niveau: { cout: number; paiement: 'or' | 'ressources' }): string {
+  return niveau.paiement === 'or' ? `${niveau.cout} Or` : `${niveau.cout} Ressource(s)`;
+}
+
 function Jauges(props: { joueur: VueJoueur }) {
   const j = props.joueur;
   const { economie, population, noblesse } = MATERIEL.plateau;
   const b = blasons(j);
-  const prochaineEconomie = economie[j.niveauEconomie + 1]?.cout;
-  const prochainePopulation = population[j.niveauPopulation + 1]?.cout;
+  const prochaineEconomie = economie[j.niveauEconomie + 1];
+  const prochainePopulation = population[j.niveauPopulation + 1];
   const prochainErudits = noblesse[j.privileges.length]?.erudits;
   return (
     <div className="jauges">
@@ -130,7 +135,7 @@ function Jauges(props: { joueur: VueJoueur }) {
           valeur: economie[j.niveauEconomie]?.or ?? 0,
           titre: 'Or pris à chaque début de lignée',
         }}
-        prochain={prochaineEconomie === undefined ? null : `${prochaineEconomie} Or`}
+        prochain={prochaineEconomie === undefined ? null : texteCoutJauge(prochaineEconomie)}
         blasons={b.economie}
       />
       <Piste
@@ -143,7 +148,7 @@ function Jauges(props: { joueur: VueJoueur }) {
           valeur: population[j.niveauPopulation]?.cartes ?? 0,
           titre: 'Cartes piochées à chaque début de lignée',
         }}
-        prochain={prochainePopulation === undefined ? null : `${prochainePopulation} Ressource(s)`}
+        prochain={prochainePopulation === undefined ? null : texteCoutJauge(prochainePopulation)}
         blasons={b.population}
       />
       <Piste

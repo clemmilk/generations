@@ -25,6 +25,7 @@ const POIDS_REGLABLES = [
   'metal',
   'erudit',
   'achat',
+  'achatEffet',
   'finLignee',
   'effetRouge',
   'seuilTrash',

@@ -1,0 +1,79 @@
+Dossier,Identifiant,Nom,Coût,Ressource,Effet,Effet Rouge,Départ,Code effet,Code effet rouge
+visuels\cartes\jbleu,carte_71,Salle du trésor,,P,Gagne 3 Or,Gagne 1 Or,Deck de départ du joueur Bleu,Or+3,or+1
+visuels\cartes\jbleu,carte_72,Épicerie,,E,Gagne 2 Or,Gagne 1 Or,Deck de départ du joueur Bleu,Or+2,Or+1
+visuels\cartes\jbleu,carte_73,Tour de guet,,M,Trash 1 carte pour 2 Métal dans son aire de jeu,Paye 7 Or pour trasher 1 carte,Deck de départ du joueur Bleu,trash(1) / metal:2,payer(or:7) > trash(1)
+visuels\cartes\jbleu,carte_74,Cachot,,P,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Deck de départ du joueur Bleu,pioche(1) / pierre:2,payer(or:4) > pioche(1)
+visuels\cartes\jbleu,carte_75,Forgeron,,M,Gagne 1 Or,,Deck de départ du joueur Bleu,Or+1,
+visuels\cartes\jbleu,carte_76,Marché,,P,Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal,Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal,Deck de départ du joueur Bleu,vendre(pierre:3 metal:4),vendre(pierre:2 metal:3)
+visuels\cartes\jbleu,carte_77,Imprimeur,,E,Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu,,Deck de départ du joueur Bleu,recherche(1) / erudit:3,
+visuels\cartes\jbleu,carte_78,Ferrailleur,,P,Gagne 2 Or,,Deck de départ du joueur Bleu,Or+2,
+visuels\cartes\jbleu,carte_79,Colporteur,,E,Gagne 1 Or puis Achète 1 carte,,Deck de départ du joueur Bleu,Or+1 ; achete(1) ,
+visuels\cartes\jjaune,carte_44,Salle du trésor,,P,Gagne 3 Or,Gagne 1 Or,Deck de départ du joueur Jaune,Or+3,or+1
+visuels\cartes\jjaune,carte_45,Épicerie,,E,Gagne 2 Or,Gagne 1 Or,Deck de départ du joueur Jaune,Or+2,Or+1
+visuels\cartes\jjaune,carte_46,Tour de guet,,M,Trash 1 carte pour 2 Métal dans son aire de jeu,Paye 7 Or pour trasher 1 carte,Deck de départ du joueur Jaune,trash(1) / metal:2,payer(or:7) > trash(1)
+visuels\cartes\jjaune,carte_47,Cachot,,P,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Deck de départ du joueur Jaune,pioche(1) / pierre:2,payer(or:4) > pioche(1)
+visuels\cartes\jjaune,carte_48,Forgeron,,M,Gagne 1 Or,,Deck de départ du joueur Jaune,Or+1,
+visuels\cartes\jjaune,carte_49,Marché,,P,Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal,Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal,Deck de départ du joueur Jaune,vendre(pierre:3 metal:4),vendre(pierre:2 metal:3)
+visuels\cartes\jjaune,carte_50,Imprimeur,,E,Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu,,Deck de départ du joueur Jaune,recherche(1) / erudit:3,
+visuels\cartes\jjaune,carte_51,Ferrailleur,,P,Gagne 2 Or,,Deck de départ du joueur Jaune,Or+2,
+visuels\cartes\jjaune,carte_52,Colporteur,,E,Gagne 1 Or puis Achète 1 carte,,Deck de départ du joueur Jaune,Or+1 ; achete(1) ,
+visuels\cartes\jrouge,carte_53,Salle du trésor,,P,Gagne 3 Or,Gagne 1 Or,Deck de départ du joueur rouge,Or+3,or+1
+visuels\cartes\jrouge,carte_54,Épicerie,,E,Gagne 2 Or,Gagne 1 Or,Deck de départ du joueur rouge,Or+2,Or+1
+visuels\cartes\jrouge,carte_55,Tour de guet,,M,Trash 1 carte pour 2 Métal dans son aire de jeu,Paye 7 Or pour trasher 1 carte,Deck de départ du joueur rouge,trash(1) / metal:2,payer(or:7) > trash(1)
+visuels\cartes\jrouge,carte_56,Cachot,,P,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Deck de départ du joueur rouge,pioche(1) / pierre:2,payer(or:4) > pioche(1)
+visuels\cartes\jrouge,carte_57,Forgeron,,M,Gagne 1 Or,,Deck de départ du joueur rouge,Or+1,
+visuels\cartes\jrouge,carte_58,Marché,,P,Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal,Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal,Deck de départ du joueur rouge,vendre(pierre:3 metal:4),vendre(pierre:2 metal:3)
+visuels\cartes\jrouge,carte_59,Imprimeur,,E,Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu,,Deck de départ du joueur rouge,recherche(1) / erudit:3,
+visuels\cartes\jrouge,carte_60,Ferrailleur,,P,Gagne 2 Or,,Deck de départ du joueur rouge,Or+2,
+visuels\cartes\jrouge,carte_61,Colporteur,,E,Gagne 1 Or puis Achète 1 carte,,Deck de départ du joueur rouge,Or+1 ; achete(1) ,
+visuels\cartes\jvert,carte_62,Salle du trésor,,P,Gagne 3 Or,Gagne 1 Or,Deck de départ du joueur vert,Or+3,or+1
+visuels\cartes\jvert,carte_63,Épicerie,,E,Gagne 2 Or,Gagne 1 Or,Deck de départ du joueur vert,Or+2,Or+1
+visuels\cartes\jvert,carte_64,Tour de guet,,M,Trash 1 carte pour 2 Métal dans son aire de jeu,Paye 7 Or pour trasher 1 carte,Deck de départ du joueur vert,trash(1) / metal:2,payer(or:7) > trash(1)
+visuels\cartes\jvert,carte_65,Cachot,,P,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Deck de départ du joueur vert,pioche(1) / pierre:2,payer(or:4) > pioche(1)
+visuels\cartes\jvert,carte_66,Forgeron,,M,Gagne 1 Or,,Deck de départ du joueur vert,Or+1,
+visuels\cartes\jvert,carte_67,Marché,,P,Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal,Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal,Deck de départ du joueur vert,vendre(pierre:3 metal:4),vendre(pierre:2 metal:3)
+visuels\cartes\jvert,carte_68,Imprimeur,,E,Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu,,Deck de départ du joueur vert,recherche(1) / erudit:3,
+visuels\cartes\jvert,carte_69,Ferrailleur,,P,Gagne 2 Or,,Deck de départ du joueur vert,Or+2,
+visuels\cartes\jvert,carte_70,Colporteur,,E,Gagne 1 Or puis Achète 1 carte,,Deck de départ du joueur vert,Or+1 ; achete(1) ,
+visuels\cartes\domaines,carte_35,Justice,,E,Gagne 2 Or par Blason Noblesse,Gagne 1 Or par Blason Noblesse,Deck Assymétrie,or+2 / blason_noblesse,or+1 / blason_noblesse
+visuels\cartes\domaines,carte_36,Diplomatie,,E,Gagne 2 Or par Blason Population,Gagne 1 Or par Blason Population,Deck Assymétrie,or+2 / blason_population,or+1 / blason_population
+visuels\cartes\domaines,carte_37,Économie,,P,Paye 2 Or pour Lvl up Économie,Paye 4 Or pour Lvl up Économie,Deck Assymétrie,payer(or:2) > lvlup(economie),payer(or:4) > lvlup(economie)
+visuels\cartes\domaines,carte_38,Histoire,,M,Gagne 3 Or,Gagne 1 Or,Deck Assymétrie,Or+3,or+1
+visuels\cartes\domaines,carte_40,Religion,,P,Paye 1 Métal pour prendre 1 Privilège au choix parmi les 4 visibles,Paye 5 Or pour prendre 1 privilège au hasard dans la pioche,Deck Assymétrie,payer(metal:1) > privilege(choix),payer(or:5) > privilege(hasard)
+visuels\cartes\domaines,carte_41,Production,,E,Gagne 2 Or par Blason Économie,Gagne 1 Or par Blason Économie,Deck Assymétrie,or+2 / blason_economie,or+1 / blason_economie
+visuels\cartes\domaines,carte_42,Science,,M,Paye 2 Pierre pour Lvl up Population,Paye 6 Or pour Lvl up Population,Deck Assymétrie,payer(pierre:2) > lvlup(population),payer(or:6) > lvlup(population)
+visuels\cartes\domaines,carte_43,Progrès,,P,Gagne 5 Or,Gagne 2 Or,Deck Assymétrie,or+5,or+2
+visuels\cartes\avancées,carte_1,Remouleur ambulant,2,PP,Gagne 3 Or,,Pioche commune,Or+3,
+visuels\cartes\avancées,carte_2,Banque,R,P,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Pioche commune,pioche(1) / pierre:2,payer(or:4) > pioche(1)
+visuels\cartes\avancées,carte_3,Halle des négociants,2,E,Gagne 3 Or puis Achète 1 carte,,Pioche commune,Or+3 ; achete(1) ,
+visuels\cartes\avancées,carte_4,Prison,3,M,Trash 1 carte pour 2 Métal dans son aire de jeu,Paye 7 Or pour trasher 1 carte,Pioche commune,trash(1) / metal:2,payer(or:7) > trash(1)
+visuels\cartes\avancées,carte_5,Cabinet d'architecte,2R,PME,Paye 5 Or pour Lvl up Population,Paye 6 Or pour Lvl up Population,Pioche commune,payer(or:5) > lvlup(population),payer(or:6) > lvlup(population)
+visuels\cartes\avancées,carte_6,Contremaître,3,MM,Gagne 3 Or,,Pioche commune,Or+3,
+visuels\cartes\avancées,carte_7,Assassin,4,P,Paye 2 Métal pour trasher 1 carte par blason Économie,,Pioche commune,payer(metal:2) > trash(1) / blason_economie,
+visuels\cartes\avancées,carte_8,Carrière,R,P,Gagne 5 Or,Gagne 2 Or,Pioche commune,Or+5,Or+2
+visuels\cartes\avancées,carte_9,Forge,R,M,Gagne 4 Or,Gagne 2 Or,Pioche commune,Or+4,Or+2
+visuels\cartes\avancées,carte_10,Ferme,4,PM,Pioche 2 cartes pour chaque 3 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Pioche commune,pioche(2) / pierre:3,payer(or:4) > pioche(1)
+visuels\cartes\avancées,carte_11,Chancellerie,3,PE,Paye 1 Métal pour prendre 1 Privilège au choix parmi les 4 visibles,Paye 6 Or pour prendre 1 privilège au hasard dans la pioche,Pioche commune,payer(metal:1) > privilege(choix),payer(or:6) > privilege(hasard)
+visuels\cartes\avancées,carte_12,Tribunal,3,P,Paye 2 Métal pour trasher 1 carte par blason Noblesse,Paye 7 Or pour trasher 1 carte,Pioche commune,payer(metal:2) > trash(1) / blason_noblesse,payer(or:7) > trash(1)
+visuels\cartes\avancées,carte_13,Moulin,RR,M,Gagne 4 Or puis Achète 1,Gagne 1 Or,Pioche commune,Or+4 ; achete(1),Or+1
+visuels\cartes\avancées,carte_14,Apothicairerie,1R,PE,Gagne 2 Or par Érudit,Gagne 1 Or par Érudit,Pioche commune,or+2 / erudit,or+1 / erudit
+visuels\cartes\avancées,carte_15,Mine,R,PP,Paye 5 Or pour trasher 1 carte puis 5 Or pour trasher 1 carte,Paye 7 Or pour trasher 1 carte,Pioche commune,payer(or:5) > trash(1) ; payer(or:5) > trash(1),payer(or:7) > trash(1)
+visuels\cartes\avancées,carte_16,Maître fondeur,4,ME,Trash 2 cartes pour 3 Métal dans son aire de jeu,,Pioche commune,trash(2) / metal:3,
+visuels\cartes\avancées,carte_17,Sapeur,RR,ME,Recherche 1 carte pour chaque 2 Érudits dans son aire de jeu,,Pioche commune,recherche(1) / erudit:2,
+visuels\cartes\avancées,carte_18,Comptoir maritime,6,MME,Paye 2Or pour Lvl up Économie,Paye 4 Or pour Lvl up Économie,Pioche commune,payer(or:2) > lvlup(economie),payer(or:4) > lvlup(economie)
+visuels\cartes\avancées,carte_19,Hôtel des impôts,4,PE,Gagne 3 Or par Blason Économie,Gagne 1 Or par Blason Économie,Pioche commune,or+3 / blason_economie,or+1 / blason_economie
+visuels\cartes\avancées,carte_20,Loge des bâtisseurs,4,PPE,Paye 1 Métal pour Lvl up Population,Paye 6 Or pour Lvl up Population,Pioche commune,payer(metal:1) > lvlup(population),payer(or:6) > lvlup(population)
+visuels\cartes\avancées,carte_21,Aqueduc,5,MM,Paye 3 Or pour piocher 1 puis Paye 3 Or pour piocher 1 carte,Paye 4 Or pour piocher 1 carte,Pioche commune,payer(or:3) > pioche(1) ; payer(or:3) > pioche(1),payer(or:4) > pioche(1)
+visuels\cartes\avancées,carte_22,Bibliothécaire,2R,PEE,Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu,,Pioche commune,recherche(1) / erudit:3,
+visuels\cartes\avancées,carte_23,Roi,4,PP,Paye 2 Métal pour piocher 1 carte par blason Noblesse,,Pioche commune,payer(metal:2) > pioche(1) / blason_noblesse,
+visuels\cartes\avancées,carte_24,Hôpital,RR,EE,Gagne 2 Or par Érudit,Gagne 1 Or par Érudit,Pioche commune,or+2 / erudit,or+1 / erudit
+visuels\cartes\avancées,carte_25,Cardinal,5,ME,Paye 2 Pierre pour Trasher 1 carte par blason Population,,Pioche commune,payer(pierre:2) > trash(1) / blason_population,
+visuels\cartes\avancées,carte_26,Mairie,RR,PE,Gagne 3 Or par Blason Population,Gagne 1 Or par Blason Population,Pioche commune,or+3 / blason_population,or+1 / blason_population
+visuels\cartes\avancées,carte_27,Alchimiste royale,6,MM,Trash 1 carte pour 2 Métal dans son aire de jeu,,Pioche commune,trash(1) / metal:2,
+visuels\cartes\avancées,carte_28,Démolisseur,6,PP,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,,Pioche commune,pioche(1) / pierre:2,
+visuels\cartes\avancées,carte_29,Maison du commerce,5,MME,Gagne 2 Or puis Lvl up Économie,Paye 4 Or pour Lvl up Économie,Pioche commune,Or+2 ; lvlup(economie),payer(or:4) > lvlup(economie)
+visuels\cartes\avancées,carte_30,Archiviste royale,3R,PE,Recherche 1 carte pour chaque 2 Érudits dans son aire de jeu,,Pioche commune,recherche(1) / erudit:2,
+visuels\cartes\avancées,carte_31,Cour du roi,4R,PPP,Prend 1 Privilège au choix parmi les 4 visibles,Paye 5 Or pour prendre 1 privilège au hasard dans la pioche,Pioche commune,privilege(choix),payer(or:5) > privilege(hasard)
+visuels\cartes\avancées,carte_32,Ambassade,RRR,MMM,Gagne 3 Or par Blason Noblesse,Gagne 1 Or par Blason Noblesse,Pioche commune,or+3 / blason_noblesse,or+1 / blason_noblesse
+visuels\cartes\avancées,carte_33,Grand argentier,7,PPE,Paye 1 Métal pour piocher 1 carte par blason Économie,,Pioche commune,payer(metal:1) > pioche(1) / blason_economie,
+visuels\cartes\avancées,carte_34,Chambellan,5R,PPMM,Paye 9 Or pour piocher 1 carte par  symbole Population,,Pioche commune,payer(or:9) > pioche(1) / blason_population,

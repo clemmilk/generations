@@ -43,6 +43,8 @@ export type Gain =
   | { type: 'lvlup'; piste: Piste }
   | { type: 'privilege'; mode: 'choix' | 'hasard' }
   | { type: 'vendre'; orParPierre: number; orParMetal: number }
+  /** Acheter une carte de la Rivière, comme l'action Acheter (coût normal, trash possible pour 1 Or). */
+  | { type: 'achat'; nombre: number }
   | { type: 'rejouer' };
 
 /**
@@ -81,12 +83,18 @@ export interface Privilege {
   texte: string;
 }
 
+/**
+ * Comment se paye un niveau de jauge en fin de lignée : « or » = l'Or est dépensé ;
+ * « ressources » = il faut assez de Pierre et de Métal dans son aire de jeu, sans les dépenser.
+ */
+export type Paiement = 'or' | 'ressources';
+
 export interface Plateau {
   /** Les 4 emplacements de Privilège, dans l'ordre. */
   noblesse: { erudits: number; blasons: number }[];
   /** Un élément par niveau, le premier étant le niveau de départ. */
-  economie: { cout: number; or: number; blasons: number }[];
-  population: { cout: number; cartes: number; blasons: number }[];
+  economie: { cout: number; paiement: Paiement; or: number; blasons: number }[];
+  population: { cout: number; paiement: Paiement; cartes: number; blasons: number }[];
 }
 
 export interface Materiel {

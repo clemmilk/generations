@@ -93,4 +93,9 @@ describe('lireCodeEffet', () => {
     expect(() => lireCodeEffet('or+1 / pierre:0')).toThrow(/tranche/);
     expect(() => lireCodeEffet('or+1 ;')).toThrow(/illisible/);
   });
+
+  it('ignore les majuscules', () => {
+    expect(lireCodeEffet('Or+3')).toEqual(lireCodeEffet('or+3'));
+    expect(lireCodeEffet('Pioche(1) ; payer(or:6) > pioche(1)')).toEqual(lireCodeEffet('pioche(1) ; payer(or:6) > pioche(1)'));
+  });
 });

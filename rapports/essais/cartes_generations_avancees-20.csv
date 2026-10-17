@@ -1,0 +1,67 @@
+Dossier,Identifiant,Nom,Coût,Ressource,Effet,Effet Rouge,Départ,Code effet,Code effet rouge
+visuels\cartes\jbleu,carte_71,Base Pierre,,P,Gagne 2 Or,,Deck de départ du joueur Bleu,or+2,
+visuels\cartes\jbleu,carte_72,Base Pierre,,P,Gagne 2 Or,,Deck de départ du joueur Bleu,or+2,
+visuels\cartes\jbleu,carte_73,Base Métal,,M,Gagne 2 Or,,Deck de départ du joueur Bleu,or+2,
+visuels\cartes\jbleu,carte_74,Base Métal,,M,Gagne 2 Or,,Deck de départ du joueur Bleu,or+2,
+visuels\cartes\jbleu,carte_75,Base Érudit,,E,Gagne 1 Or,,Deck de départ du joueur Bleu,or+1,
+visuels\cartes\jbleu,carte_76,Base Érudit,,E,Gagne 1 Or,,Deck de départ du joueur Bleu,or+1,
+visuels\cartes\jbleu,carte_77,Outil de pioche,,P,Paye 3 Or pour piocher 1 carte,Paye 4 Or pour piocher 1 carte,Deck de départ du joueur Bleu,payer(or:3) > pioche(1),payer(or:4) > pioche(1)
+visuels\cartes\jbleu,carte_79,Vente,,M,Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal,,Deck de départ du joueur Bleu,vendre(pierre:2 metal:3),
+visuels\cartes\jbleu,carte_81,Érudit-Métal,,ME,Gagne 1 Or,,Deck de départ du joueur Bleu,or+1,
+visuels\cartes\jjaune,carte_44,Base Pierre,,P,Gagne 2 Or,,Deck de départ du joueur Jaune,or+2,
+visuels\cartes\jjaune,carte_45,Base Pierre,,P,Gagne 2 Or,,Deck de départ du joueur Jaune,or+2,
+visuels\cartes\jjaune,carte_46,Base Métal,,M,Gagne 2 Or,,Deck de départ du joueur Jaune,or+2,
+visuels\cartes\jjaune,carte_47,Base Métal,,M,Gagne 2 Or,,Deck de départ du joueur Jaune,or+2,
+visuels\cartes\jjaune,carte_48,Base Érudit,,E,Gagne 1 Or,,Deck de départ du joueur Jaune,or+1,
+visuels\cartes\jjaune,carte_49,Base Érudit,,E,Gagne 1 Or,,Deck de départ du joueur Jaune,or+1,
+visuels\cartes\jjaune,carte_50,Outil de pioche,,P,Paye 3 Or pour piocher 1 carte,Paye 4 Or pour piocher 1 carte,Deck de départ du joueur Jaune,payer(or:3) > pioche(1),payer(or:4) > pioche(1)
+visuels\cartes\jjaune,carte_52,Vente,,M,Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal,,Deck de départ du joueur Jaune,vendre(pierre:2 metal:3),
+visuels\cartes\jjaune,carte_84,Érudit-Métal,,ME,Gagne 1 Or,,Deck de départ du joueur Jaune,or+1,
+visuels\cartes\jrouge,carte_53,Base Pierre,,P,Gagne 2 Or,,Deck de départ du joueur rouge,or+2,
+visuels\cartes\jrouge,carte_54,Base Pierre,,P,Gagne 2 Or,,Deck de départ du joueur rouge,or+2,
+visuels\cartes\jrouge,carte_55,Base Métal,,M,Gagne 2 Or,,Deck de départ du joueur rouge,or+2,
+visuels\cartes\jrouge,carte_56,Base Métal,,M,Gagne 2 Or,,Deck de départ du joueur rouge,or+2,
+visuels\cartes\jrouge,carte_57,Base Érudit,,E,Gagne 1 Or,,Deck de départ du joueur rouge,or+1,
+visuels\cartes\jrouge,carte_58,Base Érudit,,E,Gagne 1 Or,,Deck de départ du joueur rouge,or+1,
+visuels\cartes\jrouge,carte_59,Outil de pioche,,P,Paye 3 Or pour piocher 1 carte,Paye 4 Or pour piocher 1 carte,Deck de départ du joueur rouge,payer(or:3) > pioche(1),payer(or:4) > pioche(1)
+visuels\cartes\jrouge,carte_61,Vente,,M,Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal,,Deck de départ du joueur rouge,vendre(pierre:2 metal:3),
+visuels\cartes\jrouge,carte_87,Érudit-Métal,,ME,Gagne 1 Or,,Deck de départ du joueur rouge,or+1,
+visuels\cartes\jvert,carte_62,Base Pierre,,P,Gagne 2 Or,,Deck de départ du joueur vert,or+2,
+visuels\cartes\jvert,carte_63,Base Pierre,,P,Gagne 2 Or,,Deck de départ du joueur vert,or+2,
+visuels\cartes\jvert,carte_64,Base Métal,,M,Gagne 2 Or,,Deck de départ du joueur vert,or+2,
+visuels\cartes\jvert,carte_65,Base Métal,,M,Gagne 2 Or,,Deck de départ du joueur vert,or+2,
+visuels\cartes\jvert,carte_66,Base Érudit,,E,Gagne 1 Or,,Deck de départ du joueur vert,or+1,
+visuels\cartes\jvert,carte_67,Base Érudit,,E,Gagne 1 Or,,Deck de départ du joueur vert,or+1,
+visuels\cartes\jvert,carte_68,Outil de pioche,,P,Paye 3 Or pour piocher 1 carte,Paye 4 Or pour piocher 1 carte,Deck de départ du joueur vert,payer(or:3) > pioche(1),payer(or:4) > pioche(1)
+visuels\cartes\jvert,carte_70,Vente,,M,Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal,,Deck de départ du joueur vert,vendre(pierre:2 metal:3),
+visuels\cartes\jvert,carte_90,Érudit-Métal,,ME,Gagne 1 Or,,Deck de départ du joueur vert,or+1,
+visuels\cartes\domaines,carte_34,Justice,,ME,Gagne 2 Or par Blason Noblesse,Gagne 1 Or par Blason Noblesse,Deck Assymétrie,or+2 / blason_noblesse,or+1 / blason_noblesse
+visuels\cartes\domaines,carte_35,Commerce,,PM,Achète 1 carte,,Deck Assymétrie,achete(1) ,
+visuels\cartes\domaines,carte_36,Diplomatie,,EP,Gagne 2 Or par Blason Population,Gagne 1 Or par Blason Population,Deck Assymétrie,or+2 / blason_population,or+1 / blason_population
+visuels\cartes\domaines,carte_37,Économie,,M,Paye 3 Or pour Lvl up Économie,Paye 4 Or pour Lvl up Économie,Deck Assymétrie,payer(or:3) > lvlup(economie),payer(or:4) > lvlup(economie)
+visuels\cartes\domaines,carte_38,Histoire,,ME,Gagne 3 Or,Gagne 1 Or,Deck Assymétrie,Or+3,or+1
+visuels\cartes\domaines,carte_39,Éducation,,E,Gagne 2 Or par Érudit,Gagne 1 Or par Érudit,Deck Assymétrie,or+2 / erudit,or+1 / erudit
+visuels\cartes\domaines,carte_40,Religion,,P,Paye 1 Métal pour prendre 1 Privilège au choix parmi les 4 visibles,Paye 5 Or pour prendre 1 privilège au hasard dans la pioche,Deck Assymétrie,payer(metal:1) > privilege(choix),payer(or:5) > privilege(hasard)
+visuels\cartes\domaines,carte_41,Production,,PE,Gagne 2 Or par Blason Économie,Gagne 1 Or par Blason Économie,Deck Assymétrie,or+2 / blason_economie,or+1 / blason_economie
+visuels\cartes\domaines,carte_42,Science,,P,Paye 2 Pierre pour Lvl up Population,Paye 6 Or pour Lvl up Population,Deck Assymétrie,payer(pierre:2) > lvlup(population),payer(or:6) > lvlup(population)
+visuels\cartes\domaines,carte_43,Progrès,,E,Gagne 5 Or,Gagne 2 Or,Deck Assymétrie,or+5,or+2
+visuels\cartes\avancées,carte_1,Comptoir,4,P,"Gagne 2 Or, puis pioche 1 carte",Gagne 1 Or,Pioche commune,or+2 ; pioche(1),or+1
+visuels\cartes\avancées,carte_2,Atelier,3,PM,Gagne 1 Or par Pierre et 1 Or par Métal,,Pioche commune,or+1 / pierre:1 ; or+1 / metal:1,
+visuels\cartes\avancées,carte_3,Marché royal,4,PM,Vend Pierre 3 Or et Métal 4 Or,Vend Pierre 2 Or et Métal 3 Or,Pioche commune,vendre(pierre:3 metal:4),vendre(pierre:2 metal:3)
+visuels\cartes\avancées,carte_4,Trésorerie,6,E,Gagne 6 Or,Gagne 2 Or,Pioche commune,or+6,or+2
+visuels\cartes\avancées,carte_5,Charrette,3,P,"Pioche 1 carte par 2 Pierres, puis gagne 1 Or",,Pioche commune,pioche(1) / pierre:2 ; or+1,
+visuels\cartes\avancées,carte_6,Carrière,RR,PP,Pioche 2 cartes par 3 Pierres,,Pioche commune,pioche(2) / pierre:3,
+visuels\cartes\avancées,carte_7,Caravane,5,PM,"Pioche 1 carte, puis trash 1 carte par 3 Métal",,Pioche commune,pioche(1) ; trash(1) / metal:3,
+visuels\cartes\avancées,carte_8,Grand Marché,7,P,"Pioche 2 cartes, puis gagne 2 Or",Paye 4 Or pour piocher 1 carte,Pioche commune,pioche(2) ; or+2,payer(or:4) > pioche(1)
+visuels\cartes\avancées,carte_9,Bibliothèque,3,E,"Recherche 1 carte par 2 Érudits, puis gagne 1 Or",,Pioche commune,recherche(1) / erudit:2 ; or+1,
+visuels\cartes\avancées,carte_10,Archives,5,EE,"Recherche 1 carte, puis paye 3 Or pour en rechercher 1 autre",Paye 5 Or pour rechercher 1 carte,Pioche commune,recherche(1) ; payer(or:3) > recherche(1),payer(or:5) > recherche(1)
+visuels\cartes\avancées,carte_11,Académie,6,PE,"Recherche 1 carte, puis gagne 1 Or par Érudit",,Pioche commune,recherche(1) ; or+1 / erudit,
+visuels\cartes\avancées,carte_12,Forge,3,M,"Gagne 2 Or, puis paye 4 Or pour trasher 1 carte",Paye 6 Or pour trasher 1 carte,Pioche commune,or+2 ; payer(or:4) > trash(1),payer(or:6) > trash(1)
+visuels\cartes\avancées,carte_13,Fonderie,RR,MM,Paye 1 Métal pour trasher 1 carte par 2 Métal,,Pioche commune,payer(metal:1) > trash(1) / metal:2,
+visuels\cartes\avancées,carte_14,Démolition,5,M,Paye 2 Pierres pour trasher 2 cartes,Paye 7 Or pour trasher 1 carte,Pioche commune,payer(pierre:2) > trash(2),payer(or:7) > trash(1)
+visuels\cartes\avancées,carte_15,Recyclage,4,P,Paye 1 Métal pour trasher 1 carte par 2 Érudits,,Pioche commune,payer(metal:1) > trash(1) / erudit:2,
+visuels\cartes\avancées,carte_16,Bourreau,7,ME,"Trash 2 cartes, puis gagne 2 Or",Paye 8 Or pour trasher 1 carte,Pioche commune,trash(2) ; or+2,payer(or:8) > trash(1)
+visuels\cartes\avancées,carte_17,Chantier,5,PM,"Paye 3 Or pour Lvl up Population, puis pioche 1 carte",Paye 6 Or pour Lvl up Population,Pioche commune,payer(or:3) > lvlup(population) ; pioche(1),payer(or:6) > lvlup(population)
+visuels\cartes\avancées,carte_18,Guilde,4,ME,"Paye 1 Métal pour Lvl up Économie, puis gagne 2 Or",Paye 5 Or pour Lvl up Économie,Pioche commune,payer(metal:1) > lvlup(economie) ; or+2,payer(or:5) > lvlup(economie)
+visuels\cartes\avancées,carte_19,Conseil,5,EE,"Paye 1 Métal pour 1 Privilège au choix, puis pioche 1 carte",Paye 6 Or pour 1 Privilège au hasard,Pioche commune,payer(metal:1) > privilege(choix) ; pioche(1),payer(or:6) > privilege(hasard)
+visuels\cartes\avancées,carte_20,Cathédrale,8,PE,"Lvl up Population, puis Lvl up Économie",,Pioche commune,lvlup(population) ; lvlup(economie),

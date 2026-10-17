@@ -1,0 +1,62 @@
+{
+  "strategie": "libre",
+  "description": "Témoin : aucune contrainte. Montre ce que cette méthode gagne à elle seule contre le champion.",
+  "bornes": {},
+  "contreLeChampion": {
+    "avantEntrainement": {
+      "force": 1.02,
+      "victoiresA2": 50,
+      "victoiresA4": 25.8
+    },
+    "apresEntrainement": {
+      "force": 1.2,
+      "victoiresA2": 56.8,
+      "victoiresA4": 31.6
+    }
+  },
+  "adoptions": 2,
+  "poids": {
+    "or": 1,
+    "pioche": 4.81,
+    "piocheCarte": 0.67,
+    "piocheProche": 2.64,
+    "trash": 9.96,
+    "recherche": 0.08,
+    "lvlupEconomie": 0.52,
+    "lvlupPopulation": 2.47,
+    "privilege": -1.07,
+    "rejouer": -0.07,
+    "pierre": 2.02,
+    "metal": 1.76,
+    "erudit": 0.51,
+    "achat": -10.75,
+    "achatEffet": 3.98,
+    "finLignee": 0.21,
+    "effetRouge": 3.87,
+    "seuilTrash": 20.45,
+    "margeFinale": 1,
+    "parTranche": 0.84,
+    "privileges": {
+      "1": 0,
+      "2": 2.05,
+      "3": 2.03,
+      "4": 1.56,
+      "5": 5.44,
+      "6": 1.15,
+      "7": 0,
+      "8": 5.8,
+      "9": 0.21,
+      "10": 0.08,
+      "11": 2.59,
+      "12": 3.45,
+      "13": 3.14,
+      "14": 1.01,
+      "15": 0.73,
+      "16": 1.25,
+      "17": 0,
+      "18": 0.15,
+      "19": 6.46,
+      "20": 1.37
+    }
+  }
+}

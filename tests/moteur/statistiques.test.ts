@@ -32,13 +32,13 @@ describe('statistiques des joueurs', () => {
     expect(etat.joueurs[1]!.statistiques).toEqual(VIDES);
   });
 
-  it('comptent un seul tour pour un achat suivi d\'un trash', () => {
-    const etat = scene({ main: [c('Cachot')], or: 3 });
+  it('comptent un seul tour pour un achat, et la carte remplacée comme trashée', () => {
+    const etat = scene({ main: [c('Cachot')], or: 2 });
     etat.riviere = [c('Remouleur ambulant')];
     const apres = faire(
       etat,
       { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] },
-      { type: 'trasher', carte: c('Cachot') },
+      { type: 'remplacer', carte: c('Cachot') },
     );
     expect(apres.joueurs[0]!.statistiques).toEqual({ ...VIDES, tours: 1, cartesAchetees: 1, cartesTrashees: 1 });
   });
@@ -178,11 +178,10 @@ describe('statistiques des joueurs', () => {
       expect(etat.joueurs[0]!.statistiques.effetsRougesAutomatiques).toBe(0);
     });
 
-    it('ne donnent l\'Or du Privilège 20 qu\'à celui qui le possède', () => {
+    it('comptent un Effet Rouge automatique pour chaque adversaire qui le reçoit', () => {
       const depart = scene({ main: [c('Épicerie')] }, 3);
-      depart.joueurs[2]!.privileges = [20];
       const apres = faire(depart, { type: 'jouer', carte: c('Épicerie') });
-      expect(apres.joueurs.map((j) => j.or)).toEqual([4, 2, 4]);
+      expect(apres.joueurs.map((j) => j.or)).toEqual([4, 2, 2]);
       expect(apres.joueurs.map((j) => j.statistiques.effetsRougesAutomatiques)).toEqual([0, 1, 1]);
     });
   });

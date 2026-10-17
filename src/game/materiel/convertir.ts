@@ -6,6 +6,7 @@ import type {
   Cout,
   Materiel,
   Origine,
+  Paiement,
   Plateau,
   Privilege,
   Ressources,
@@ -117,7 +118,10 @@ function convertirPlateau(csv: string, erreurs: string[]): Plateau {
   for (const ligne of lireCsv(csv)) {
     const piste = ligne['Piste'] ?? '';
     const statut = ligne['Statut'] ?? '';
-    const cout = premierNombre(ligne['Coût'] ?? '', /(\d+)/) ?? 0;
+    const texteCout = ligne['Coût'] ?? '';
+    const cout = premierNombre(texteCout, /(\d+)/) ?? 0;
+    // « 2 Or » : l'Or est dépensé ; « 1 Pierre / Métal » : les ressources sont seulement comptées.
+    const paiement: Paiement = /pierre|métal|metal/i.test(texteCout) ? 'ressources' : 'or';
     const blasons = premierNombre(statut, /(\d+) blasons?/i) ?? 0;
     if (piste === 'Noblesse') {
       plateau.noblesse.push({ erudits: cout, blasons });
@@ -127,14 +131,14 @@ function convertirPlateau(csv: string, erreurs: string[]): Plateau {
         erreurs.push(`Plateau, Économie : « N Or en début de lignée » attendu dans « ${statut} »`);
         continue;
       }
-      plateau.economie.push({ cout, or, blasons });
+      plateau.economie.push({ cout, paiement, or, blasons });
     } else if (piste === 'Population') {
       const cartes = premierNombre(statut, /Pioche (\d+) cartes?/i);
       if (cartes === null) {
         erreurs.push(`Plateau, Population : « Pioche N cartes » attendu dans « ${statut} »`);
         continue;
       }
-      plateau.population.push({ cout, cartes, blasons });
+      plateau.population.push({ cout, paiement, cartes, blasons });
     } else {
       erreurs.push(`Plateau : piste inconnue « ${piste} »`);
     }

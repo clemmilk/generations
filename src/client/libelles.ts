@@ -46,15 +46,24 @@ export function question(vue: Vue): string {
     }
     case 'trashAchat':
       return `${nom}, veux-tu payer 1 Or de plus pour trasher 1 de tes cartes ?`;
+    case 'remplacementAchat':
+      return `${nom}, choisis la carte que ${carte(attente.carte).nom} va remplacer (elle sera trashée).`;
+    case 'trashPrivilege':
+      return `${nom}, choisis 1 carte à trasher (Privilège).`;
     case 'finNoblesse':
       return `${nom}, tu as assez d'Érudits : veux-tu prendre un Privilège ?`;
-    case 'finEconomie': {
+    case 'finJauges': {
+      if (attente.seule === undefined) {
+        return `${nom}, veux-tu monter une jauge ? (Les Ressources de ton aire de jeu sont partagées entre les deux.)`;
+      }
       const moi = vue.joueurs[attente.joueur];
-      const cout = MATERIEL.plateau.economie[(moi?.niveauEconomie ?? 0) + 1]?.cout;
-      return `${nom}, veux-tu payer ${cout} Or pour monter en Économie ? (Le reste de ton Or sera défaussé.)`;
+      const niveau = attente.seule === 'economie' ? (moi?.niveauEconomie ?? 0) : (moi?.niveauPopulation ?? 0);
+      const suivant = MATERIEL.plateau[attente.seule][niveau + 1];
+      const nomJauge = attente.seule === 'economie' ? 'Économie' : 'Population';
+      const cout = suivant ? (suivant.paiement === 'or' ? `${suivant.cout} Or` : `${suivant.cout} Ressource(s) de ton aire de jeu, sans les dépenser`) : '';
+      const suite = attente.seule === 'economie' ? ' (Le reste de ton Or sera ensuite défaussé.)' : '';
+      return `${nom}, veux-tu monter en ${nomJauge} ? Coût : ${cout}.${suite}`;
     }
-    case 'finPopulation':
-      return `${nom}, tu as assez de Ressources : veux-tu monter en Population ?`;
     case 'debutRecherche':
       return `${nom}, début de lignée : choisis 1 carte de ton deck à prendre en main (Privilège).`;
     case 'debutDefausse':
@@ -73,6 +82,10 @@ export function libelleAction(action: Action, attente: Attente | null): string {
         : `Acheter ${carte(action.carte).nom}`;
     case 'finLignee':
       return 'Mettre fin à ma lignée';
+    case 'remplacer':
+      return `Remplacer ${carte(action.carte).nom}`;
+    case 'remplacerPioche':
+      return 'Remplacer la première carte de ma pioche';
     case 'utiliserPrivilege':
       return action.paiement.length > 0
         ? `Privilège ${action.numero} : piocher en défaussant ${nomsDesCartes(action.paiement)}`

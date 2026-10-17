@@ -48,6 +48,11 @@ const STRATEGIES: Record<string, Strategie> = {
     depart: { lvlupPopulation: 20, pierre: 4, metal: 4 },
     bornes: { lvlupPopulation: { min: 14 }, pierre: { min: 3 }, metal: { min: 3 } },
   },
+  trash: {
+    description: 'Épure son deck avant tout : trashe beaucoup et tôt, achète peu.',
+    depart: { trash: 16, seuilTrash: 14, achat: -15 },
+    bornes: { trash: { min: 12 }, seuilTrash: { min: 10 } },
+  },
   privileges: {
     description: 'Vise les Privilèges et les Érudits avant tout.',
     depart: { privilege: 20, erudit: 5 },

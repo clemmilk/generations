@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { BOTS, choisirAction } from '../../src/ai/index.ts';
 import { POIDS_MANUELS } from '../../src/ai/poids.ts';
-import { creerBotPreferences } from '../../src/ai/preferences.ts';
+import { creerBotPreferences, valeurCarte } from '../../src/ai/preferences.ts';
 import { simulerPartie } from '../../src/ai/simulation.ts';
 import type { Etat } from '../../src/game/index.ts';
 import { alea } from '../../src/game/hasard.ts';
-import { c, faire, installer, scene } from '../moteur/outils.ts';
+import { avecReglage, c, faire, installer, scene } from '../moteur/outils.ts';
 
 const bot = BOTS.preferences;
 
@@ -207,7 +207,24 @@ describe('bot à préférences', () => {
     });
   });
 
-  describe('achat avec trash à 1 Or', () => {
+  describe('achat par remplacement (décision AA)', () => {
+    it('remplace sa carte la moins utile par la carte achetée', () => {
+      // Seules options : 2 cartes de sa défausse (pas de main, pioche vide).
+      const etat = scene({ defausse: [c('Forgeron'), c('Colporteur')], pioche: [], or: 2 });
+      etat.riviere = [c('Remouleur ambulant')];
+      const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] });
+      expect(apres.attente?.type).toBe('remplacementAchat');
+      const moins = [c('Forgeron'), c('Colporteur')].sort(
+        (a, b) => valeurCarte({ privileges: [] }, a, POIDS_MANUELS) - valeurCarte({ privileges: [] }, b, POIDS_MANUELS),
+      )[0]!;
+      expect(choix(apres)).toEqual({ type: 'remplacer', carte: moins });
+    });
+  });
+
+  // Règle de la carte achetée en main (réglage carteAcheteeVa : 'main'), avec le trash à 1 Or.
+  describe('achat avec trash à 1 Or (carte achetée en main)', () => {
+    avecReglage('carteAcheteeVa', 'main');
+
     /** Alice n'a plus de carte en main : elle peut acheter le Remouleur ambulant (2 Or) ou finir sa lignée. */
     const marche = (or: number, defausse: string[]) => {
       const etat = scene({ defausse, or });
@@ -252,10 +269,10 @@ describe('bot à préférences', () => {
       expect(choix(etat)).toEqual({ type: 'payer', paiement: [] });
     });
 
-    it('monte en Population et en Économie quand il le peut en fin de lignée', () => {
+    it('monte en Population puis en Économie quand il le peut en fin de lignée', () => {
       const etat = faire(scene({ aire: [c('Cachot')], or: 2 }), { type: 'finLignee' });
-      expect(choix(etat)).toEqual({ type: 'monter', piste: 'economie' });
-      expect(choix(faire(etat, { type: 'monter', piste: 'economie' }))).toEqual({ type: 'monter', piste: 'population' });
+      expect(choix(etat)).toEqual({ type: 'monter', piste: 'population' });
+      expect(choix(faire(etat, { type: 'monter', piste: 'population' }))).toEqual({ type: 'monter', piste: 'economie' });
     });
 
     it('prend un Privilège quand il y a droit, en suivant ses préférences', () => {

@@ -6,7 +6,7 @@ export type Action =
   | { type: 'jouer'; joueur: number; carte: string }
   | { type: 'acheter'; joueur: number; carte: string; paiement: string[] }
   | { type: 'finLignee'; joueur: number }
-  /** Privilèges 13, 14 et 15 : payer pour piocher, à la place de l'action du tour. */
+  /** Privilèges d'action (13, 14, 15) : payer pour piocher ou trasher, à la place de l'action du tour. */
   | { type: 'utiliserPrivilege'; joueur: number; numero: number; paiement: string[] }
   // Les réponses aux choix proposés pendant un effet ou une fin de lignée
   | { type: 'payer'; joueur: number; paiement: string[] }
@@ -17,6 +17,10 @@ export type Action =
   | { type: 'prendrePrivilege'; joueur: number; numero: number }
   | { type: 'rejouer'; joueur: number }
   | { type: 'monter'; joueur: number; piste: Piste }
+  /** Achat par remplacement : la carte achetée prend la place de cette carte (main, aire de jeu ou défausse). */
+  | { type: 'remplacer'; joueur: number; carte: string }
+  /** Achat par remplacement : la carte achetée prend la place de la première carte de la pioche. */
+  | { type: 'remplacerPioche'; joueur: number }
   /** Refuser ce qui est proposé, ou s'arrêter là. */
   | { type: 'passer'; joueur: number };
 
@@ -39,9 +43,13 @@ export type Attente =
   | ({ type: 'gain'; restant: number } & RefEtape)
   /** Après un achat : payer 1 Or de plus pour trasher 1 carte. */
   | { type: 'trashAchat'; joueur: number }
+  /** Privilège d'action de trash : choisir encore « restant » carte(s) à trasher. */
+  | { type: 'trashPrivilege'; joueur: number; restant: number }
+  /** Achat par remplacement : choisir la carte que la carte achetée remplace. */
+  | { type: 'remplacementAchat'; joueur: number; carte: string }
   | { type: 'finNoblesse'; joueur: number }
-  | { type: 'finEconomie'; joueur: number }
-  | { type: 'finPopulation'; joueur: number }
+  /** Fin de lignée : monter l'Économie et/ou la Population, sur un budget de Ressources commun. */
+  | { type: 'finJauges'; joueur: number; ressourcesUtilisees: number; montees: Piste[]; seule?: Piste }
   /** Début de lignée, Privilège 8 : prendre encore « restant » carte(s) de son choix dans son deck. */
   | { type: 'debutRecherche'; joueur: number; restant: number }
   /** Début de lignée, Privilège 12 : défausser encore « restant » carte(s) de sa main. */
@@ -52,9 +60,12 @@ export type Tache =
   | ({ type: 'etape' } & RefEtape)
   | ({ type: 'gain'; restant: number } & RefEtape)
   | { type: 'trashAchat'; joueur: number }
+  | { type: 'trashPrivilege'; joueur: number; restant: number }
+  | { type: 'remplacementAchat'; joueur: number; carte: string }
   | { type: 'finNoblesse'; joueur: number }
-  | { type: 'finEconomie'; joueur: number }
-  | { type: 'finPopulation'; joueur: number }
+  | { type: 'finJauges'; joueur: number; ressourcesUtilisees: number; montees: Piste[]; seule?: Piste }
+  /** Fin de lignée : l'Or restant est défaussé (sauf Privilège 18), une fois les jauges réglées. */
+  | { type: 'defausserOr'; joueur: number }
   | { type: 'reformerDeck'; joueur: number }
   | { type: 'debutRecherche'; joueur: number; restant: number }
   | { type: 'debutPioche'; joueur: number; cartes: number }

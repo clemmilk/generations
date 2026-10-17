@@ -1,8 +1,9 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { convertirMateriel } from '../../src/game/materiel/convertir.ts';
-import { MATERIEL } from '../../src/game/materiel/index.ts';
-import type { Carte, Couleur } from '../../src/game/materiel/index.ts';
+import donnees from '../../src/game/materiel/materiel.json' with { type: 'json' };
+import type { Carte, Couleur, Materiel } from '../../src/game/materiel/index.ts';
+import { PARAMETRES } from '../../src/game/parametres.ts';
 
 const racine = new URL('../../', import.meta.url);
 const lire = (chemin: string) => readFileSync(new URL(chemin, racine), 'utf8');
@@ -10,7 +11,15 @@ const csvCartes = lire('data/cartes_generations.csv');
 const csvPrivileges = lire('data/privileges_generations.csv');
 const csvPlateau = lire('data/plateau_generations.csv');
 
+// Ce fichier vérifie les VRAIS fichiers de data/ (les autres tests utilisent le matériel fixe de tests/donnees/).
+const MATERIEL = donnees as Materiel;
 const { cartes, privileges, plateau } = MATERIEL;
+// Le matériel fixe des tests, pour vérifier la lecture des csv sur des cartes qui ne bougent pas.
+const materielDeTest = convertirMateriel(
+  lire('tests/donnees/cartes_test.csv'),
+  lire('tests/donnees/privileges_test.csv'),
+  lire('tests/donnees/plateau_test.csv'),
+);
 const COULEURS: Couleur[] = ['bleu', 'jaune', 'rouge', 'vert'];
 
 /** Tout ce qui définit une carte en jeu, sans ce qui la distingue visuellement. */
@@ -24,14 +33,17 @@ describe('matériel importé', () => {
     expect(MATERIEL).toEqual(convertirMateriel(csvCartes, csvPrivileges, csvPlateau));
   });
 
-  it('contient 79 cartes : 4 decks de 9, 10 Assymétrie, 33 Avancée', () => {
-    expect(cartes).toHaveLength(79);
+  it('contient un deck de départ par couleur, assez de cartes Assymétrie pour 4 joueurs, et des cartes Avancée', () => {
+    const taille = cartes.filter((c) => c.couleur === 'bleu').length;
+    expect(taille).toBeGreaterThan(0);
     for (const couleur of COULEURS) {
-      expect(cartes.filter((c) => c.couleur === couleur)).toHaveLength(9);
+      expect(cartes.filter((c) => c.couleur === couleur)).toHaveLength(taille);
     }
-    expect(cartes.filter((c) => c.origine === 'depart')).toHaveLength(36);
-    expect(cartes.filter((c) => c.origine === 'asymetrie')).toHaveLength(10);
-    expect(cartes.filter((c) => c.origine === 'avancee')).toHaveLength(33);
+    expect(cartes.filter((c) => c.origine === 'depart')).toHaveLength(4 * taille);
+    expect(cartes.filter((c) => c.origine === 'asymetrie').length).toBeGreaterThanOrEqual(
+      PARAMETRES.cartesAsymetrieParJoueur * PARAMETRES.joueursMax,
+    );
+    expect(cartes.filter((c) => c.origine === 'avancee').length).toBeGreaterThanOrEqual(PARAMETRES.tailleRiviere);
   });
 
   it('donne des decks de départ identiques dans les 4 couleurs', () => {
@@ -65,8 +77,8 @@ describe('matériel importé', () => {
     }
   });
 
-  it('contient 20 Privilèges numérotés de 1 à 20', () => {
-    expect(privileges.map((p) => p.numero)).toEqual(Array.from({ length: 20 }, (_, i) => i + 1));
+  it('contient des Privilèges numérotés de 1 à N, sans trou', () => {
+    expect(privileges.map((p) => p.numero)).toEqual(Array.from({ length: privileges.length }, (_, i) => i + 1));
   });
 
   it('a une image pour chaque carte et chaque Privilège', () => {
@@ -86,40 +98,42 @@ describe('matériel importé', () => {
     }
   });
 
-  it('reprend les valeurs du plateau personnel', () => {
-    expect(plateau.noblesse).toEqual([
-      { erudits: 1, blasons: 0 },
-      { erudits: 2, blasons: 1 },
-      { erudits: 3, blasons: 2 },
-      { erudits: 4, blasons: 3 },
-    ]);
-    expect(plateau.economie).toEqual([
-      { cout: 0, or: 3, blasons: 0 },
-      { cout: 2, or: 4, blasons: 1 },
-      { cout: 3, or: 7, blasons: 1 },
-      { cout: 4, or: 8, blasons: 2 },
-      { cout: 5, or: 10, blasons: 3 },
-    ]);
-    expect(plateau.population).toEqual([
-      { cout: 0, cartes: 3, blasons: 0 },
-      { cout: 1, cartes: 3, blasons: 1 },
-      { cout: 2, cartes: 4, blasons: 1 },
-      { cout: 3, cartes: 4, blasons: 2 },
-      { cout: 4, cartes: 5, blasons: 3 },
-    ]);
+  it('version du 17/10 : Population payée en Or, Économie en Ressources, Chambellan dans la pioche commune', () => {
+    expect(plateau.population[1]!.paiement).toBe('or');
+    expect(plateau.economie[1]!.paiement).toBe('ressources');
+    const chambellan = cartes.find((c) => c.nom === 'Chambellan');
+    expect(chambellan?.origine).toBe('avancee');
+    expect(chambellan?.ressources).toEqual({ pierre: 2, metal: 2, erudit: 0 });
+  });
+
+  it('a un plateau cohérent : 4 emplacements de Noblesse, des jauges qui progressent', () => {
+    expect(plateau.noblesse.map((n) => n.erudits)).toEqual([1, 2, 3, 4]);
+    for (const piste of ['economie', 'population'] as const) {
+      const niveaux = plateau[piste];
+      expect(niveaux[0]!.cout, piste).toBe(0);
+      for (let i = 1; i < niveaux.length; i++) {
+        // Un niveau ne coûte jamais moins que le précédent, et ne rapporte jamais moins.
+        expect(niveaux[i]!.cout, `${piste} ${i}`).toBeGreaterThanOrEqual(niveaux[i - 1]!.cout);
+        expect(niveaux[i]!.blasons, `${piste} ${i}`).toBeGreaterThanOrEqual(niveaux[i - 1]!.blasons);
+      }
+    }
+    for (let i = 1; i < plateau.economie.length; i++) {
+      expect(plateau.economie[i]!.or).toBeGreaterThanOrEqual(plateau.economie[i - 1]!.or);
+      expect(plateau.population[i]!.cartes).toBeGreaterThanOrEqual(plateau.population[i - 1]!.cartes);
+    }
   });
 });
 
 describe('convertirMateriel', () => {
   it('lit les coûts en Or et en ressources', () => {
-    const cout = (nom: string) => cartes.find((c) => c.nom === nom)?.cout;
+    const cout = (nom: string) => materielDeTest.cartes.find((c) => c.nom === nom)?.cout;
     expect(cout('Remouleur ambulant')).toEqual({ or: 2, pierre: 0, metal: 0, ressource: 0 });
     expect(cout('Banque')).toEqual({ or: 0, pierre: 0, metal: 0, ressource: 1 });
     expect(cout('Cour du roi')).toEqual({ or: 3, pierre: 0, metal: 0, ressource: 2 });
   });
 
   it('lit les ressources portées par les cartes', () => {
-    const ressources = (nom: string) => cartes.find((c) => c.nom === nom)?.ressources;
+    const ressources = (nom: string) => materielDeTest.cartes.find((c) => c.nom === nom)?.ressources;
     expect(ressources('Comptoir maritime')).toEqual({ pierre: 0, metal: 2, erudit: 1 });
     expect(ressources('Cour du roi')).toEqual({ pierre: 3, metal: 0, erudit: 0 });
   });
@@ -148,6 +162,17 @@ describe('convertirMateriel', () => {
     expect(message).toMatch(/Carte carte_d : colonne Départ illisible/);
     expect(message).toMatch(/Carte carte_e : Gain inconnu/);
     expect(message).toMatch(/« carte_f » apparaît plusieurs fois/);
+  });
+
+  it('lit les valeurs et le mode de paiement des jauges', () => {
+    expect(materielDeTest.plateau.economie).toEqual([
+      { cout: 0, paiement: 'or', or: 3, blasons: 0 },
+      { cout: 2, paiement: 'or', or: 4, blasons: 1 },
+      { cout: 3, paiement: 'or', or: 7, blasons: 1 },
+      { cout: 4, paiement: 'or', or: 8, blasons: 2 },
+      { cout: 5, paiement: 'or', or: 10, blasons: 3 },
+    ]);
+    expect(materielDeTest.plateau.population[1]).toEqual({ cout: 1, paiement: 'ressources', cartes: 3, blasons: 1 });
   });
 
   it('signale une ligne de plateau illisible', () => {

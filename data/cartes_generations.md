@@ -33,6 +33,8 @@ Un code est une suite d'étapes séparées par ` ; `. Les étapes sont indépend
   - `privilege(choix)` : prend 1 Privilège parmi les 4 visibles ; `privilege(hasard)` : au hasard dans la pioche
   - `vendre(pierre:2 metal:3)` : paye de la Pierre et du Métal pour gagner 2 Or par Pierre et 3 Or par Métal
   - `rejouer` : Rejouer
+  - `achete(1)` : achète 1 carte de la Rivière, en plus de l'action du tour, comme l'action Acheter
+  - les majuscules sont ignorées (`Or+3` se lit `or+3`)
 - `/ compteur:tranche` (facultatif) : le gain est obtenu 1 fois par tranche de ce que possède le joueur. On peut compter `pierre`, `metal`, `erudit`, `blason_noblesse`, `blason_economie`, `blason_population`. Sans `:tranche`, c'est 1 fois par élément. Exemples : `pioche(1) / pierre:2`, `or+2 / blason_noblesse`. Avec un `payer`, on paye 1 seule fois pour tous les gains.
 - `repetable:` devant une étape : elle peut être refaite autant de fois que le joueur le veut. Exemple : `or+2 ; repetable: payer(or:8) > pioche(1)`.
 

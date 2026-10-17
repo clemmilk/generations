@@ -1,3 +1,5 @@
+import type { Piste } from './materiel/index.ts';
+
 // Valeurs de règles qui ne viennent pas des csv. À modifier ici si les règles changent.
 
 export const PARAMETRES = {
@@ -15,4 +17,17 @@ export const PARAMETRES = {
   mainMaxPourFinDeLignee: 1,
   /** Or à payer en plus du coût d'une carte pour trasher 1 carte lors d'un achat. */
   surcoutTrashAchat: 1,
+  /**
+   * Fin de lignée, après la Noblesse : l'ordre des jauges (version du 17/10 : Population puis Économie),
+   * ou null pour laisser le joueur choisir (essai du 16/10). L'Or restant est défaussé ensuite.
+   */
+  ordreDesJauges: ['population', 'economie'] as readonly Piste[] | null,
+  /**
+   * Où va une carte achetée :
+   * - « main » (règles) ;
+   * - « defausse » (essai du 16/10 : il faut une nouvelle lignée pour la revoir) ;
+   * - « remplacement » (essai du 16/10, décision AA) : la carte achetée remplace une carte du deck, trashée
+   *   gratuitement, et prend sa place (main, aire de jeu, défausse, ou dessus de la pioche).
+   */
+  carteAcheteeVa: 'remplacement' as 'main' | 'defausse' | 'remplacement',
 } as const;

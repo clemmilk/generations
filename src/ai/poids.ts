@@ -37,6 +37,8 @@ export interface Poids {
   erudit: number;
   /** Envie de base d'acheter une carte. Négatif : une carte de plus épaissit le deck. */
   achat: number;
+  /** Valeur hors contexte d'un achat offert par l'effet d'une carte (« achete »). */
+  achatEffet: number;
   /** Envie de base de mettre fin à sa lignée. */
   finLignee: number;
   /** Gêne de jouer une carte dont l'Effet Rouge profite aux adversaires, par adversaire. */
@@ -69,6 +71,7 @@ export const POIDS_MANUELS: Poids = {
   metal: 1.5,
   erudit: 1.5,
   achat: -4,
+  achatEffet: 3,
   finLignee: 0,
   effetRouge: 0.5,
   seuilTrash: 6,

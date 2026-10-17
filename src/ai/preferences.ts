@@ -1,8 +1,8 @@
 import type { Action, Attente } from '../game/actions.ts';
 import { carte } from '../game/cartes.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
-import type { CoutEffet, Etape, Gain } from '../game/materiel/index.ts';
-import { coutEnOr, etapeDe } from '../game/moteur.ts';
+import type { CoutEffet, Etape, Gain, Piste } from '../game/materiel/index.ts';
+import { coutDAchat, coutEnOr, etapeDe, peutMonterEnFinDeLignee } from '../game/moteur.ts';
 import { PARAMETRES } from '../game/parametres.ts';
 import { effetsPrivilege, totalPrivilege } from '../game/privileges.ts';
 import { compter, ressourcesDe, ressourcesEnJeu } from '../game/ressources.ts';
@@ -56,6 +56,8 @@ function valeurGain(gain: Gain, p: Poids): number {
     case 'vendre':
       // Jugé au cas par cas au moment de vendre.
       return 0;
+    case 'achat':
+      return gain.nombre * p.achatEffet;
   }
 }
 
@@ -196,6 +198,9 @@ function valeurEtape(etape: Etape, joueur: VueJoueur, vue: Vue, p: Poids): numbe
     case 'vendre':
       for (const id of joueur.aireDeJeu) valeur += Math.max(0, gainDeVente(joueur, id, gain, p));
       break;
+    case 'achat':
+      valeur = meilleurAchat(joueur, vue, p);
+      break;
   }
   return Math.max(0, valeur - valeurCout(cout, p));
 }
@@ -203,12 +208,72 @@ function valeurEtape(etape: Etape, joueur: VueJoueur, vue: Vue, p: Poids): numbe
 /** Combien de cartes le joueur piochera au début de sa prochaine lignée, s'il la termine maintenant. */
 function piocheDeLaProchaineLignee(joueur: VueJoueur): number {
   const { population } = MATERIEL.plateau;
-  const r = ressourcesEnJeu(joueur);
-  const suivant = population[joueur.niveauPopulation + 1];
-  const niveau = suivant && r.pierre + r.metal >= suivant.cout ? joueur.niveauPopulation + 1 : joueur.niveauPopulation;
+  const niveau = peutMonterEnFinDeLignee(joueur, 'population') ? joueur.niveauPopulation + 1 : joueur.niveauPopulation;
   // Les Privilèges 8 et 12 ne changent pas le nombre de cartes prises dans la pioche au total.
   const enPlus = totalPrivilege(joueur, 'piocheEtDefausseDebutLignee', (effet) => effet.cartes);
   return (population[niveau]?.cartes ?? 0) + enPlus;
+}
+
+/**
+ * La note d'un achat. « paiement » : les cartes défaussées pour payer les Ressources ; null si on ne
+ * le sait pas encore (on compte alors chaque Ressource à la valeur de la moins chère, Pierre ou Métal).
+ */
+/** Valeur moyenne des cartes de sa pioche : ce que vaut, en moyenne, la première carte de la pioche. */
+function valeurMoyennePioche(moi: VueJoueur, p: Poids): number | null {
+  const pioche = moi.contenuPioche ?? [];
+  if (pioche.length === 0) return null;
+  return pioche.reduce((total, id) => total + valeurCarte(moi, id, p), 0) / pioche.length;
+}
+
+/** Achat par remplacement : la valeur de la carte qu'il sacrifierait (la moins utile de son deck). */
+function valeurDuRemplacement(moi: VueJoueur, p: Poids): number {
+  const valeurs = [...(moi.main ?? []), ...moi.aireDeJeu, ...moi.defausse].map((id) => valeurCarte(moi, id, p));
+  const pioche = valeurMoyennePioche(moi, p);
+  if (pioche !== null) valeurs.push(pioche);
+  return valeurs.length > 0 ? Math.min(...valeurs) : 0;
+}
+
+function noteAchat(moi: VueJoueur, id: string, paiement: string[] | null, p: Poids): number {
+  const cout = coutEnOr(moi, id);
+  if (PARAMETRES.carteAcheteeVa === 'remplacement') {
+    // Le deck ne grossit pas : la carte achetée remplace la moins utile, trashée gratuitement.
+    let note = valeurCarte(moi, id, p) - valeurDuRemplacement(moi, p) - cout * p.or;
+    note += totalPrivilege(moi, 'orParTrash', (effet) => effet.or) * p.or;
+    if (paiement) for (const carteDonnee of paiement) note -= valeurRessources(moi, carteDonnee, p);
+    else note -= coutDAchat(moi, id).ressource * Math.min(p.pierre, p.metal);
+    return note;
+  }
+  // Une carte de plus dans le deck…
+  let note = valeurCarte(moi, id, p) + p.achat - cout * p.or;
+  if (paiement) for (const carteDonnee of paiement) note -= valeurRessources(moi, carteDonnee, p);
+  else note -= coutDAchat(moi, id).ressource * Math.min(p.pierre, p.metal);
+  // … sauf que, pour 1 Or de plus, l'achat permet de trasher une carte : le deck ne grossit pas.
+  // Ce trash vaut autant qu'un trash obtenu par un effet de carte, pour bien moins cher.
+  if (carteARemplacer(moi, p, moi.or - cout) !== null) {
+    note += p.trash - PARAMETRES.surcoutTrashAchat * p.or;
+  }
+  return note;
+}
+
+/** Le meilleur achat que le joueur peut se payer dans la Rivière (Or et Ressources de son aire de jeu), 0 s'il n'y en a pas. */
+function meilleurAchat(moi: VueJoueur, vue: Vue, p: Poids): number {
+  const r = ressourcesEnJeu(moi);
+  let meilleure = 0;
+  for (const id of vue.riviere) {
+    if (moi.or < coutEnOr(moi, id) || r.pierre + r.metal < coutDAchat(moi, id).ressource) continue;
+    meilleure = Math.max(meilleure, noteAchat(moi, id, null, p));
+  }
+  return meilleure;
+}
+
+/** Monter cette jauge en fin de lignée vaut-il le coup ? L'Or non dépensé est perdu, sauf avec le Privilège 18. */
+function monterVautLeCoup(moi: VueJoueur, piste: Piste, p: Poids): boolean {
+  const valeur = piste === 'economie' ? p.lvlupEconomie : p.lvlupPopulation;
+  const niveau = piste === 'economie' ? moi.niveauEconomie : moi.niveauPopulation;
+  const suivant = MATERIEL.plateau[piste][niveau + 1];
+  const garde = effetsPrivilege(moi, 'conserveOr').length > 0;
+  if (suivant?.paiement === 'or' && garde) return valeur > suivant.cout * p.or;
+  return valeur > 0;
 }
 
 function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): number {
@@ -218,27 +283,28 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
       // La carte jouée compte dans son propre effet : on l'imagine déjà dans l'aire de jeu.
       const apres: VueJoueur = { ...moi, aireDeJeu: [...moi.aireDeJeu, c.id], nbCartesMain: moi.nbCartesMain - 1 };
       let note = valeurRessources(moi, c.id, p);
+      // Privilège 20 : jouer une carte Avancée rapporte de l'Or.
+      if (c.origine === 'avancee') note += totalPrivilege(moi, 'orParCarteAvanceeJouee', (effet) => effet.or) * p.or;
       for (const etape of c.effet) note += valeurEtape(etape, apres, vue, p);
       if (c.effetRouge.length > 0) note -= p.effetRouge * (vue.joueurs.length - 1);
       return note;
     }
-    case 'acheter': {
-      const cout = coutEnOr(moi, action.carte);
-      // Une carte de plus dans le deck…
-      let note = valeurCarte(moi, action.carte, p) + p.achat - cout * p.or;
-      for (const id of action.paiement) note -= valeurRessources(moi, id, p);
-      // … sauf que, pour 1 Or de plus, l'achat permet de trasher une carte : le deck ne grossit pas.
-      // Ce trash vaut autant qu'un trash obtenu par un effet de carte, pour bien moins cher.
-      if (carteARemplacer(moi, p, moi.or - cout) !== null) {
-        note += p.trash - PARAMETRES.surcoutTrashAchat * p.or;
-      }
-      return note;
-    }
+    case 'acheter':
+      return noteAchat(moi, action.carte, action.paiement, p);
     case 'utiliserPrivilege': {
-      const effet = effetsPrivilege(moi, 'actionPioche').find((e) => e.numero === action.numero);
-      if (!effet) return -Infinity;
-      if (effet.cartes >= moi.nbCartesPioche) return VICTOIRE;
-      let note = valeurDesPioches(moi, effet.cartes, 'pioche', p) - effet.cout.or * p.or;
+      const pioche = effetsPrivilege(moi, 'actionPioche').find((e) => e.numero === action.numero);
+      const trash = effetsPrivilege(moi, 'actionTrash').find((e) => e.numero === action.numero);
+      let note: number;
+      if (pioche) {
+        if (pioche.cartes >= moi.nbCartesPioche) return VICTOIRE;
+        note = valeurDesPioches(moi, pioche.cartes, 'pioche', p) - pioche.cout.or * p.or;
+      } else if (trash) {
+        const cartes = Math.min(trash.cartes, cartesFaibles(moi, p).length);
+        if (cartes <= 0) return -Infinity;
+        note = cartes * p.trash - trash.cout.or * p.or;
+      } else {
+        return -Infinity;
+      }
       for (const id of action.paiement) note -= valeurRessources(moi, id, p);
       return note;
     }
@@ -246,14 +312,11 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
       // Si la pioche de la prochaine lignée vide le deck, c'est gagné.
       if (piocheDeLaProchaineLignee(moi) >= nombreDeCartes(moi)) return VICTOIRE;
       let note = p.finLignee;
-      const { noblesse, economie, population } = MATERIEL.plateau;
       const r = ressourcesEnJeu(moi);
-      const emplacement = noblesse[moi.privileges.length];
+      const emplacement = MATERIEL.plateau.noblesse[moi.privileges.length];
       if (emplacement && r.erudit >= emplacement.erudits && vue.privilegesVisibles.length > 0) note += p.privilege;
-      const eco = economie[moi.niveauEconomie + 1];
-      if (eco && moi.or >= eco.cout) note += p.lvlupEconomie;
-      const pop = population[moi.niveauPopulation + 1];
-      if (pop && r.pierre + r.metal >= pop.cout) note += p.lvlupPopulation;
+      if (peutMonterEnFinDeLignee(moi, 'economie')) note += p.lvlupEconomie;
+      if (peutMonterEnFinDeLignee(moi, 'population')) note += p.lvlupPopulation;
       return note;
     }
     default:
@@ -336,32 +399,53 @@ function choisir(vue: Vue, actions: Action[], p: Poids, hasard: () => number): A
           const rentables = choix.filter((c) => c.note > 0);
           return rentables.length > 0 ? meilleur(rentables, hasard) : (passer ?? actions[0]!);
         }
+        case 'achat': {
+          const choix: Choix[] = actions.flatMap((action) =>
+            action.type === 'acheter' ? [{ action, note: noteAchat(moi, action.carte, action.paiement, p) }] : [],
+          );
+          const rentables = choix.filter((c) => c.note > 0);
+          return rentables.length > 0 ? meilleur(rentables, hasard) : (passer ?? actions[0]!);
+        }
         default:
           return actions[0]!;
       }
     }
 
+    case 'remplacementAchat': {
+      // Il sacrifie la carte la moins utile ; la carte achetée arrive là où elle sera la plus utile.
+      // En main, il peut la jouer tout de suite ; sur la pioche, il la piochera bientôt.
+      const pioche = valeurMoyennePioche(moi, p);
+      const choix: Choix[] = actions.flatMap((action): Choix[] => {
+        if (action.type === 'remplacerPioche') return pioche === null ? [] : [{ action, note: -pioche + 0.5 * p.pioche }];
+        if (action.type !== 'remplacer') return [];
+        const enMain = (moi.main ?? []).includes(action.carte);
+        return [{ action, note: -valeurCarte(moi, action.carte, p) + (enMain ? p.pioche : 0) }];
+      });
+      return meilleur(choix, hasard);
+    }
+
     case 'trashAchat': {
       // La carte qu'il vient d'acheter est la dernière de sa main : il ne la trashe pas aussitôt.
-      const achetee = moi.main?.at(-1);
+      const achetee = PARAMETRES.carteAcheteeVa === 'defausse' ? moi.defausse.at(-1) : moi.main?.at(-1);
       const autres = actions.filter((a) => !(a.type === 'trasher' && a.carte === achetee));
       return choisirTrash(autres, moi, p, PARAMETRES.surcoutTrashAchat * p.or, hasard);
     }
 
+    case 'trashPrivilege':
+      return choisirTrash(actions, moi, p, 0, hasard);
+
     case 'finNoblesse':
       return choisirPrivilege(actions, p, hasard);
 
-    case 'finEconomie': {
-      const monter = actions.find((a) => a.type === 'monter');
-      // L'Or restant est perdu de toute façon, sauf avec le Privilège 18.
-      const garde = effetsPrivilege(moi, 'conserveOr').length > 0;
-      const cout = MATERIEL.plateau.economie[moi.niveauEconomie + 1]?.cout ?? 0;
-      const vautLeCoup = garde ? p.lvlupEconomie > cout * p.or : p.lvlupEconomie > 0;
-      return (vautLeCoup ? monter : passer) ?? actions[0]!;
+    case 'finJauges': {
+      // La jauge qui lui tient le plus à cœur d'abord : elle prend sa part du budget de Ressources.
+      const choix: Choix[] = actions.flatMap((action) =>
+        action.type === 'monter' && monterVautLeCoup(moi, action.piste, p)
+          ? [{ action, note: action.piste === 'economie' ? p.lvlupEconomie : p.lvlupPopulation }]
+          : [],
+      );
+      return choix.length > 0 ? meilleur(choix, hasard) : (passer ?? actions[0]!);
     }
-
-    case 'finPopulation':
-      return (p.lvlupPopulation > 0 ? actions.find((a) => a.type === 'monter') : passer) ?? actions[0]!;
 
     case 'debutRecherche':
       return choisirCarte(actions, moi, p, 1, hasard);

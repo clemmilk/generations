@@ -26,6 +26,8 @@ function verifier(etat: Etat): void {
     ...etat.piocheCommune,
     ...etat.trash,
     ...etat.asymetrieEcartees,
+    // Achat par remplacement : la carte achetée attend que le joueur choisisse la carte qu'elle remplace.
+    ...(etat.attente?.type === 'remplacementAchat' ? [etat.attente.carte] : []),
   ];
   const attendues = MATERIEL.cartes.filter(
     (c) => c.couleur === null || etat.joueurs.some((j) => j.couleur === c.couleur),
@@ -39,8 +41,8 @@ function verifier(etat: Etat): void {
     ...etat.privilegesVisibles,
     ...etat.piochePrivileges,
   ];
-  expect(privileges.length).toBe(20);
-  expect(new Set(privileges).size).toBe(20);
+  expect(privileges.length).toBe(MATERIEL.privileges.length);
+  expect(new Set(privileges).size).toBe(MATERIEL.privileges.length);
 
   for (const joueur of etat.joueurs) {
     expect(joueur.or).toBeGreaterThanOrEqual(0);

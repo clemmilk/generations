@@ -44,7 +44,7 @@
     },
     {
       "id": "carte_72",
-      "nom": "Épicerie",
+      "nom": "Forgeron",
       "image": "visuels/cartes/jbleu/carte_72.jpg",
       "origine": "depart",
       "couleur": "bleu",
@@ -61,28 +61,22 @@
       },
       "effet": [
         {
-          "cout": null,
+          "cout": {
+            "or": 2,
+            "pierre": 0,
+            "metal": 0
+          },
           "gain": {
-            "type": "or",
-            "montant": 2
+            "type": "pioche",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Gagne 2 Or",
-      "texteEffetRouge": "Gagne 1 Or"
+      "effetRouge": [],
+      "texteEffet": "Payez 2 Or pour piocher 1 carte",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_73",
@@ -97,8 +91,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
-        "metal": 1,
+        "pierre": 1,
+        "metal": 0,
         "erudit": 0
       },
       "effet": [
@@ -184,7 +178,7 @@
     },
     {
       "id": "carte_75",
-      "nom": "Forgeron",
+      "nom": "Épicerie",
       "image": "visuels/cartes/jbleu/carte_75.jpg",
       "origine": "depart",
       "couleur": "bleu",
@@ -204,15 +198,25 @@
           "cout": null,
           "gain": {
             "type": "or",
+            "montant": 2
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
             "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [],
-      "texteEffet": "Gagne 1 Or",
-      "texteEffetRouge": ""
+      "texteEffet": "Gagne 2 Or",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_76",
@@ -227,8 +231,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
-        "metal": 0,
+        "pierre": 0,
+        "metal": 1,
         "erudit": 0
       },
       "effet": [
@@ -306,9 +310,9 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 0,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
@@ -410,7 +414,7 @@
     },
     {
       "id": "carte_45",
-      "nom": "Épicerie",
+      "nom": "Forgeron",
       "image": "visuels/cartes/jjaune/carte_45.jpg",
       "origine": "depart",
       "couleur": "jaune",
@@ -427,28 +431,22 @@
       },
       "effet": [
         {
-          "cout": null,
+          "cout": {
+            "or": 2,
+            "pierre": 0,
+            "metal": 0
+          },
           "gain": {
-            "type": "or",
-            "montant": 2
+            "type": "pioche",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Gagne 2 Or",
-      "texteEffetRouge": "Gagne 1 Or"
+      "effetRouge": [],
+      "texteEffet": "Payez 2 Or pour piocher 1 carte",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_46",
@@ -463,8 +461,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
-        "metal": 1,
+        "pierre": 1,
+        "metal": 0,
         "erudit": 0
       },
       "effet": [
@@ -550,7 +548,7 @@
     },
     {
       "id": "carte_48",
-      "nom": "Forgeron",
+      "nom": "Épicerie",
       "image": "visuels/cartes/jjaune/carte_48.jpg",
       "origine": "depart",
       "couleur": "jaune",
@@ -570,15 +568,25 @@
           "cout": null,
           "gain": {
             "type": "or",
+            "montant": 2
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
             "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [],
-      "texteEffet": "Gagne 1 Or",
-      "texteEffetRouge": ""
+      "texteEffet": "Gagne 2 Or",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_49",
@@ -593,8 +601,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
-        "metal": 0,
+        "pierre": 0,
+        "metal": 1,
         "erudit": 0
       },
       "effet": [
@@ -672,9 +680,9 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 0,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
@@ -776,7 +784,7 @@
     },
     {
       "id": "carte_54",
-      "nom": "Épicerie",
+      "nom": "Forgeron",
       "image": "visuels/cartes/jrouge/carte_54.jpg",
       "origine": "depart",
       "couleur": "rouge",
@@ -793,28 +801,22 @@
       },
       "effet": [
         {
-          "cout": null,
+          "cout": {
+            "or": 2,
+            "pierre": 0,
+            "metal": 0
+          },
           "gain": {
-            "type": "or",
-            "montant": 2
+            "type": "pioche",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Gagne 2 Or",
-      "texteEffetRouge": "Gagne 1 Or"
+      "effetRouge": [],
+      "texteEffet": "Payez 2 Or pour piocher 1 carte",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_55",
@@ -829,8 +831,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
-        "metal": 1,
+        "pierre": 1,
+        "metal": 0,
         "erudit": 0
       },
       "effet": [
@@ -916,7 +918,7 @@
     },
     {
       "id": "carte_57",
-      "nom": "Forgeron",
+      "nom": "Épicerie",
       "image": "visuels/cartes/jrouge/carte_57.jpg",
       "origine": "depart",
       "couleur": "rouge",
@@ -936,15 +938,25 @@
           "cout": null,
           "gain": {
             "type": "or",
+            "montant": 2
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
             "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [],
-      "texteEffet": "Gagne 1 Or",
-      "texteEffetRouge": ""
+      "texteEffet": "Gagne 2 Or",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_58",
@@ -959,8 +971,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
-        "metal": 0,
+        "pierre": 0,
+        "metal": 1,
         "erudit": 0
       },
       "effet": [
@@ -1038,9 +1050,9 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 0,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
@@ -1142,7 +1154,7 @@
     },
     {
       "id": "carte_63",
-      "nom": "Épicerie",
+      "nom": "Forgeron",
       "image": "visuels/cartes/jvert/carte_63.jpg",
       "origine": "depart",
       "couleur": "vert",
@@ -1159,28 +1171,22 @@
       },
       "effet": [
         {
-          "cout": null,
+          "cout": {
+            "or": 2,
+            "pierre": 0,
+            "metal": 0
+          },
           "gain": {
-            "type": "or",
-            "montant": 2
+            "type": "pioche",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 1
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Gagne 2 Or",
-      "texteEffetRouge": "Gagne 1 Or"
+      "effetRouge": [],
+      "texteEffet": "Payez 2 Or pour piocher 1 carte",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_64",
@@ -1195,8 +1201,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
-        "metal": 1,
+        "pierre": 1,
+        "metal": 0,
         "erudit": 0
       },
       "effet": [
@@ -1282,7 +1288,7 @@
     },
     {
       "id": "carte_66",
-      "nom": "Forgeron",
+      "nom": "Épicerie",
       "image": "visuels/cartes/jvert/carte_66.jpg",
       "origine": "depart",
       "couleur": "vert",
@@ -1302,15 +1308,25 @@
           "cout": null,
           "gain": {
             "type": "or",
+            "montant": 2
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
+      "effetRouge": [
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
             "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [],
-      "texteEffet": "Gagne 1 Or",
-      "texteEffetRouge": ""
+      "texteEffet": "Gagne 2 Or",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_67",
@@ -1325,8 +1341,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
-        "metal": 0,
+        "pierre": 0,
+        "metal": 1,
         "erudit": 0
       },
       "effet": [
@@ -1404,9 +1420,9 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
+        "pierre": 0,
         "metal": 0,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
@@ -2539,14 +2555,14 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 4,
+        "or": 5,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
       },
       "ressources": {
-        "pierre": 0,
-        "metal": 1,
+        "pierre": 1,
+        "metal": 0,
         "erudit": 1
       },
       "effet": [
@@ -3036,8 +3052,8 @@
       },
       "ressources": {
         "pierre": 0,
-        "metal": 2,
-        "erudit": 0
+        "metal": 1,
+        "erudit": 1
       },
       "effet": [
         {

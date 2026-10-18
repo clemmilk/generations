@@ -1,0 +1,603 @@
+<title>Generations Rulebook</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700&family=Alegreya:ital,wght@0,400;0,600;0,700;1,400&family=Alegreya+Sans+SC:wght@500;700&display=swap">
+<style>
+/* Mise en page : un livret de boîte de jeu. Parchemin des tuiles, bois brun et bandeau rouge des cartes.
+   Sommaire fixe à gauche sur grand écran, chapitres en colonne de lecture, encadrés « À retenir » et « Exemple ». */
+:root {
+  --parchemin: #f2e8d2;
+  --papier: #fbf6ea;
+  --encre: #2a2118;
+  --encre-douce: #6b5a47;
+  --bois: #4a3424;
+  --filet: #dccbaa;
+  --rouge: #a8262b;
+  --rouge-fond: #f6dfdc;
+  --or: #c98f0e;
+  --or-fond: #f8ecc8;
+  --noblesse: #1b789f;
+  --noblesse-fond: #dcedf4;
+  --population: #474747;
+  --population-fond: #e7e5e1;
+  --titre: "Grenze Gotisch", "UnifrakturMaguntia", Georgia, serif;
+  --texte: "Alegreya", Georgia, "Times New Roman", serif;
+  --etiquette: "Alegreya Sans SC", "Gill Sans", "Trebuchet MS", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --parchemin: #1b1510; --papier: #251e17; --encre: #eee3cc; --encre-douce: #b9a688; --bois: #d3ad7f;
+    --filet: #3e3226; --rouge: #e2625f; --rouge-fond: #3a1d1b; --or: #e8b83a; --or-fond: #36290f;
+    --noblesse: #58b5dc; --noblesse-fond: #142b36; --population: #b9b9b9; --population-fond: #2c2a27;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --parchemin: #1b1510; --papier: #251e17; --encre: #eee3cc; --encre-douce: #b9a688; --bois: #d3ad7f;
+  --filet: #3e3226; --rouge: #e2625f; --rouge-fond: #3a1d1b; --or: #e8b83a; --or-fond: #36290f;
+  --noblesse: #58b5dc; --noblesse-fond: #142b36; --population: #b9b9b9; --population-fond: #2c2a27;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--parchemin);
+  color: var(--encre);
+  font-family: var(--texte);
+  font-size: 1.075rem;
+  line-height: 1.6;
+}
+.cadre {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 4rem;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 3rem;
+}
+@media (max-width: 860px) { .cadre { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+
+/* Sommaire */
+nav.sommaire {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  align-self: start;
+  padding-block: 2.2rem 1rem;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+nav.sommaire h2 {
+  font-family: var(--etiquette); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.08em;
+  color: var(--encre-douce); margin: 0 0 0.6rem;
+}
+nav.sommaire ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; counter-reset: chap; }
+nav.sommaire li { counter-increment: chap; }
+nav.sommaire a {
+  display: grid; grid-template-columns: 1.7rem 1fr; padding: 0.22rem 0.4rem; border-radius: 4px;
+  color: var(--encre); text-decoration: none; font-size: 0.96rem; line-height: 1.3;
+}
+nav.sommaire a::before { content: counter(chap); font-family: var(--etiquette); color: var(--rouge); }
+nav.sommaire a:hover, nav.sommaire a:focus-visible { background: var(--papier); outline: none; }
+@media (max-width: 860px) {
+  nav.sommaire { position: static; max-height: none; padding-block: 1.5rem 0; }
+  nav.sommaire ol { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+
+main { min-width: 0; }
+
+/* Couverture */
+.couverture {
+  padding-block: 2.5rem 2rem;
+  border-bottom: 2px solid var(--bois);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: end;
+}
+.couverture h1 {
+  font-family: var(--titre); font-weight: 700; font-size: clamp(3.2rem, 9vw, 5.6rem);
+  line-height: 0.95; margin: 0; letter-spacing: 0.01em; color: var(--bois);
+}
+.couverture .sous-titre { font-family: var(--etiquette); letter-spacing: 0.08em; color: var(--rouge); margin: 0 0 0.4rem; font-size: 1rem; }
+.couverture .accroche { font-size: 1.2rem; max-width: 34rem; margin: 1rem 0 0; }
+.reperes { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-top: 1.2rem; font-family: var(--etiquette); font-size: 0.95rem; letter-spacing: 0.04em; color: var(--encre-douce); }
+.reperes strong { color: var(--encre); font-family: var(--texte); font-size: 1.1rem; letter-spacing: 0; }
+.eventail { display: flex; align-items: flex-end; padding-right: 1rem; }
+.eventail img { width: 118px; border-radius: 7px; box-shadow: 0 6px 18px rgba(30, 20, 10, 0.28); }
+.eventail img:nth-child(1) { transform: rotate(-9deg) translate(18px, 6px); }
+.eventail img:nth-child(2) { transform: translateY(-10px); position: relative; z-index: 1; }
+.eventail img:nth-child(3) { transform: rotate(9deg) translate(-18px, 6px); }
+@media (max-width: 640px) {
+  .couverture { grid-template-columns: minmax(0, 1fr); }
+  .eventail { justify-content: center; padding: 0.5rem 0 0; }
+  .eventail img { width: 92px; }
+}
+
+/* Chapitres */
+section.chapitre { padding-block: 2.6rem 0.5rem; scroll-margin-top: 1rem; }
+.chapitre > h2 {
+  font-family: var(--titre); font-weight: 700; font-size: clamp(2rem, 4.6vw, 2.6rem); line-height: 1.05;
+  margin: 0 0 1rem; color: var(--bois); text-wrap: balance;
+  display: flex; align-items: baseline; gap: 0.8rem;
+}
+.chapitre > h2 .num { font-family: var(--etiquette); font-size: 1rem; color: var(--rouge); letter-spacing: 0.06em; }
+h3 { font-family: var(--etiquette); font-weight: 700; font-size: 1.12rem; letter-spacing: 0.05em; margin: 1.8rem 0 0.5rem; color: var(--encre); text-wrap: balance; }
+p { margin: 0 0 0.9rem; max-width: 68ch; }
+ul, ol { max-width: 68ch; padding-left: 1.3rem; margin: 0 0 1rem; }
+li { margin-bottom: 0.35rem; }
+li::marker { color: var(--rouge); }
+strong { font-weight: 700; }
+em.terme { font-style: normal; font-weight: 700; color: var(--rouge); }
+
+img.ico { height: 1.35em; width: auto; vertical-align: -0.32em; margin: 0 0.08em; }
+
+/* Encadrés */
+.encadre { border-radius: 6px; padding: 1rem 1.2rem; margin: 1.2rem 0; max-width: 72ch; }
+.encadre > :last-child { margin-bottom: 0; }
+.encadre .etiq { font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.08em; font-size: 0.9rem; display: block; margin-bottom: 0.35rem; }
+.retenir { background: var(--papier); border: 2px solid var(--bois); }
+.retenir .etiq { color: var(--bois); }
+.exemple { background: var(--papier); border-left: 5px solid var(--noblesse); }
+.exemple .etiq { color: var(--noblesse); }
+.rouge { background: var(--rouge-fond); border-left: 5px solid var(--rouge); }
+.rouge .etiq { color: var(--rouge); }
+
+.but {
+  text-align: center; padding: 1.6rem 1.2rem; margin: 1.4rem 0; border-block: 2px solid var(--bois);
+  font-family: var(--titre); font-size: clamp(1.5rem, 3.6vw, 2rem); line-height: 1.2; color: var(--bois); text-wrap: balance;
+}
+
+/* Matériel */
+.materiel { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.8rem 1.6rem; list-style: none; padding: 0; max-width: none; }
+.materiel li { display: grid; grid-template-columns: 3.2rem 1fr; gap: 0.6rem; align-items: baseline; margin: 0; padding-block: 0.4rem; border-bottom: 1px solid var(--filet); }
+.materiel .qte { font-family: var(--titre); font-size: 1.7rem; color: var(--rouge); text-align: right; line-height: 1; font-variant-numeric: tabular-nums; }
+
+/* Anatomie d'une carte */
+.anatomie { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2rem; align-items: start; margin-top: 1rem; }
+.anatomie figure { margin: 0; position: relative; }
+.anatomie figure img { width: 100%; border-radius: 9px; display: block; box-shadow: 0 4px 14px rgba(30, 20, 10, 0.22); }
+.repere {
+  position: absolute; width: 1.7rem; height: 1.7rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--rouge); color: #fff; font-family: var(--etiquette); font-weight: 700; font-size: 0.95rem;
+  box-shadow: 0 0 0 2px #fff;
+}
+.legende { list-style: none; padding: 0; margin: 0; counter-reset: rep; display: grid; gap: 0.6rem; }
+.legende li { counter-increment: rep; display: grid; grid-template-columns: 2rem 1fr; gap: 0.5rem; margin: 0; }
+.legende li::before {
+  content: counter(rep); width: 1.7rem; height: 1.7rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--rouge); color: #fff; font-family: var(--etiquette); font-weight: 700; font-size: 0.95rem;
+}
+@media (max-width: 640px) { .anatomie { grid-template-columns: minmax(0, 1fr); } .anatomie figure { max-width: 240px; } }
+
+/* Icônes */
+.icones { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.6rem 1.6rem; margin: 1rem 0; }
+.icones div { display: grid; grid-template-columns: 2.6rem 1fr; gap: 0.7rem; align-items: center; }
+.icones img { width: 2.4rem; height: auto; }
+.icones .r { width: 2.4rem; height: 2.4rem; border-radius: 6px; display: grid; place-items: center; font-family: var(--etiquette); font-weight: 700; color: #fff; background: linear-gradient(135deg, #6a6f7a 50%, #7b3f86 50%); }
+
+/* Étapes numérotées (une vraie séquence) */
+ol.etapes { list-style: none; padding: 0; counter-reset: et; display: grid; gap: 0.75rem; max-width: 70ch; }
+ol.etapes > li { counter-increment: et; display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem; margin: 0; }
+ol.etapes > li::before {
+  content: counter(et); font-family: var(--titre); font-size: 1.7rem; line-height: 1; color: var(--rouge); text-align: right;
+}
+ol.etapes > li > div > :last-child { margin-bottom: 0; }
+ol.etapes ul { margin: 0.4rem 0 0; }
+
+/* Plateau personnel */
+.pistes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+@media (max-width: 1000px) { .pistes { grid-template-columns: minmax(0, 1fr); } }
+.piste { border-radius: 8px; overflow: hidden; border: 2px solid var(--c); background: var(--papier); }
+.piste header { background: var(--c); color: #fff; padding: 0.55rem 0.9rem; display: flex; align-items: center; gap: 0.6rem; }
+.piste header img { height: 1.8rem; }
+.piste header h4 { margin: 0; font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.06em; font-size: 1.05rem; }
+.piste header small { margin-left: auto; font-family: var(--etiquette); font-size: 0.82rem; opacity: 0.9; letter-spacing: 0.03em; text-align: right; }
+.piste table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 0.98rem; }
+.piste th { font-family: var(--etiquette); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.04em; color: var(--encre-douce); text-align: left; padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--filet); }
+.piste td { padding: 0.42rem 0.7rem; border-bottom: 1px solid var(--filet); vertical-align: middle; }
+.piste tr:last-child td { border-bottom: 0; }
+.piste td:first-child { font-family: var(--titre); font-size: 1.25rem; color: var(--c); width: 2.4rem; }
+.piste .bl img { height: 1.3rem; margin-right: 1px; vertical-align: -0.3em; }
+.p-noblesse { --c: var(--noblesse); }
+.p-economie { --c: var(--or); }
+.p-population { --c: var(--population); }
+.p-economie header, .p-economie td:first-child { color: #2a2118; }
+.p-economie td:first-child { color: var(--or); }
+
+.vue-plateau { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 1.8rem; align-items: start; margin: 1.2rem 0 0.5rem; }
+.vue-plateau figure { margin: 0; }
+.vue-plateau figure img { width: 100%; display: block; border-radius: 8px; box-shadow: 0 4px 16px rgba(30, 20, 10, 0.25); }
+.lecture { display: grid; gap: 0.9rem; min-width: 0; }
+.zone { border-left: 5px solid var(--c); padding: 0.2rem 0 0.2rem 0.9rem; }
+.zone h4 { margin: 0 0 0.25rem; font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.05em; font-size: 1.02rem; color: var(--c); }
+.zone p { margin: 0; }
+.lecture .note { color: var(--encre-douce); font-style: italic; margin: 0; }
+@media (max-width: 760px) { .vue-plateau { grid-template-columns: minmax(0, 1fr); } .vue-plateau figure { max-width: 380px; } }
+
+/* Les 4 actions */
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+@media (max-width: 700px) { .actions { grid-template-columns: minmax(0, 1fr); } }
+.action { background: var(--papier); border: 1px solid var(--filet); border-top: 4px solid var(--bois); border-radius: 6px; padding: 1rem 1.1rem; min-width: 0; }
+.action h3 { margin: 0 0 0.4rem; font-family: var(--titre); font-weight: 700; font-size: 1.55rem; letter-spacing: 0; color: var(--bois); }
+.action p, .action ul { max-width: none; }
+.action > :last-child { margin-bottom: 0; }
+
+/* Tableaux de cartes */
+.galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.9rem 1.4rem; margin: 1rem 0 1.5rem; }
+.carte-ligne { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 0.9rem; align-items: start; padding-bottom: 0.9rem; border-bottom: 1px solid var(--filet); }
+.carte-ligne img { width: 76px; border-radius: 5px; display: block; }
+.carte-ligne h4 { margin: 0 0 0.15rem; font-family: var(--titre); font-weight: 700; font-size: 1.3rem; color: var(--bois); }
+.carte-ligne p { margin: 0 0 0.25rem; font-size: 0.98rem; line-height: 1.45; }
+.carte-ligne .er { color: var(--rouge); }
+.carte-ligne .res { font-family: var(--etiquette); font-size: 0.85rem; color: var(--encre-douce); letter-spacing: 0.03em; }
+
+.privileges { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 0 1.6rem; list-style: none; padding: 0; max-width: none; }
+.privileges li { display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid var(--filet); margin: 0; font-size: 0.98rem; line-height: 1.45; }
+.privileges b { font-family: var(--titre); font-size: 1.35rem; color: var(--noblesse); line-height: 1.1; font-weight: 700; }
+.groupe-priv { font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.05em; color: var(--encre-douce); font-size: 0.92rem; margin: 1.4rem 0 0.2rem; }
+
+.deux-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 2rem; }
+@media (max-width: 760px) { .deux-col { grid-template-columns: minmax(0, 1fr); } }
+
+.pied { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--filet); color: var(--encre-douce); font-size: 0.92rem; }
+a { color: var(--rouge); }
+.partie { margin-top: 1.6rem; }
+.titre-partie { font-family: var(--titre); font-weight: 700; font-size: 1.7rem; letter-spacing: 0; color: var(--bois); margin: 0 0 0.6rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--filet); }
+.titre-partie small { font-family: var(--etiquette); font-size: 0.85rem; letter-spacing: 0.04em; color: var(--encre-douce); font-weight: 500; margin-left: 0.4rem; }
+.note-priv { color: var(--encre-douce); font-style: italic; margin-top: 0.8rem; }
+dl.mots { margin: 0 0 1rem; }
+.sommaire-imprime, .dos { display: none; }
+</style>
+
+<div class="cadre">
+  <nav class="sommaire" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#but">Goal of the game</a></li>
+      <li><a href="#materiel">Components</a></li>
+      <li><a href="#cartes">Reading a card</a></li>
+      <li><a href="#mise-en-place">Setup</a></li>
+      <li><a href="#plateau">The player board</a></li>
+      <li><a href="#lignees">Lineages</a></li>
+      <li><a href="#tour">Your turn</a></li>
+      <li><a href="#fin-lignee">Ending your lineage</a></li>
+      <li><a href="#fin">End of the game</a></li>
+      <li><a href="#aide">Reference</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="couverture">
+      <div>
+        <p class="sous-titre">Rulebook</p>
+        <h1>Generations</h1>
+        <p class="accroche">Each player rules a domain, represented by their deck of cards. Lineage after lineage, they transform it: they buy new cards, get rid of useless ones, and grow their population, their economy and their nobility. The first player to get through their whole deck in a single lineage wins.</p>
+        <div class="reperes">
+          <span><strong>2–4</strong> players</span>
+          <span><strong>30</strong> minutes</span>
+        </div>
+      </div>
+      <div class="eventail" aria-hidden="true">
+        <img src="img/cartes/forgeron.jpg" alt="">
+        <img src="img/cartes/negociant.jpg" alt="">
+        <img src="img/cartes/progres.jpg" alt="">
+      </div>
+    </header>
+
+    <div class="sommaire-imprime">
+      <h2>Contents</h2>
+      <ol>
+        <li><span>Goal of the game</span><span>2</span></li>
+        <li><span>Components</span><span>2</span></li>
+        <li><span>Reading a card</span><span>3</span></li>
+        <li><span>Setup</span><span>4</span></li>
+        <li><span>The player board</span><span>4</span></li>
+        <li><span>Lineages</span><span>5</span></li>
+        <li><span>Your turn</span><span>6</span></li>
+        <li><span>Ending your lineage</span><span>7</span></li>
+        <li><span>End of the game</span><span>7</span></li>
+        <li><span>Reference: card effects</span><span>8</span></li>
+        <li><span>Reference: Privileges</span><span>9</span></li>
+        <li><span>Reference: starting deck</span><span>10</span></li>
+        <li><span>Reference: Domains</span><span>11</span></li>
+      </ol>
+    </div>
+
+    <!-- 1 -->
+    <section class="chapitre" id="but">
+      <h2><span class="num">1</span>Goal of the game</h2>
+      <div class="but">The first player to draw the last card of their deck immediately wins the game.</div>
+      <p>At the start of the game, your deck has 11 cards. You will play through it several times, over several <em class="terme">lineages</em>. At the start of each new lineage, you shuffle all your cards and start again, with a slightly stronger domain.</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="chapitre" id="materiel">
+      <h2><span class="num">2</span>Components</h2>
+      <ul class="materiel">
+        <li><span class="qte">36</span><span><strong>starting cards</strong>: 9 per colour (blue, yellow, red, green). The 4 decks are identical.</span></li>
+        <li><span class="qte">8</span><span><strong>Domain cards</strong>, dealt at random to make each deck different.</span></li>
+        <li><span class="qte">34</span><span><strong>Advanced cards</strong>, which form the common deck.</span></li>
+        <li><span class="qte">20</span><span><strong>Privilege tiles</strong>, numbered 1 to 20.</span></li>
+        <li><span class="qte">4</span><span><strong>player boards</strong>, all identical.</span></li>
+        <li><span class="qte">8</span><span><strong>markers</strong>: 2 per player, for the Population and Economy tracks.</span></li>
+        <li><span class="qte">—</span><span><strong>Gold coins</strong>, for each player's supply.</span></li>
+      </ul>
+    </section>
+
+    <!-- 3 -->
+    <section class="chapitre" id="cartes">
+      <h2><span class="num">3</span>Reading a card</h2>
+      <div class="anatomie">
+        <figure>
+          <img src="img/cartes/banque.jpg" alt="The Bank card: 1 Stone, costs 1 Resource, draw 1 card for every 2 Stone, Red Effect: pay 4 Gold to draw 1 card.">
+          <span class="repere" style="left: 4%; top: 2%">1</span>
+          <span class="repere" style="right: 2%; top: 1%">2</span>
+          <span class="repere" style="left: 45%; top: 1%">3</span>
+          <span class="repere" style="left: 2%; top: 72%">4</span>
+          <span class="repere" style="right: 3%; top: 64%">5</span>
+          <span class="repere" style="right: 3%; top: 85%">6</span>
+        </figure>
+        <ol class="legende">
+          <li><div><strong>Resources.</strong> What the card provides once it is in your play area: Stone <img class="ico" src="img/ico/pierre.png" alt="Stone">, Metal <img class="ico" src="img/ico/metal.png" alt="Metal"> or Scholar <img class="ico" src="img/ico/erudit.png" alt="Scholar">. The Bank provides 1 Stone.</div></li>
+          <li><div><strong>Purchase cost.</strong> Only Advanced cards have one: Gold, or a Resource (Stone or Metal, your choice). The Bank costs 1 Resource.</div></li>
+          <li><div><strong>Banner.</strong> It shows where the card comes from: the player's colour for a starting card, purple for a Domain, black for an Advanced card. It has no effect on play.</div></li>
+          <li><div>The card's <strong>name</strong>.</div></li>
+          <li><div><strong>Effect.</strong> What you may do when you play the card. Here: draw 1 card for every 2 Stone in your play area.</div></li>
+          <li><div><strong>Red Effect.</strong> Below the dotted line: what <em>your opponents</em> may do when you play the card. Here: pay 4 Gold to draw 1 card.</div></li>
+        </ol>
+      </div>
+
+      <h3>Symbols</h3>
+      <div class="icones">
+        <div><img src="img/ico/or.png" alt=""><span><strong>Gold.</strong> The currency: it pays for purchases and many effects.</span></div>
+        <div><img src="img/ico/pierre.png" alt=""><span><strong>Stone.</strong> A Resource.</span></div>
+        <div><img src="img/ico/metal.png" alt=""><span><strong>Metal.</strong> A Resource.</span></div>
+        <div><img src="img/ico/ressource.png" alt=""><span><strong>Resource.</strong> Stone or Metal, your choice.</span></div>
+        <div><img src="img/ico/erudit.png" alt=""><span><strong>Scholar.</strong> Counts towards Privileges and some effects. It is <em>not</em> a Resource.</span></div>
+        <div><img src="img/ico/pioche.png" alt=""><span><strong>Draw</strong> 1 card from your deck.</span></div>
+        <div><img src="img/ico/population.png" alt=""><span><strong>Population crest.</strong></span></div>
+        <div><img src="img/ico/economie.png" alt=""><span><strong>Economy crest.</strong></span></div>
+        <div><img src="img/ico/noblesse.png" alt=""><span><strong>Nobility crest.</strong></span></div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="chapitre" id="mise-en-place">
+      <h2><span class="num">4</span>Setup</h2>
+      <ol class="etapes">
+        <li><div><p>Each player takes the 9 starting cards of their colour. They add <strong>2 Domain cards</strong> drawn at random, which they look at without showing them. They shuffle these 11 cards face down: this is their deck. Put the remaining Domains back in the box without looking at them (with 4 players, all 8 are dealt).</p></div></li>
+        <li><div><p>Each player takes a player board and places their 2 markers on the starting space of the <strong>Population</strong> and <strong>Economy</strong> tracks.</p></div></li>
+        <li><div><p>Shuffle the 34 Advanced cards face down: this is the <em class="terme">common deck</em>. Reveal the top 4 cards next to it: this is the <em class="terme">River</em>.</p></div></li>
+        <li><div><p>Shuffle the 20 Privilege tiles face down, then reveal 4 of them face up.</p></div></li>
+        <li><div><p>Choose a first player at random. As compensation, the 2<sup>nd</sup> player receives 1 Gold, the 3<sup>rd</sup> 2 Gold and the 4<sup>th</sup> 3 Gold.</p></div></li>
+        <li><div><p>All players start their first lineage at the same time: each takes their Gold and draws their cards (see “Starting a lineage”). This Gold is added to their compensation.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- 5 -->
+    <section class="chapitre" id="plateau">
+      <h2><span class="num">5</span>The player board</h2>
+      <p>Your board has three tracks. They move up when you end a lineage, by one level at most per track, and make each of your following lineages stronger.</p>
+      <div class="vue-plateau">
+        <figure>
+          <img src="img/plateau.webp" alt="The player board: the Nobility track on the left, Economy at the top right, Population at the bottom right.">
+        </figure>
+        <div class="lecture">
+          <div class="zone p-noblesse"><h4>Left: Nobility</h4><p>4 spaces for your Privilege tiles, from bottom to top. The number shows the Scholars <img class="ico" src="img/ico/erudit.png" alt="Scholars"> required; the crowns show the Nobility crests gained.</p></div>
+          <div class="zone p-economie"><h4>Top right: Economy</h4><p>On the left of each space, the Resources you need in your play area to move up; on the right, the Gold you receive at the start of each lineage and your Economy crests.</p></div>
+          <div class="zone p-population"><h4>Bottom right: Population</h4><p>On the left of each space, the Gold you pay to move up; on the right, the cards you draw at the start of each lineage and your Population crests.</p></div>
+          <p class="note">Markers start on the empty space at the bottom of each track. Your crests are those of your current level: they do not add up from one level to the next.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="chapitre" id="lignees">
+      <h2><span class="num">6</span>Lineages</h2>
+      <p>A <em class="terme">lineage</em> begins when a player starts again with their full deck, and ends when they decide to end it, or when they win. Each player manages their lineages at their own pace: they drift apart from one player to the next during the game.</p>
+      <h3>Starting a lineage</h3>
+      <ol class="etapes">
+        <li><div><p>Take the Gold shown by your <strong>Economy</strong> track, plus any Gold from your Privileges.</p></div></li>
+        <li><div><p>Draw the number of cards shown by your <strong>Population</strong> track.</p></div></li>
+      </ol>
+      <p>If this draws the last card of your deck, you win immediately, even if it is not your turn.</p>
+      <h3>Your areas</h3>
+      <div class="deux-col">
+        <p><strong>Your draw pile</strong>: your deck, face down. Nobody knows its order.</p>
+        <p><strong>Your hand</strong>: secret. The other players only know how many cards you hold.</p>
+        <p><strong>Your play area</strong>: the cards you have played. They stay there until their resources are spent.</p>
+        <p><strong>Your discard pile</strong>: the cards whose resources have been spent.</p>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="chapitre" id="tour">
+      <h2><span class="num">7</span>Your turn</h2>
+      <p>Starting with the first player, then clockwise, each player takes <strong>a single action</strong> from the following four. You may not pass.</p>
+      <div class="actions">
+        <article class="action">
+          <h3>Play 1 card</h3>
+          <p>Place a card from your hand in your play area, then apply its effect if you wish.</p>
+          <p>Then each opponent, clockwise, may apply the card's <strong>Red Effect</strong>, even if you did not apply its effect.</p>
+        </article>
+        <article class="action">
+          <h3>Buy 1 card</h3>
+          <p>Buy a card from the River by paying its cost. Gold comes from your supply. To pay Resources, discard cards from your play area that provide them.</p>
+          <p>The card you buy <strong>must replace</strong> a card of your deck, which is destroyed for free. It takes that card's place (see below). Then refill the River with the top card of the common deck.</p>
+        </article>
+        <article class="action">
+          <h3>Use a Privilege</h3>
+          <p>If you have Privilege 13, 14 or 15, pay its cost to destroy or draw 1 card. This replaces your action: only once per turn, but you may do it again on later turns.</p>
+        </article>
+        <article class="action">
+          <h3>End your lineage</h3>
+          <p>If you have <strong>0 or 1 card</strong> in hand, you may end your lineage: your tracks move up, then you start again with your whole deck. See the next chapter.</p>
+        </article>
+      </div>
+
+      <h3>Where the bought card goes</h3>
+      <p>It takes the place of the card you destroy for it:</p>
+      <ul>
+        <li>a card from your <strong>hand</strong>: the bought card goes into your hand, and you can play it on a later turn;</li>
+        <li>a card from your <strong>play area</strong>: the bought card goes into your play area. Its resources are available (those of the destroyed card are lost), but its effect is not triggered;</li>
+        <li>a card from your <strong>discard pile</strong>: the bought card goes into your discard pile and will only be used in your next lineage;</li>
+        <li>the <strong>top card of your draw pile</strong>, without looking at it: it is destroyed, and the bought card is placed in its stead, on top of your draw pile.</li>
+      </ul>
+      <p>A purchase therefore never changes the number of cards in your deck. When the common deck is empty, the River is no longer refilled.</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="chapitre" id="fin-lignee">
+      <h2><span class="num">8</span>Ending your lineage</h2>
+      <p>With 0 or 1 card in hand, follow these steps in order. Each one is optional.</p>
+      <ol class="etapes">
+        <li><div><p><strong>Nobility.</strong> If your play area has enough Scholars <img class="ico" src="img/ico/erudit.png" alt=""> for the first empty space of your Nobility track (1, then 2, 3 and 4), take one of the 4 face-up Privileges. Scholars are not spent. Reveal a new Privilege to replace it.</p></div></li>
+        <li><div><p><strong>Population.</strong> If you have enough Gold, pay the cost of the next level and move up one level.</p></div></li>
+        <li><div><p><strong>Economy.</strong> If your play area has enough Resources (Stone or Metal), move up one level. Resources are not spent.</p></div></li>
+        <li><div><p><strong>Leftover Gold.</strong> Discard all your remaining Gold (unless you have Privilege 18).</p></div></li>
+        <li><div><p><strong>New lineage.</strong> Shuffle your hand, play area and discard pile face down to form your deck again, then start a new lineage. On your next turn, you can play or buy a card.</p></div></li>
+      </ol>
+      <div class="encadre retenir">
+        <span class="etiq">Remember</span>
+        <p>Each track moves up <strong>only one level</strong> per lineage end, and you take <strong>only one Privilege</strong>.</p>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="chapitre" id="fin">
+      <h2><span class="num">9</span>End of the game</h2>
+      <p>The game ends <strong>immediately</strong> when a player:</p>
+      <ul>
+        <li>draws the last card of their deck, in any way (effect, Search, Red Effect, start of a lineage);</li>
+        <li>or destroys the last card of their draw pile.</li>
+      </ul>
+      <p>That player wins. There is only one winner: the other players are not ranked.</p>
+      <div class="encadre retenir">
+        <span class="etiq">Ties</span>
+        <p>If several players draw their last card at the same time (through a Red Effect, for example), the player whose turn it is wins. If they are not among them, the first of them clockwise from the player who played the card wins.</p>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="chapitre" id="aide">
+      <h2><span class="num">10</span>Reference</h2>
+
+      <div class="partie" id="effets">
+        <h3 class="titre-partie">Card effects</h3>
+        <ul>
+          <li>All effects are <strong>optional</strong>. You may play a card without applying its effect.</li>
+          <li>When an effect has several parts (“Gain 1 Gold, then Buy 1 card”), they are independent: you may apply the second without the first.</li>
+          <li>When an effect counts something (resources, Scholars, crests), only count what the player applying it owns: their play area and their board. The card you have just played counts for its own effect.</li>
+        </ul>
+        <dl class="deux-col mots">
+          <div><p><strong>Pay.</strong> Gold is taken from your supply. To pay Stone or Metal, discard cards from your play area that provide it. A discarded card is discarded entirely: its extra resources and Scholars are lost. The card you have just played may pay for its own effect.</p></div>
+          <div><p><strong>Draw.</strong> Take the top card of your deck into your hand. When an effect makes you draw several cards, you draw them all at once.</p></div>
+          <div><p><strong>Destroy.</strong> Permanently remove a card from your deck: from your hand, your play area, your discard pile, or the top card of your draw pile, without looking at it. You may destroy the card you have just played. If the effect destroys several cards, you may take the top of your draw pile several times, and you may destroy fewer than allowed.</p></div>
+          <div><p><strong>Search.</strong> Look through your deck, choose 1 card and put it into your hand, then shuffle your deck. You may search for fewer cards than allowed.</p></div>
+          <div><p><strong>Buy 1 card.</strong> A purchase on top of your action, exactly like the Buy action (normal cost, mandatory replacement). If there are several purchases, refill the River between them.</p></div>
+          <div><p><strong>Level up.</strong> Move the stated track up one level without paying the board cost. A track never goes above level 4.</p></div>
+        </dl>
+        <ul>
+          <li><strong>“Draw 1 card for every 2 Stone in your play area”</strong>: count the Stone present and apply the effect once per complete set. Nothing is spent.</li>
+          <li><strong>“Pay 3 Metal to draw 1 card per Population crest”</strong>: pay only once, then draw as many cards as you have Population crests.</li>
+          <li>When an effect makes you pay and then counts, you <strong>count before paying</strong>: resources discarded to pay still count.</li>
+          <li><strong>“Pay X Gold to draw (or destroy) 1 card”</strong>: only once per card played.</li>
+          <li><strong>Market</strong>: sell as much Stone and Metal as you wish. Every resource on the discarded cards earns Gold: a card providing 1 Stone and 1 Metal earns twice.</li>
+        </ul>
+        <div class="encadre rouge">
+          <span class="etiq">Red Effects</span>
+          <p>When a player plays a card with a Red Effect, each of their opponents may apply it, one after the other, clockwise, starting with the next player. Each uses their own Gold, resources and board. The Red Effect can be applied even if the active player did not apply the card's effect.</p>
+        </div>
+      </div>
+
+      <div class="partie" id="privileges">
+        <h3 class="titre-partie">Privileges</h3>
+        <ul>
+          <li>You get them when you end a lineage, thanks to Scholars, or through some cards (Religion, Chancellery, King's Court). You may own <strong>4 at most</strong>.</li>
+          <li>A Privilege gained through a card also takes a space on your Nobility track: it requires no Scholars, but it gives that space's crests and makes the next Privilege harder to get.</li>
+          <li>Unless it says “at random from the pile”, you choose among the 4 face-up Privileges. When the Privilege pile is empty, they are no longer replaced.</li>
+          <li>Resources added by Privileges count everywhere: for paying, for tracks, for Privileges and for card effects.</li>
+        </ul>
+        <ul class="privileges">
+          <li><b>1</b><span>River cards cost you 2 Gold less (never below 0; the Resource cost does not change).</span></li>
+          <li><b>2</b><span>Each Advanced card in your play area also provides 1 Scholar.</span></li>
+          <li><b>3</b><span>Each Advanced card in your play area also provides 1 Stone.</span></li>
+          <li><b>4</b><span>Each Advanced card in your play area also provides 1 Metal.</span></li>
+          <li><b>5</b><span>1 extra Population crest.</span></li>
+          <li><b>6</b><span>1 extra Economy crest.</span></li>
+          <li><b>7</b><span>1 extra Nobility crest.</span></li>
+          <li><b>8</b><span>Start of a lineage: draw 1 card fewer than usual, then take 1 card of your choice from your deck before shuffling it (mandatory).</span></li>
+          <li><b>9</b><span>Start of a lineage: gain 2 extra Gold per Population crest.</span></li>
+          <li><b>10</b><span>Start of a lineage: gain 2 extra Gold per Nobility crest.</span></li>
+          <li><b>11</b><span>Start of a lineage: gain 2 extra Gold per Economy crest.</span></li>
+          <li><b>12</b><span>Start of a lineage: draw 1 extra card, then discard 1 card from your hand (mandatory; it is not destroyed).</span></li>
+          <li><b>13</b><span>Instead of your action: pay 3 Stone to destroy 1 card.</span></li>
+          <li><b>14</b><span>Instead of your action: pay 2 Metal to draw 1 card.</span></li>
+          <li><b>15</b><span>Instead of your action: pay 6 Gold to draw 1 card.</span></li>
+          <li><b>16</b><span>1 permanent Scholar, as if it were on a card in your play area, including to gain a Privilege.</span></li>
+          <li><b>17</b><span>Each time you destroy 1 card, including the card replaced by a purchase, gain 2 Gold.</span></li>
+          <li><b>18</b><span>When you end a lineage, keep your remaining Gold instead of discarding it.</span></li>
+          <li><b>19</b><span>Start of a lineage: gain 3 extra Gold.</span></li>
+          <li><b>20</b><span>Each time you play an Advanced card, gain 2 Gold, even if you do not apply its effect.</span></li>
+        </ul>
+        <p class="note-priv">At the start of a lineage, take your Gold and your cards, then apply Privilege 12, then Privilege 8.</p>
+      </div>
+
+      <div class="partie" id="depart">
+        <h3 class="titre-partie">The starting deck <small>9 cards, identical for every colour</small></h3>
+        <div class="galerie">
+          <div class="carte-ligne"><img src="img/cartes/salle-du-tresor.jpg" alt=""><div><h4>Treasury</h4><p class="res">1 Stone</p><p>Gain 3 Gold.</p><p class="er">Red Effect: gain 1 Gold.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/forgeron.jpg" alt=""><div><h4>Blacksmith</h4><p class="res">1 Scholar</p><p>Pay 2 Gold to draw 1 card.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/tour-de-guet.jpg" alt=""><div><h4>Watchtower</h4><p class="res">1 Stone</p><p>Destroy 1 card for every 2 Metal in your play area.</p><p class="er">Red Effect: pay 7 Gold to destroy 1 card.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/cachot.jpg" alt=""><div><h4>Dungeon</h4><p class="res">1 Stone</p><p>Draw 1 card for every 2 Stone in your play area.</p><p class="er">Red Effect: pay 4 Gold to draw 1 card.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/epicerie.jpg" alt=""><div><h4>Grocer</h4><p class="res">1 Metal</p><p>Gain 2 Gold.</p><p class="er">Red Effect: gain 1 Gold.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/marche.jpg" alt=""><div><h4>Market</h4><p class="res">1 Metal</p><p>Pay Stone and Metal to gain 3 Gold per resource sold.</p><p class="er">Red Effect: same, 2 Gold per resource sold.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/imprimeur.jpg" alt=""><div><h4>Printer</h4><p class="res">1 Scholar</p><p>Search for 1 card for every 3 Scholars in your play area.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/ferrailleur.jpg" alt=""><div><h4>Scrap Dealer</h4><p class="res">1 Scholar</p><p>Gain 2 Gold.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/colporteur.jpg" alt=""><div><h4>Peddler</h4><p class="res">1 Scholar</p><p>Gain 1 Gold, then buy 1 card.</p></div></div>
+        </div>
+      </div>
+
+      <div class="partie" id="domaines">
+        <h3 class="titre-partie">The 8 Domains</h3>
+        <div class="galerie">
+          <div class="carte-ligne"><img src="img/cartes/justice.jpg" alt=""><div><h4>Justice</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Nobility crest.</p><p class="er">Red Effect: gain 1 Gold per Nobility crest.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/diplomatie.jpg" alt=""><div><h4>Diplomacy</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Population crest.</p><p class="er">Red Effect: gain 1 Gold per Population crest.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/economie.jpg" alt=""><div><h4>Economy</h4><p class="res">1 Stone</p><p>Pay 2 Gold to level up Economy.</p><p class="er">Red Effect: pay 4 Gold to level up Economy.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/histoire.jpg" alt=""><div><h4>History</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Scholar.</p><p class="er">Red Effect: gain 1 Gold per Scholar.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/religion.jpg" alt=""><div><h4>Religion</h4><p class="res">1 Stone</p><p>Pay 1 Metal to take 1 of the 4 face-up Privileges.</p><p class="er">Red Effect: pay 5 Gold to take 1 Privilege at random from the pile.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/production.jpg" alt=""><div><h4>Production</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Economy crest.</p><p class="er">Red Effect: gain 1 Gold per Economy crest.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/science.jpg" alt=""><div><h4>Science</h4><p class="res">1 Metal</p><p>Pay 2 Stone to level up Population.</p><p class="er">Red Effect: pay 6 Gold to level up Population.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/progres.jpg" alt=""><div><h4>Progress</h4><p class="res">1 Metal</p><p>Gain 5 Gold.</p><p class="er">Red Effect: gain 2 Gold.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="dos">
+      <div class="eventail" aria-hidden="true">
+        <img src="img/cartes/cachot.jpg" alt="">
+        <img src="img/cartes/banque.jpg" alt="">
+        <img src="img/cartes/religion.jpg" alt="">
+      </div>
+      <div>
+        <p class="titre-dos">Generations</p>
+        <p>Lineage after lineage, make your domain prosper. The first player to get through their whole deck in a single lineage wins.</p>
+        <div class="reperes"><span><strong>2–4</strong> players</span><span><strong>30</strong> minutes</span></div>
+      </div>
+      <div class="resume">
+        <p class="resume-titre">On your turn, a single action</p>
+        <div class="resume-actions">
+          <div><strong>Play 1 card</strong><span>Place it in your play area and apply its effect. Your opponents may apply its Red Effect.</span></div>
+          <div><strong>Buy 1 card</strong><span>Pay for a card from the River. It replaces a card of your deck, which is destroyed.</span></div>
+          <div><strong>Use a Privilege</strong><span>With Privilege 13, 14 or 15: pay to destroy or draw 1 card.</span></div>
+          <div><strong>End your lineage</strong><span>With 0 or 1 card in hand: Nobility, Population, Economy, then a new deck.</span></div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>

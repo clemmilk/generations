@@ -125,3 +125,19 @@ describe('getPlayerView', () => {
     expect(() => getPlayerView(createGame(inscriptions(2), 42), 5)).toThrow(/Joueur inconnu/);
   });
 });
+
+describe('deck du vainqueur', () => {
+  it('n\'est révélé à personne tant que la partie n\'est pas finie', () => {
+    const etat = createGame(inscriptions(3), 42);
+    for (const moi of [0, 1, 2]) expect(getPlayerView(etat, moi).deckDuVainqueur).toBeNull();
+  });
+
+  it('est montré à tous en fin de partie, complet et trié', () => {
+    // Ferrailleur avec Cachot en jeu : 2 Pierres, Alice pioche la dernière carte de sa pioche et gagne.
+    const etat = scene({ main: [c('Ferrailleur'), c('Épicerie')], aire: [c('Cachot')], defausse: [c('Marché')], pioche: [c('Forgeron')] });
+    const apres = faire(etat, { type: 'jouer', carte: c('Ferrailleur') });
+    expect(apres.vainqueur).toBe(0);
+    const attendu = [c('Cachot'), c('Épicerie'), c('Ferrailleur'), c('Marché'), c('Forgeron')].sort();
+    for (const moi of [0, 1]) expect(getPlayerView(apres, moi).deckDuVainqueur).toEqual(attendu);
+  });
+});

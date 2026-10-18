@@ -555,6 +555,22 @@ header button:disabled {
   margin-top: 4px;
 }
 
+.deck-vainqueur {
+  margin: 4px 0 10px;
+}
+
+.deck-vainqueur summary {
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.deck-vainqueur h4 {
+  margin: 10px 0 4px;
+  font-size: 13px;
+  color: var(--discret);
+}
+
 .piste-texte {
   color: var(--discret);
 }

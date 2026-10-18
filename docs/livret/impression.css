@@ -1,0 +1,150 @@
+/* Version imprimée : pages de 160 × 190 mm, maquette serrée. */
+@page { size: 160mm 190mm; margin: 11mm 11mm 12mm; }
+@page :first { margin: 0; }
+
+html { scroll-behavior: auto; }
+:root { color-scheme: light; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; background: #fff; font-size: 8.8pt; line-height: 1.36; orphans: 3; widows: 3; }
+
+.cadre { display: block; max-width: none; padding: 0; margin: 0; background: #fff; }
+main { background: #fff; }
+nav.sommaire { display: none; }
+
+/* Couverture : une page pleine */
+.couverture {
+  height: 190mm; box-sizing: border-box; margin: 0; padding: 22mm 14mm 16mm;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: stretch;
+  border: 0; background: var(--parchemin); break-after: page;
+}
+.couverture h1 { font-size: 46pt; }
+.couverture .sous-titre { font-size: 10pt; }
+.couverture .accroche { font-size: 11pt; max-width: none; }
+.reperes { font-size: 9pt; }
+.eventail { justify-content: center; padding: 0; margin-bottom: 4mm; }
+.eventail img { width: 34mm; }
+
+/* Les chapitres s'enchaînent ; seule l'aide de jeu et ses parties commencent une page. */
+section.chapitre { padding: 4.5mm 0 0; break-before: auto; }
+#but { padding-top: 0; }
+.chapitre > h2 { font-size: 17pt; margin-bottom: 1.8mm; break-after: avoid; }
+.chapitre > h2 .num { font-size: 8.5pt; }
+h3 { font-size: 9.2pt; margin: 3mm 0 1.2mm; break-after: avoid; }
+p, ul, ol { max-width: none; }
+p { margin-bottom: 1.6mm; }
+ul, ol { margin-bottom: 1.8mm; padding-left: 4.5mm; }
+li { margin-bottom: 0.7mm; }
+
+.but { font-size: 13pt; padding: 3mm 3mm; margin: 2.5mm 0; }
+.encadre { padding: 2.2mm 3.5mm; margin: 2.5mm 0; max-width: none; break-inside: avoid; }
+.encadre .etiq { font-size: 7.8pt; margin-bottom: 0.8mm; }
+.encadre p { margin-bottom: 1mm; }
+
+.materiel { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 5mm; }
+.materiel li { grid-template-columns: 8mm 1fr; gap: 2mm; padding-block: 1mm; }
+.materiel .qte { font-size: 12pt; }
+
+.anatomie { grid-template-columns: 42mm minmax(0, 1fr); gap: 4.5mm; break-inside: avoid; margin-top: 1mm; }
+.anatomie figure { max-width: none; }
+.repere, .legende li::before { width: 4.4mm; height: 4.4mm; font-size: 7pt; }
+.legende { gap: 1.1mm; }
+.legende li { grid-template-columns: 5.5mm 1fr; gap: 1.2mm; }
+
+.icones { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.6mm 3.5mm; margin: 1mm 0; }
+.icones div { grid-template-columns: 6.5mm 1fr; gap: 1.6mm; break-inside: avoid; font-size: 8.2pt; line-height: 1.25; }
+.icones img, .icones .r { width: 6.2mm; }
+.icones .r { height: 6.2mm; font-size: 8pt; }
+
+ol.etapes { gap: 1.3mm; max-width: none; }
+ol.etapes > li { grid-template-columns: 5mm 1fr; gap: 2mm; break-inside: avoid; }
+ol.etapes > li::before { font-size: 12pt; }
+ol.etapes p { margin-bottom: 0; }
+
+.vue-plateau { grid-template-columns: 58mm minmax(0, 1fr); gap: 4.5mm; margin: 1.5mm 0 0; break-inside: avoid; }
+.vue-plateau figure { max-width: none; }
+.lecture { gap: 2mm; }
+.zone { padding: 0.5mm 0 0.5mm 3mm; border-left-width: 1.2mm; }
+.zone h4 { font-size: 8.6pt; margin-bottom: 0.6mm; }
+
+.deux-col { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 5mm; }
+
+.actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5mm; margin: 2mm 0; }
+.action { padding: 2.2mm 3mm; break-inside: avoid; border-top-width: 1mm; }
+.action h3 { font-size: 11pt; margin-bottom: 0.8mm; }
+.action p { margin-bottom: 1mm; }
+
+/* Aide de jeu */
+#aide { break-before: page; padding-top: 0; }
+.partie { margin-top: 0; }
+#privileges, #depart { break-before: page; }
+#domaines { margin-top: 4mm; }
+.titre-partie { font-size: 13pt; margin: 0 0 1.5mm; padding-bottom: 0.8mm; }
+.titre-partie small { font-size: 7.5pt; }
+#effets, #privileges { font-size: 8.4pt; line-height: 1.32; }
+dl.mots { margin: 0 0 1.5mm; gap: 0 4.5mm; }
+dl.mots p { margin-bottom: 1.2mm; }
+
+.privileges { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 5mm; }
+.privileges li { grid-template-columns: 5.5mm 1fr; gap: 1.5mm; padding: 1mm 0; font-size: 8.2pt; line-height: 1.3; break-inside: avoid; }
+.privileges b { font-size: 10pt; }
+.note-priv { margin-top: 1.5mm; font-size: 8pt; }
+
+.galerie { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.8mm 5mm; margin: 1mm 0 1mm; }
+.carte-ligne { grid-template-columns: 14mm minmax(0, 1fr); gap: 2.5mm; padding-bottom: 1.6mm; break-inside: avoid; }
+.carte-ligne img { width: 14mm; }
+.carte-ligne h4 { font-size: 10pt; }
+.carte-ligne p { font-size: 8pt; line-height: 1.3; margin-bottom: 0.4mm; }
+.carte-ligne .res { font-size: 7.2pt; }
+
+.pied { margin-top: 3mm; padding-top: 1.5mm; font-size: 7.5pt; }
+
+/* Une page par bloc : 12 pages en tout (couverture, 10 pages, dos). */
+#cartes, #mise-en-place, #lignees, #tour, #fin-lignee, #aide, #privileges, #depart, #domaines { break-before: page; }
+#aide, #cartes, #mise-en-place, #lignees, #tour, #fin-lignee { padding-top: 0; }
+#domaines { margin-top: 0; }
+#effets { font-size: 8.1pt; line-height: 1.3; }
+#effets ul { margin-bottom: 1.4mm; }
+#effets li { margin-bottom: 0.5mm; }
+.anatomie { grid-template-columns: 50mm minmax(0, 1fr); }
+.vue-plateau { grid-template-columns: 60mm minmax(0, 1fr); }
+#plateau { padding-top: 3mm; }
+.galerie { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3mm 5mm; }
+.carte-ligne { grid-template-columns: 19mm minmax(0, 1fr); gap: 2.8mm; padding-bottom: 2.4mm; }
+.carte-ligne img { width: 19mm; }
+.carte-ligne p { font-size: 8.3pt; }
+#domaines .pied { display: none; }
+
+/* Sommaire, page 2 */
+.sommaire-imprime { display: block; margin-bottom: 5mm; padding: 3mm 4mm; background: var(--papier); border: 1px solid var(--filet); border-radius: 4px; }
+.sommaire-imprime h2 { font-family: var(--titre); font-size: 13pt; color: var(--bois); margin: 0 0 1.5mm; }
+.sommaire-imprime ol { list-style: none; padding: 0; margin: 0; columns: 2; column-gap: 6mm; }
+.sommaire-imprime li { display: flex; justify-content: space-between; gap: 2mm; border-bottom: 1px dotted var(--filet); padding: 0.6mm 0; margin: 0; font-size: 8.2pt; break-inside: avoid; }
+.sommaire-imprime li span:last-child { font-family: var(--etiquette); color: var(--rouge); }
+
+/* Dos du livret */
+@page dos { margin: 0; background: #f2e8d2; }
+.dos {
+  display: flex; page: dos; break-before: page; height: 190mm; width: 160mm; margin: 0; box-sizing: border-box;
+  flex-direction: column; justify-content: center; gap: 10mm; padding: 18mm 16mm; background: var(--parchemin); text-align: center;
+}
+.dos .eventail { justify-content: center; margin: 0; }
+.dos .eventail img { width: 30mm; }
+.dos .titre-dos { font-family: var(--titre); font-size: 28pt; color: var(--bois); margin: 0 auto 3mm; }
+.dos p { font-size: 10pt; margin: 0 auto 3mm; max-width: 100mm; }
+.dos .reperes { justify-content: center; font-size: 9pt; }
+.dos .version { font-size: 7.5pt; color: var(--encre-douce); margin-top: 6mm; }
+
+/* Numéros de page */
+@page { @bottom-center { content: counter(page); font-family: "Alegreya Sans SC", sans-serif; font-size: 8pt; color: #a8262b; } }
+@page :first { @bottom-center { content: none; } }
+@page dos { @bottom-center { content: none; } }
+
+/* Dos : résumé des 4 actions */
+.dos { gap: 6mm; padding: 14mm 14mm; }
+.dos .eventail img { width: 25mm; }
+.dos .titre-dos { font-size: 24pt; margin-bottom: 2mm; }
+.resume { background: var(--papier); border: 2px solid var(--bois); border-radius: 5px; padding: 3.5mm 4mm; text-align: left; }
+.resume-titre { font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.06em; font-size: 9pt !important; color: var(--bois); text-align: center; margin: 0 auto 2.5mm !important; max-width: none !important; }
+.resume-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5mm 4mm; }
+.resume-actions div { display: grid; gap: 0.6mm; font-size: 8.3pt; line-height: 1.3; }
+.resume-actions strong { font-family: var(--titre); font-size: 11pt; color: var(--bois); }

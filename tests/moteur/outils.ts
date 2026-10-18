@@ -118,11 +118,16 @@ export function brouiller(etat: Etat, moi: number, graine = 1): Etat {
  * - Elle ne doit nommer ni les cartes Assymétrie jamais vues des autres, ni les cartes de la pioche commune.
  */
 export function verifierAucuneFuite(etat: Etat): void {
+  // Seule exception : une fois la partie gagnée, le deck du vainqueur est montré à tous (deckDuVainqueur).
+  const sansDeckDuVainqueur = (vue: ReturnType<typeof getPlayerView>) => JSON.stringify({ ...vue, deckDuVainqueur: null });
   for (const moi of etat.joueurs) {
     const vue = getPlayerView(etat, moi.id);
-    const envoye = JSON.stringify(vue);
+    if (etat.vainqueur === null && vue.deckDuVainqueur !== null) {
+      throw new Error(`Le deck d'un joueur est révélé à ${moi.nom} avant la fin de la partie.`);
+    }
+    const envoye = sansDeckDuVainqueur(vue);
     for (const graine of [1, 2]) {
-      if (JSON.stringify(getPlayerView(brouiller(etat, moi.id, graine), moi.id)) !== envoye) {
+      if (sansDeckDuVainqueur(getPlayerView(brouiller(etat, moi.id, graine), moi.id)) !== envoye) {
         throw new Error(`La vue de ${moi.nom} dépend d'une information cachée.`);
       }
     }
@@ -130,7 +135,7 @@ export function verifierAucuneFuite(etat: Etat): void {
       ...etat.piocheCommune,
       ...etat.asymetrieEcartees,
       ...etat.joueurs
-        .filter((joueur) => joueur.id !== moi.id)
+        .filter((joueur) => joueur.id !== moi.id && joueur.id !== etat.vainqueur)
         .flatMap((joueur) => [...joueur.main, ...joueur.pioche])
         .filter((id) => id.length > 0 && !vue.joueurs.some((j) => j.cartesCacheesConnues.includes(id))),
     ];

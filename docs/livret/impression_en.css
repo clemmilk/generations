@@ -1,0 +1,2 @@
+/* Version anglaise : le texte de la mise en place est plus long, le plateau est un peu plus petit pour tenir en page 4. */
+@media print { .vue-plateau { grid-template-columns: 54mm minmax(0, 1fr); } #plateau { padding-top: 2mm; } }

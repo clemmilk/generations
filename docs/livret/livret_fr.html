@@ -1,0 +1,603 @@
+<title>Règles de Générations</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700&family=Alegreya:ital,wght@0,400;0,600;0,700;1,400&family=Alegreya+Sans+SC:wght@500;700&display=swap">
+<style>
+/* Mise en page : un livret de boîte de jeu. Parchemin des tuiles, bois brun et bandeau rouge des cartes.
+   Sommaire fixe à gauche sur grand écran, chapitres en colonne de lecture, encadrés « À retenir » et « Exemple ». */
+:root {
+  --parchemin: #f2e8d2;
+  --papier: #fbf6ea;
+  --encre: #2a2118;
+  --encre-douce: #6b5a47;
+  --bois: #4a3424;
+  --filet: #dccbaa;
+  --rouge: #a8262b;
+  --rouge-fond: #f6dfdc;
+  --or: #c98f0e;
+  --or-fond: #f8ecc8;
+  --noblesse: #1b789f;
+  --noblesse-fond: #dcedf4;
+  --population: #474747;
+  --population-fond: #e7e5e1;
+  --titre: "Grenze Gotisch", "UnifrakturMaguntia", Georgia, serif;
+  --texte: "Alegreya", Georgia, "Times New Roman", serif;
+  --etiquette: "Alegreya Sans SC", "Gill Sans", "Trebuchet MS", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --parchemin: #1b1510; --papier: #251e17; --encre: #eee3cc; --encre-douce: #b9a688; --bois: #d3ad7f;
+    --filet: #3e3226; --rouge: #e2625f; --rouge-fond: #3a1d1b; --or: #e8b83a; --or-fond: #36290f;
+    --noblesse: #58b5dc; --noblesse-fond: #142b36; --population: #b9b9b9; --population-fond: #2c2a27;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --parchemin: #1b1510; --papier: #251e17; --encre: #eee3cc; --encre-douce: #b9a688; --bois: #d3ad7f;
+  --filet: #3e3226; --rouge: #e2625f; --rouge-fond: #3a1d1b; --or: #e8b83a; --or-fond: #36290f;
+  --noblesse: #58b5dc; --noblesse-fond: #142b36; --population: #b9b9b9; --population-fond: #2c2a27;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--parchemin);
+  color: var(--encre);
+  font-family: var(--texte);
+  font-size: 1.075rem;
+  line-height: 1.6;
+}
+.cadre {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 4rem;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 3rem;
+}
+@media (max-width: 860px) { .cadre { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+
+/* Sommaire */
+nav.sommaire {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  align-self: start;
+  padding-block: 2.2rem 1rem;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+nav.sommaire h2 {
+  font-family: var(--etiquette); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.08em;
+  color: var(--encre-douce); margin: 0 0 0.6rem;
+}
+nav.sommaire ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; counter-reset: chap; }
+nav.sommaire li { counter-increment: chap; }
+nav.sommaire a {
+  display: grid; grid-template-columns: 1.7rem 1fr; padding: 0.22rem 0.4rem; border-radius: 4px;
+  color: var(--encre); text-decoration: none; font-size: 0.96rem; line-height: 1.3;
+}
+nav.sommaire a::before { content: counter(chap); font-family: var(--etiquette); color: var(--rouge); }
+nav.sommaire a:hover, nav.sommaire a:focus-visible { background: var(--papier); outline: none; }
+@media (max-width: 860px) {
+  nav.sommaire { position: static; max-height: none; padding-block: 1.5rem 0; }
+  nav.sommaire ol { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+
+main { min-width: 0; }
+
+/* Couverture */
+.couverture {
+  padding-block: 2.5rem 2rem;
+  border-bottom: 2px solid var(--bois);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: end;
+}
+.couverture h1 {
+  font-family: var(--titre); font-weight: 700; font-size: clamp(3.2rem, 9vw, 5.6rem);
+  line-height: 0.95; margin: 0; letter-spacing: 0.01em; color: var(--bois);
+}
+.couverture .sous-titre { font-family: var(--etiquette); letter-spacing: 0.08em; color: var(--rouge); margin: 0 0 0.4rem; font-size: 1rem; }
+.couverture .accroche { font-size: 1.2rem; max-width: 34rem; margin: 1rem 0 0; }
+.reperes { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-top: 1.2rem; font-family: var(--etiquette); font-size: 0.95rem; letter-spacing: 0.04em; color: var(--encre-douce); }
+.reperes strong { color: var(--encre); font-family: var(--texte); font-size: 1.1rem; letter-spacing: 0; }
+.eventail { display: flex; align-items: flex-end; padding-right: 1rem; }
+.eventail img { width: 118px; border-radius: 7px; box-shadow: 0 6px 18px rgba(30, 20, 10, 0.28); }
+.eventail img:nth-child(1) { transform: rotate(-9deg) translate(18px, 6px); }
+.eventail img:nth-child(2) { transform: translateY(-10px); position: relative; z-index: 1; }
+.eventail img:nth-child(3) { transform: rotate(9deg) translate(-18px, 6px); }
+@media (max-width: 640px) {
+  .couverture { grid-template-columns: minmax(0, 1fr); }
+  .eventail { justify-content: center; padding: 0.5rem 0 0; }
+  .eventail img { width: 92px; }
+}
+
+/* Chapitres */
+section.chapitre { padding-block: 2.6rem 0.5rem; scroll-margin-top: 1rem; }
+.chapitre > h2 {
+  font-family: var(--titre); font-weight: 700; font-size: clamp(2rem, 4.6vw, 2.6rem); line-height: 1.05;
+  margin: 0 0 1rem; color: var(--bois); text-wrap: balance;
+  display: flex; align-items: baseline; gap: 0.8rem;
+}
+.chapitre > h2 .num { font-family: var(--etiquette); font-size: 1rem; color: var(--rouge); letter-spacing: 0.06em; }
+h3 { font-family: var(--etiquette); font-weight: 700; font-size: 1.12rem; letter-spacing: 0.05em; margin: 1.8rem 0 0.5rem; color: var(--encre); text-wrap: balance; }
+p { margin: 0 0 0.9rem; max-width: 68ch; }
+ul, ol { max-width: 68ch; padding-left: 1.3rem; margin: 0 0 1rem; }
+li { margin-bottom: 0.35rem; }
+li::marker { color: var(--rouge); }
+strong { font-weight: 700; }
+em.terme { font-style: normal; font-weight: 700; color: var(--rouge); }
+
+img.ico { height: 1.35em; width: auto; vertical-align: -0.32em; margin: 0 0.08em; }
+
+/* Encadrés */
+.encadre { border-radius: 6px; padding: 1rem 1.2rem; margin: 1.2rem 0; max-width: 72ch; }
+.encadre > :last-child { margin-bottom: 0; }
+.encadre .etiq { font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.08em; font-size: 0.9rem; display: block; margin-bottom: 0.35rem; }
+.retenir { background: var(--papier); border: 2px solid var(--bois); }
+.retenir .etiq { color: var(--bois); }
+.exemple { background: var(--papier); border-left: 5px solid var(--noblesse); }
+.exemple .etiq { color: var(--noblesse); }
+.rouge { background: var(--rouge-fond); border-left: 5px solid var(--rouge); }
+.rouge .etiq { color: var(--rouge); }
+
+.but {
+  text-align: center; padding: 1.6rem 1.2rem; margin: 1.4rem 0; border-block: 2px solid var(--bois);
+  font-family: var(--titre); font-size: clamp(1.5rem, 3.6vw, 2rem); line-height: 1.2; color: var(--bois); text-wrap: balance;
+}
+
+/* Matériel */
+.materiel { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.8rem 1.6rem; list-style: none; padding: 0; max-width: none; }
+.materiel li { display: grid; grid-template-columns: 3.2rem 1fr; gap: 0.6rem; align-items: baseline; margin: 0; padding-block: 0.4rem; border-bottom: 1px solid var(--filet); }
+.materiel .qte { font-family: var(--titre); font-size: 1.7rem; color: var(--rouge); text-align: right; line-height: 1; font-variant-numeric: tabular-nums; }
+
+/* Anatomie d'une carte */
+.anatomie { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2rem; align-items: start; margin-top: 1rem; }
+.anatomie figure { margin: 0; position: relative; }
+.anatomie figure img { width: 100%; border-radius: 9px; display: block; box-shadow: 0 4px 14px rgba(30, 20, 10, 0.22); }
+.repere {
+  position: absolute; width: 1.7rem; height: 1.7rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--rouge); color: #fff; font-family: var(--etiquette); font-weight: 700; font-size: 0.95rem;
+  box-shadow: 0 0 0 2px #fff;
+}
+.legende { list-style: none; padding: 0; margin: 0; counter-reset: rep; display: grid; gap: 0.6rem; }
+.legende li { counter-increment: rep; display: grid; grid-template-columns: 2rem 1fr; gap: 0.5rem; margin: 0; }
+.legende li::before {
+  content: counter(rep); width: 1.7rem; height: 1.7rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--rouge); color: #fff; font-family: var(--etiquette); font-weight: 700; font-size: 0.95rem;
+}
+@media (max-width: 640px) { .anatomie { grid-template-columns: minmax(0, 1fr); } .anatomie figure { max-width: 240px; } }
+
+/* Icônes */
+.icones { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.6rem 1.6rem; margin: 1rem 0; }
+.icones div { display: grid; grid-template-columns: 2.6rem 1fr; gap: 0.7rem; align-items: center; }
+.icones img { width: 2.4rem; height: auto; }
+.icones .r { width: 2.4rem; height: 2.4rem; border-radius: 6px; display: grid; place-items: center; font-family: var(--etiquette); font-weight: 700; color: #fff; background: linear-gradient(135deg, #6a6f7a 50%, #7b3f86 50%); }
+
+/* Étapes numérotées (une vraie séquence) */
+ol.etapes { list-style: none; padding: 0; counter-reset: et; display: grid; gap: 0.75rem; max-width: 70ch; }
+ol.etapes > li { counter-increment: et; display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem; margin: 0; }
+ol.etapes > li::before {
+  content: counter(et); font-family: var(--titre); font-size: 1.7rem; line-height: 1; color: var(--rouge); text-align: right;
+}
+ol.etapes > li > div > :last-child { margin-bottom: 0; }
+ol.etapes ul { margin: 0.4rem 0 0; }
+
+/* Plateau personnel */
+.pistes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+@media (max-width: 1000px) { .pistes { grid-template-columns: minmax(0, 1fr); } }
+.piste { border-radius: 8px; overflow: hidden; border: 2px solid var(--c); background: var(--papier); }
+.piste header { background: var(--c); color: #fff; padding: 0.55rem 0.9rem; display: flex; align-items: center; gap: 0.6rem; }
+.piste header img { height: 1.8rem; }
+.piste header h4 { margin: 0; font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.06em; font-size: 1.05rem; }
+.piste header small { margin-left: auto; font-family: var(--etiquette); font-size: 0.82rem; opacity: 0.9; letter-spacing: 0.03em; text-align: right; }
+.piste table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 0.98rem; }
+.piste th { font-family: var(--etiquette); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.04em; color: var(--encre-douce); text-align: left; padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--filet); }
+.piste td { padding: 0.42rem 0.7rem; border-bottom: 1px solid var(--filet); vertical-align: middle; }
+.piste tr:last-child td { border-bottom: 0; }
+.piste td:first-child { font-family: var(--titre); font-size: 1.25rem; color: var(--c); width: 2.4rem; }
+.piste .bl img { height: 1.3rem; margin-right: 1px; vertical-align: -0.3em; }
+.p-noblesse { --c: var(--noblesse); }
+.p-economie { --c: var(--or); }
+.p-population { --c: var(--population); }
+.p-economie header, .p-economie td:first-child { color: #2a2118; }
+.p-economie td:first-child { color: var(--or); }
+
+.vue-plateau { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 1.8rem; align-items: start; margin: 1.2rem 0 0.5rem; }
+.vue-plateau figure { margin: 0; }
+.vue-plateau figure img { width: 100%; display: block; border-radius: 8px; box-shadow: 0 4px 16px rgba(30, 20, 10, 0.25); }
+.lecture { display: grid; gap: 0.9rem; min-width: 0; }
+.zone { border-left: 5px solid var(--c); padding: 0.2rem 0 0.2rem 0.9rem; }
+.zone h4 { margin: 0 0 0.25rem; font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.05em; font-size: 1.02rem; color: var(--c); }
+.zone p { margin: 0; }
+.lecture .note { color: var(--encre-douce); font-style: italic; margin: 0; }
+@media (max-width: 760px) { .vue-plateau { grid-template-columns: minmax(0, 1fr); } .vue-plateau figure { max-width: 380px; } }
+
+/* Les 4 actions */
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+@media (max-width: 700px) { .actions { grid-template-columns: minmax(0, 1fr); } }
+.action { background: var(--papier); border: 1px solid var(--filet); border-top: 4px solid var(--bois); border-radius: 6px; padding: 1rem 1.1rem; min-width: 0; }
+.action h3 { margin: 0 0 0.4rem; font-family: var(--titre); font-weight: 700; font-size: 1.55rem; letter-spacing: 0; color: var(--bois); }
+.action p, .action ul { max-width: none; }
+.action > :last-child { margin-bottom: 0; }
+
+/* Tableaux de cartes */
+.galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.9rem 1.4rem; margin: 1rem 0 1.5rem; }
+.carte-ligne { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 0.9rem; align-items: start; padding-bottom: 0.9rem; border-bottom: 1px solid var(--filet); }
+.carte-ligne img { width: 76px; border-radius: 5px; display: block; }
+.carte-ligne h4 { margin: 0 0 0.15rem; font-family: var(--titre); font-weight: 700; font-size: 1.3rem; color: var(--bois); }
+.carte-ligne p { margin: 0 0 0.25rem; font-size: 0.98rem; line-height: 1.45; }
+.carte-ligne .er { color: var(--rouge); }
+.carte-ligne .res { font-family: var(--etiquette); font-size: 0.85rem; color: var(--encre-douce); letter-spacing: 0.03em; }
+
+.privileges { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 0 1.6rem; list-style: none; padding: 0; max-width: none; }
+.privileges li { display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid var(--filet); margin: 0; font-size: 0.98rem; line-height: 1.45; }
+.privileges b { font-family: var(--titre); font-size: 1.35rem; color: var(--noblesse); line-height: 1.1; font-weight: 700; }
+.groupe-priv { font-family: var(--etiquette); font-weight: 700; letter-spacing: 0.05em; color: var(--encre-douce); font-size: 0.92rem; margin: 1.4rem 0 0.2rem; }
+
+.deux-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 2rem; }
+@media (max-width: 760px) { .deux-col { grid-template-columns: minmax(0, 1fr); } }
+
+.pied { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--filet); color: var(--encre-douce); font-size: 0.92rem; }
+a { color: var(--rouge); }
+.partie { margin-top: 1.6rem; }
+.titre-partie { font-family: var(--titre); font-weight: 700; font-size: 1.7rem; letter-spacing: 0; color: var(--bois); margin: 0 0 0.6rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--filet); }
+.titre-partie small { font-family: var(--etiquette); font-size: 0.85rem; letter-spacing: 0.04em; color: var(--encre-douce); font-weight: 500; margin-left: 0.4rem; }
+.note-priv { color: var(--encre-douce); font-style: italic; margin-top: 0.8rem; }
+dl.mots { margin: 0 0 1rem; }
+.sommaire-imprime, .dos { display: none; }
+</style>
+
+<div class="cadre">
+  <nav class="sommaire" aria-label="Sommaire">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#but">But du jeu</a></li>
+      <li><a href="#materiel">Matériel</a></li>
+      <li><a href="#cartes">Lire une carte</a></li>
+      <li><a href="#mise-en-place">Mise en place</a></li>
+      <li><a href="#plateau">Le plateau personnel</a></li>
+      <li><a href="#lignees">Les lignées</a></li>
+      <li><a href="#tour">Le tour de jeu</a></li>
+      <li><a href="#fin-lignee">Mettre fin à sa lignée</a></li>
+      <li><a href="#fin">Fin de partie</a></li>
+      <li><a href="#aide">Aide de jeu</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="couverture">
+      <div>
+        <p class="sous-titre">Livret de règles</p>
+        <h1>Générations</h1>
+        <p class="accroche">Chaque joueur dirige un domaine, représenté par son deck de cartes. De lignée en lignée, il le transforme : il achète de nouvelles cartes, se sépare des inutiles, fait grandir sa population, son économie et sa noblesse. Le premier qui parvient à traverser tout son deck en une seule lignée l'emporte.</p>
+        <div class="reperes">
+          <span><strong>2 à 4</strong> joueurs</span>
+          <span><strong>30</strong> minutes environ</span>
+        </div>
+      </div>
+      <div class="eventail" aria-hidden="true">
+        <img src="img/cartes/forgeron.jpg" alt="">
+        <img src="img/cartes/negociant.jpg" alt="">
+        <img src="img/cartes/progres.jpg" alt="">
+      </div>
+    </header>
+
+    <div class="sommaire-imprime">
+      <h2>Sommaire</h2>
+      <ol>
+        <li><span>But du jeu</span><span>2</span></li>
+        <li><span>Matériel</span><span>2</span></li>
+        <li><span>Lire une carte</span><span>3</span></li>
+        <li><span>Mise en place</span><span>4</span></li>
+        <li><span>Le plateau personnel</span><span>4</span></li>
+        <li><span>Les lignées</span><span>5</span></li>
+        <li><span>Le tour de jeu</span><span>6</span></li>
+        <li><span>Mettre fin à sa lignée</span><span>7</span></li>
+        <li><span>Fin de partie</span><span>7</span></li>
+        <li><span>Aide de jeu : les effets des cartes</span><span>8</span></li>
+        <li><span>Aide de jeu : les Privilèges</span><span>9</span></li>
+        <li><span>Aide de jeu : le deck de départ</span><span>10</span></li>
+        <li><span>Aide de jeu : les Domaines</span><span>11</span></li>
+      </ol>
+    </div>
+
+    <!-- 1 -->
+    <section class="chapitre" id="but">
+      <h2><span class="num">1</span>But du jeu</h2>
+      <div class="but">Le premier joueur qui pioche la dernière carte de son deck gagne immédiatement la partie.</div>
+      <p>Au début de la partie, votre deck compte 11 cartes. Vous allez le jouer plusieurs fois, en plusieurs <em class="terme">lignées</em>. À chaque nouvelle lignée, vous mélangez toutes vos cartes et vous recommencez, avec un domaine un peu plus fort.</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="chapitre" id="materiel">
+      <h2><span class="num">2</span>Matériel</h2>
+      <ul class="materiel">
+        <li><span class="qte">36</span><span><strong>cartes de départ</strong> : 9 par couleur (bleu, jaune, rouge, vert). Les 4 decks sont identiques.</span></li>
+        <li><span class="qte">8</span><span><strong>cartes Domaine</strong>, distribuées au hasard pour rendre chaque deck différent.</span></li>
+        <li><span class="qte">34</span><span><strong>cartes Avancée</strong>, qui forment la pioche commune.</span></li>
+        <li><span class="qte">20</span><span><strong>tuiles Privilège</strong>, numérotées de 1 à 20.</span></li>
+        <li><span class="qte">4</span><span><strong>plateaux personnels</strong>, tous identiques.</span></li>
+        <li><span class="qte">8</span><span><strong>marqueurs</strong> : 2 par joueur, pour les jauges de Population et d'Économie.</span></li>
+        <li><span class="qte">—</span><span><strong>des pièces d'Or</strong>, pour la réserve de chaque joueur.</span></li>
+      </ul>
+    </section>
+
+    <!-- 3 -->
+    <section class="chapitre" id="cartes">
+      <h2><span class="num">3</span>Lire une carte</h2>
+      <div class="anatomie">
+        <figure>
+          <img src="img/cartes/banque.jpg" alt="La carte Banque : 1 Pierre, coût 1 Ressource, pioche 1 carte pour chaque 2 Pierres, Effet Rouge : paye 4 Or pour piocher 1 carte.">
+          <span class="repere" style="left: 4%; top: 2%">1</span>
+          <span class="repere" style="right: 2%; top: 1%">2</span>
+          <span class="repere" style="left: 45%; top: 1%">3</span>
+          <span class="repere" style="left: 2%; top: 72%">4</span>
+          <span class="repere" style="right: 3%; top: 64%">5</span>
+          <span class="repere" style="right: 3%; top: 85%">6</span>
+        </figure>
+        <ol class="legende">
+          <li><div><strong>Ressources.</strong> Ce que la carte rapporte une fois posée dans votre aire de jeu : Pierre <img class="ico" src="img/ico/pierre.png" alt="Pierre">, Métal <img class="ico" src="img/ico/metal.png" alt="Métal"> ou Érudit <img class="ico" src="img/ico/erudit.png" alt="Érudit">. La Banque porte 1 Pierre.</div></li>
+          <li><div><strong>Coût d'achat.</strong> Seules les cartes Avancée en ont un : de l'Or, ou une Ressource (Pierre ou Métal, au choix). La Banque coûte 1 Ressource.</div></li>
+          <li><div><strong>Bandeau.</strong> Il indique d'où vient la carte : la couleur du joueur pour une carte de départ, violet pour un Domaine, noir pour une carte Avancée. Il n'a aucun effet en jeu.</div></li>
+          <li><div><strong>Nom</strong> de la carte.</div></li>
+          <li><div><strong>Effet.</strong> Ce que vous pouvez faire en jouant la carte. Ici : piochez 1 carte pour chaque tranche de 2 Pierres dans votre aire de jeu.</div></li>
+          <li><div><strong>Effet Rouge.</strong> Sous la ligne pointillée : ce que <em>vos adversaires</em> peuvent faire quand vous jouez la carte. Ici : payer 4 Or pour piocher 1 carte.</div></li>
+        </ol>
+      </div>
+
+      <h3>Les symboles</h3>
+      <div class="icones">
+        <div><img src="img/ico/or.png" alt=""><span><strong>Or.</strong> La monnaie : elle paye les achats et de nombreux effets.</span></div>
+        <div><img src="img/ico/pierre.png" alt=""><span><strong>Pierre.</strong> Une Ressource.</span></div>
+        <div><img src="img/ico/metal.png" alt=""><span><strong>Métal.</strong> Une Ressource.</span></div>
+        <div><img src="img/ico/ressource.png" alt=""><span><strong>Ressource.</strong> Pierre ou Métal, au choix.</span></div>
+        <div><img src="img/ico/erudit.png" alt=""><span><strong>Érudit.</strong> Il compte pour obtenir des Privilèges et pour certains effets. Ce n'est <em>pas</em> une Ressource.</span></div>
+        <div><img src="img/ico/pioche.png" alt=""><span><strong>Piocher</strong> 1 carte de son deck.</span></div>
+        <div><img src="img/ico/population.png" alt=""><span><strong>Blason Population.</strong></span></div>
+        <div><img src="img/ico/economie.png" alt=""><span><strong>Blason Économie.</strong></span></div>
+        <div><img src="img/ico/noblesse.png" alt=""><span><strong>Blason Noblesse.</strong></span></div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="chapitre" id="mise-en-place">
+      <h2><span class="num">4</span>Mise en place</h2>
+      <ol class="etapes">
+        <li><div><p>Chaque joueur prend les 9 cartes de départ de sa couleur. Il y ajoute <strong>2 cartes Domaine</strong> tirées au hasard, qu'il regarde sans les montrer. Il mélange ces 11 cartes face cachée : c'est son deck. Les Domaines restants sont rangés dans la boîte sans être regardés (à 4 joueurs, les 8 sont distribués).</p></div></li>
+        <li><div><p>Chaque joueur prend un plateau personnel et place ses 2 marqueurs sur la case de départ des pistes de <strong>Population</strong> et d'<strong>Économie</strong>.</p></div></li>
+        <li><div><p>Mélangez les 34 cartes Avancée face cachée : c'est la <em class="terme">pioche commune</em>. Révélez les 4 premières à côté d'elle : c'est la <em class="terme">Rivière</em>.</p></div></li>
+        <li><div><p>Mélangez les 20 tuiles Privilège face cachée, puis révélez-en 4 face visible.</p></div></li>
+        <li><div><p>Désignez le premier joueur au hasard. En compensation, le 2<sup>e</sup> joueur reçoit 1 Or, le 3<sup>e</sup> 2 Or et le 4<sup>e</sup> 3 Or.</p></div></li>
+        <li><div><p>Tous les joueurs débutent leur première lignée en même temps : chacun prend son Or et pioche ses cartes (voir « Débuter une lignée »). Cet Or s'ajoute à sa compensation.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- 5 -->
+    <section class="chapitre" id="plateau">
+      <h2><span class="num">5</span>Le plateau personnel</h2>
+      <p>Votre plateau porte trois jauges. Elles progressent en fin de lignée, d'un niveau au plus par jauge, et rendent chacune de vos lignées suivantes plus fortes.</p>
+      <div class="vue-plateau">
+        <figure>
+          <img src="img/plateau.webp" alt="Le plateau personnel : la piste Noblesse à gauche, l'Économie en haut à droite, la Population en bas à droite.">
+        </figure>
+        <div class="lecture">
+          <div class="zone p-noblesse"><h4>À gauche : la Noblesse</h4><p>4 emplacements pour vos tuiles Privilège, du bas vers le haut. Le chiffre indique les Érudits <img class="ico" src="img/ico/erudit.png" alt="Érudits"> nécessaires ; les couronnes, les blasons Noblesse gagnés.</p></div>
+          <div class="zone p-economie"><h4>En haut à droite : l'Économie</h4><p>À gauche de chaque case, les Ressources à avoir dans son aire de jeu pour monter ; à droite, l'Or reçu au début de chaque lignée et les blasons Économie.</p></div>
+          <div class="zone p-population"><h4>En bas à droite : la Population</h4><p>À gauche de chaque case, l'Or à payer pour monter ; à droite, les cartes piochées au début de chaque lignée et les blasons Population.</p></div>
+          <p class="note">Les marqueurs partent de la case vide, tout en bas de chaque jauge. Vos blasons sont ceux de votre niveau actuel : ils ne s'additionnent pas d'un niveau à l'autre.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="chapitre" id="lignees">
+      <h2><span class="num">6</span>Les lignées</h2>
+      <p>Une <em class="terme">lignée</em> commence quand un joueur repart avec son deck complet, et se termine quand il décide d'y mettre fin, ou quand il gagne. Chaque joueur gère ses lignées à son rythme : elles se décalent d'un joueur à l'autre au fil de la partie.</p>
+      <h3>Débuter une lignée</h3>
+      <ol class="etapes">
+        <li><div><p>Prenez l'Or indiqué par votre jauge d'<strong>Économie</strong>, plus celui de vos Privilèges.</p></div></li>
+        <li><div><p>Piochez le nombre de cartes indiqué par votre jauge de <strong>Population</strong>.</p></div></li>
+      </ol>
+      <p>Si cette pioche vous fait piocher la dernière carte de votre deck, vous gagnez aussitôt, même si ce n'est pas votre tour.</p>
+      <h3>Vos zones de jeu</h3>
+      <div class="deux-col">
+        <p><strong>Votre pioche</strong> : votre deck, face cachée. Personne n'en connaît l'ordre.</p>
+        <p><strong>Votre main</strong> : secrète. Les autres joueurs savent seulement combien de cartes vous avez.</p>
+        <p><strong>Votre aire de jeu</strong> : les cartes que vous avez jouées. Elles y restent jusqu'à ce que leurs ressources soient dépensées.</p>
+        <p><strong>Votre défausse</strong> : les cartes dont les ressources ont été dépensées.</p>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="chapitre" id="tour">
+      <h2><span class="num">7</span>Le tour de jeu</h2>
+      <p>En commençant par le premier joueur, puis dans le sens du tour, chaque joueur effectue <strong>une seule action</strong> parmi les quatre suivantes. Il est interdit de passer son tour.</p>
+      <div class="actions">
+        <article class="action">
+          <h3>Jouer 1 carte</h3>
+          <p>Posez une carte de votre main dans votre aire de jeu, puis appliquez son effet, si vous le voulez.</p>
+          <p>Puis chaque adversaire, dans le sens du tour, peut appliquer l'<strong>Effet Rouge</strong> de la carte, même si vous n'avez pas appliqué son effet.</p>
+        </article>
+        <article class="action">
+          <h3>Acheter 1 carte</h3>
+          <p>Achetez une carte de la Rivière en payant son coût. L'Or vient de votre réserve. Pour payer des Ressources, défaussez des cartes de votre aire de jeu qui les portent.</p>
+          <p>La carte achetée <strong>remplace obligatoirement</strong> une carte de votre deck, qui est détruite gratuitement. Elle prend sa place (voir ci-dessous). Complétez ensuite la Rivière avec la première carte de la pioche commune.</p>
+        </article>
+        <article class="action">
+          <h3>Utiliser un Privilège</h3>
+          <p>Si vous possédez le Privilège 13, 14 ou 15, payez son coût pour détruire ou piocher 1 carte. Cela remplace votre action : une seule fois par tour, mais vous pouvez recommencer aux tours suivants.</p>
+        </article>
+        <article class="action">
+          <h3>Mettre fin à sa lignée</h3>
+          <p>Si vous avez <strong>0 ou 1 carte</strong> en main, vous pouvez clore votre lignée : vos jauges progressent, puis vous repartez avec tout votre deck. Voir le chapitre suivant.</p>
+        </article>
+      </div>
+
+      <h3>Où va la carte achetée</h3>
+      <p>Elle prend la place de la carte que vous détruisez pour elle :</p>
+      <ul>
+        <li>une carte de votre <strong>main</strong> : la carte achetée arrive dans votre main, et vous pourrez la jouer à un prochain tour ;</li>
+        <li>une carte de votre <strong>aire de jeu</strong> : la carte achetée arrive dans votre aire de jeu. Ses ressources sont disponibles (celles de la carte détruite sont perdues), mais son effet ne se déclenche pas ;</li>
+        <li>une carte de votre <strong>défausse</strong> : la carte achetée arrive dans votre défausse et ne servira qu'à la lignée suivante ;</li>
+        <li>la <strong>première carte de votre pioche</strong>, sans la regarder : elle est détruite, et la carte achetée est posée à sa place, sur le dessus de votre pioche.</li>
+      </ul>
+      <p>Un achat ne change donc jamais le nombre de cartes de votre deck. Quand la pioche commune est vide, la Rivière n'est plus complétée.</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="chapitre" id="fin-lignee">
+      <h2><span class="num">8</span>Mettre fin à sa lignée</h2>
+      <p>Avec 0 ou 1 carte en main, appliquez ces étapes dans l'ordre. Chacune est facultative.</p>
+      <ol class="etapes">
+        <li><div><p><strong>Noblesse.</strong> Si votre aire de jeu compte assez d'Érudits <img class="ico" src="img/ico/erudit.png" alt=""> pour le premier emplacement libre de votre piste Noblesse (1, puis 2, 3 et 4), prenez l'un des 4 Privilèges visibles. Les Érudits ne sont pas dépensés. Révélez un nouveau Privilège pour le remplacer.</p></div></li>
+        <li><div><p><strong>Population.</strong> Si vous avez assez d'Or, payez le coût du niveau suivant et montez d'un niveau.</p></div></li>
+        <li><div><p><strong>Économie.</strong> Si votre aire de jeu compte assez de Ressources (Pierre ou Métal), montez d'un niveau. Les Ressources ne sont pas dépensées.</p></div></li>
+        <li><div><p><strong>Or restant.</strong> Défaussez tout l'Or qui vous reste (sauf avec le Privilège 18).</p></div></li>
+        <li><div><p><strong>Nouvelle lignée.</strong> Mélangez face cachée votre main, votre aire de jeu et votre défausse pour reformer votre deck, puis débutez une nouvelle lignée. À votre prochain tour, vous pourrez jouer ou acheter une carte.</p></div></li>
+      </ol>
+      <div class="encadre retenir">
+        <span class="etiq">À retenir</span>
+        <p>Chaque jauge monte d'<strong>un seul niveau</strong> par fin de lignée, et vous ne prenez qu'<strong>un seul Privilège</strong>.</p>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="chapitre" id="fin">
+      <h2><span class="num">9</span>Fin de partie</h2>
+      <p>La partie s'arrête <strong>immédiatement</strong> quand un joueur :</p>
+      <ul>
+        <li>pioche la dernière carte de son deck, de quelque façon que ce soit (effet, Recherche, Effet Rouge, début de lignée) ;</li>
+        <li>ou détruit la dernière carte de sa pioche.</li>
+      </ul>
+      <p>Ce joueur gagne. Il n'y a qu'un vainqueur : les autres joueurs ne sont pas classés.</p>
+      <div class="encadre retenir">
+        <span class="etiq">Égalité</span>
+        <p>Si plusieurs joueurs piochent leur dernière carte en même temps (par un Effet Rouge, par exemple), le joueur dont c'est le tour l'emporte. S'il n'en fait pas partie, c'est le premier d'entre eux dans le sens du tour, à partir du joueur qui a joué la carte.</p>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="chapitre" id="aide">
+      <h2><span class="num">10</span>Aide de jeu</h2>
+
+      <div class="partie" id="effets">
+        <h3 class="titre-partie">Les effets des cartes</h3>
+        <ul>
+          <li>Tous les effets sont <strong>facultatifs</strong>. Vous pouvez jouer une carte « à vide », sans appliquer son effet.</li>
+          <li>Quand un effet a plusieurs parties (« Gagne 1 Or puis Achète 1 carte »), elles sont indépendantes : vous pouvez appliquer la seconde sans la première.</li>
+          <li>Quand un effet compte quelque chose (ressources, Érudits, blasons), on ne regarde que ce que possède le joueur qui l'applique : son aire de jeu et son plateau. La carte que vous venez de jouer compte pour son propre effet.</li>
+        </ul>
+        <dl class="deux-col mots">
+          <div><p><strong>Payer.</strong> L'Or est retiré de votre réserve. Pour payer de la Pierre ou du Métal, défaussez des cartes de votre aire de jeu qui en portent. Une carte défaussée l'est entièrement : ses ressources en trop et ses Érudits sont perdus. La carte que vous venez de jouer peut payer son propre effet.</p></div>
+          <div><p><strong>Piocher.</strong> Prenez la première carte de votre deck en main. Quand un effet fait piocher plusieurs cartes, vous les piochez toutes d'un coup.</p></div>
+          <div><p><strong>Détruire.</strong> Retirez définitivement une carte de votre deck : de votre main, de votre aire de jeu, de votre défausse, ou bien la carte du dessus de votre pioche, sans la regarder. Vous pouvez détruire la carte que vous venez de jouer. Si l'effet détruit plusieurs cartes, vous pouvez prendre plusieurs fois le dessus de votre pioche, et en détruire moins que permis.</p></div>
+          <div><p><strong>Rechercher.</strong> Regardez votre deck, choisissez 1 carte et prenez-la en main, puis remélangez votre deck. Vous pouvez rechercher moins de cartes que permis.</p></div>
+          <div><p><strong>Achète 1 carte.</strong> Un achat en plus de votre action, exactement comme l'action Acheter (coût normal, remplacement obligatoire). S'il y a plusieurs achats, la Rivière est complétée entre deux.</p></div>
+          <div><p><strong>Lvl up.</strong> Montez d'un niveau la jauge indiquée, sans payer le coût du plateau. On ne dépasse jamais le niveau 4.</p></div>
+        </dl>
+        <ul>
+          <li><strong>« Pioche 1 carte pour chaque 2 Pierres dans son aire de jeu »</strong> : comptez les Pierres présentes et faites l'effet une fois par tranche complète. Rien n'est dépensé.</li>
+          <li><strong>« Paye 3 Métal pour piocher 1 carte par blason Population »</strong> : payez une seule fois, puis piochez autant de cartes que vous avez de blasons Population.</li>
+          <li>Quand un effet fait payer puis compte, on <strong>compte avant de payer</strong> : les ressources défaussées pour payer comptent encore.</li>
+          <li><strong>« Paye X Or pour piocher (ou détruire) 1 carte »</strong> : une seule fois par carte jouée.</li>
+          <li><strong>Marché</strong> : vendez autant de Pierres et de Métal que vous le souhaitez. Chaque ressource des cartes défaussées rapporte : une carte portant 1 Pierre et 1 Métal rapporte 2 fois.</li>
+        </ul>
+        <div class="encadre rouge">
+          <span class="etiq">Les Effets Rouges</span>
+          <p>Quand un joueur joue une carte qui a un Effet Rouge, chacun de ses adversaires peut l'appliquer, chacun son tour, dans le sens du tour, en commençant par le joueur suivant. Chacun utilise son propre Or, ses propres ressources et son propre plateau. L'Effet Rouge reste possible même si le joueur actif n'a pas appliqué l'effet de sa carte.</p>
+        </div>
+      </div>
+
+      <div class="partie" id="privileges">
+        <h3 class="titre-partie">Les Privilèges</h3>
+        <ul>
+          <li>Ils s'obtiennent en fin de lignée, grâce aux Érudits, ou par certaines cartes (Religion, Chancellerie, Cour du roi). Vous en possédez <strong>4 au plus</strong>.</li>
+          <li>Un Privilège obtenu par une carte occupe lui aussi un emplacement de votre piste Noblesse : il ne demande pas d'Érudits, mais il donne les blasons de l'emplacement et rend le Privilège suivant plus exigeant.</li>
+          <li>Sauf mention « au hasard dans la pioche », on choisit parmi les 4 Privilèges visibles. Quand la pioche de Privilèges est vide, ils ne sont plus remplacés.</li>
+          <li>Les ressources ajoutées par les Privilèges comptent partout : pour payer, pour les jauges, pour les Privilèges et pour les effets des cartes.</li>
+        </ul>
+        <ul class="privileges">
+          <li><b>1</b><span>Les cartes de la Rivière vous coûtent 2 Or de moins (jamais moins de 0 ; le coût en Ressources ne change pas).</span></li>
+          <li><b>2</b><span>Chaque carte Avancée de votre aire de jeu rapporte aussi 1 Érudit.</span></li>
+          <li><b>3</b><span>Chaque carte Avancée de votre aire de jeu rapporte aussi 1 Pierre.</span></li>
+          <li><b>4</b><span>Chaque carte Avancée de votre aire de jeu rapporte aussi 1 Métal.</span></li>
+          <li><b>5</b><span>1 blason Population supplémentaire.</span></li>
+          <li><b>6</b><span>1 blason Économie supplémentaire.</span></li>
+          <li><b>7</b><span>1 blason Noblesse supplémentaire.</span></li>
+          <li><b>8</b><span>Début de lignée : piochez 1 carte de moins que prévu, puis prenez 1 carte de votre choix dans votre deck avant de le remélanger (obligatoire).</span></li>
+          <li><b>9</b><span>Début de lignée : gagnez 2 Or de plus par blason Population.</span></li>
+          <li><b>10</b><span>Début de lignée : gagnez 2 Or de plus par blason Noblesse.</span></li>
+          <li><b>11</b><span>Début de lignée : gagnez 2 Or de plus par blason Économie.</span></li>
+          <li><b>12</b><span>Début de lignée : piochez 1 carte de plus, puis défaussez 1 carte de votre main (obligatoire ; elle n'est pas détruite).</span></li>
+          <li><b>13</b><span>À la place de votre action : payez 3 Pierres pour détruire 1 carte.</span></li>
+          <li><b>14</b><span>À la place de votre action : payez 2 Métal pour piocher 1 carte.</span></li>
+          <li><b>15</b><span>À la place de votre action : payez 6 Or pour piocher 1 carte.</span></li>
+          <li><b>16</b><span>1 Érudit permanent, comme s'il était sur une carte de votre aire de jeu, y compris pour obtenir un Privilège.</span></li>
+          <li><b>17</b><span>Chaque fois que vous détruisez 1 carte, y compris la carte remplacée lors d'un achat, gagnez 2 Or.</span></li>
+          <li><b>18</b><span>En fin de lignée, vous gardez l'Or qui vous reste au lieu de le défausser.</span></li>
+          <li><b>19</b><span>Début de lignée : gagnez 3 Or de plus.</span></li>
+          <li><b>20</b><span>Chaque fois que vous jouez une carte Avancée, gagnez 2 Or, même sans appliquer son effet.</span></li>
+        </ul>
+        <p class="note-priv">Au début d'une lignée, on prend son Or et ses cartes, puis on applique le Privilège 12, puis le 8.</p>
+      </div>
+
+      <div class="partie" id="depart">
+        <h3 class="titre-partie">Le deck de départ <small>9 cartes, identiques pour chaque couleur</small></h3>
+        <div class="galerie">
+          <div class="carte-ligne"><img src="img/cartes/salle-du-tresor.jpg" alt=""><div><h4>Salle du trésor</h4><p class="res">1 Pierre</p><p>Gagne 3 Or.</p><p class="er">Effet Rouge : gagne 1 Or.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/forgeron.jpg" alt=""><div><h4>Forgeron</h4><p class="res">1 Érudit</p><p>Paye 2 Or pour piocher 1 carte.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/tour-de-guet.jpg" alt=""><div><h4>Tour de guet</h4><p class="res">1 Pierre</p><p>Détruit 1 carte pour chaque 2 Métal dans son aire de jeu.</p><p class="er">Effet Rouge : paye 7 Or pour détruire 1 carte.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/cachot.jpg" alt=""><div><h4>Cachot</h4><p class="res">1 Pierre</p><p>Pioche 1 carte pour chaque 2 Pierres dans son aire de jeu.</p><p class="er">Effet Rouge : paye 4 Or pour piocher 1 carte.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/epicerie.jpg" alt=""><div><h4>Épicerie</h4><p class="res">1 Métal</p><p>Gagne 2 Or.</p><p class="er">Effet Rouge : gagne 1 Or.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/marche.jpg" alt=""><div><h4>Marché</h4><p class="res">1 Métal</p><p>Paye de la Pierre et du Métal pour gagner 3 Or par ressource vendue.</p><p class="er">Effet Rouge : idem, 2 Or par ressource vendue.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/imprimeur.jpg" alt=""><div><h4>Imprimeur</h4><p class="res">1 Érudit</p><p>Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/ferrailleur.jpg" alt=""><div><h4>Ferrailleur</h4><p class="res">1 Érudit</p><p>Gagne 2 Or.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/colporteur.jpg" alt=""><div><h4>Colporteur</h4><p class="res">1 Érudit</p><p>Gagne 1 Or, puis achète 1 carte.</p></div></div>
+        </div>
+      </div>
+
+      <div class="partie" id="domaines">
+        <h3 class="titre-partie">Les 8 Domaines</h3>
+        <div class="galerie">
+          <div class="carte-ligne"><img src="img/cartes/justice.jpg" alt=""><div><h4>Justice</h4><p class="res">1 Érudit</p><p>Gagne 2 Or par blason Noblesse.</p><p class="er">Effet Rouge : gagne 1 Or par blason Noblesse.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/diplomatie.jpg" alt=""><div><h4>Diplomatie</h4><p class="res">1 Érudit</p><p>Gagne 2 Or par blason Population.</p><p class="er">Effet Rouge : gagne 1 Or par blason Population.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/economie.jpg" alt=""><div><h4>Économie</h4><p class="res">1 Pierre</p><p>Paye 2 Or pour Lvl up Économie.</p><p class="er">Effet Rouge : paye 4 Or pour Lvl up Économie.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/histoire.jpg" alt=""><div><h4>Histoire</h4><p class="res">1 Érudit</p><p>Gagne 2 Or par Érudit.</p><p class="er">Effet Rouge : gagne 1 Or par Érudit.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/religion.jpg" alt=""><div><h4>Religion</h4><p class="res">1 Pierre</p><p>Paye 1 Métal pour prendre 1 Privilège parmi les 4 visibles.</p><p class="er">Effet Rouge : paye 5 Or pour prendre 1 Privilège au hasard dans la pioche.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/production.jpg" alt=""><div><h4>Production</h4><p class="res">1 Érudit</p><p>Gagne 2 Or par blason Économie.</p><p class="er">Effet Rouge : gagne 1 Or par blason Économie.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/science.jpg" alt=""><div><h4>Science</h4><p class="res">1 Métal</p><p>Paye 2 Pierres pour Lvl up Population.</p><p class="er">Effet Rouge : paye 6 Or pour Lvl up Population.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/progres.jpg" alt=""><div><h4>Progrès</h4><p class="res">1 Métal</p><p>Gagne 5 Or.</p><p class="er">Effet Rouge : gagne 2 Or.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="dos">
+      <div class="eventail" aria-hidden="true">
+        <img src="img/cartes/cachot.jpg" alt="">
+        <img src="img/cartes/banque.jpg" alt="">
+        <img src="img/cartes/religion.jpg" alt="">
+      </div>
+      <div>
+        <p class="titre-dos">Générations</p>
+        <p>De lignée en lignée, faites prospérer votre domaine. Le premier qui traverse tout son deck en une seule lignée l'emporte.</p>
+        <div class="reperes"><span><strong>2 à 4</strong> joueurs</span><span><strong>30</strong> minutes environ</span></div>
+      </div>
+      <div class="resume">
+        <p class="resume-titre">À votre tour, une seule action</p>
+        <div class="resume-actions">
+          <div><strong>Jouer 1 carte</strong><span>Posez-la dans votre aire de jeu et appliquez son effet. Vos adversaires peuvent appliquer son Effet Rouge.</span></div>
+          <div><strong>Acheter 1 carte</strong><span>Payez une carte de la Rivière. Elle remplace une carte de votre deck, qui est détruite.</span></div>
+          <div><strong>Utiliser un Privilège</strong><span>Avec le Privilège 13, 14 ou 15 : payez pour détruire ou piocher 1 carte.</span></div>
+          <div><strong>Mettre fin à sa lignée</strong><span>Avec 0 ou 1 carte en main : Noblesse, Population, Économie, puis nouveau deck.</span></div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>

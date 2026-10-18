@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   root: 'src/client',
@@ -13,5 +13,6 @@ export default defineConfig({
   server: { watch: { usePolling: true, interval: 300 } },
   // Les tests sont dans tests/, à la racine du projet.
   // Le matériel des tests est fixe (tests/donnees/) : voir tests/setup.ts.
-  test: { root: '.', setupFiles: ['tests/setup.ts'] },
+  // .claude/ contient les copies de travail des tâches lancées à part : leurs tests ne sont pas ceux du projet.
+  test: { root: '.', setupFiles: ['tests/setup.ts'], exclude: [...configDefaults.exclude, '.claude/**'] },
 });

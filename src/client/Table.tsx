@@ -297,6 +297,43 @@ function cartesParLignee(joueur: VueJoueur): string {
 }
 
 /** Ce que chaque joueur a fait pendant la partie. Replié en cours de partie, ouvert à la fin. */
+/** En fin de partie : le deck complet du vainqueur, rangé par origine des cartes. */
+function DeckDuVainqueur(props: { vue: Vue; onSurvol: (id: string | null) => void }) {
+  const deck = props.vue.deckDuVainqueur;
+  const vainqueur = props.vue.vainqueur === null ? undefined : props.vue.joueurs[props.vue.vainqueur];
+  if (!deck || !vainqueur) return null;
+  const groupes = [
+    { titre: 'Cartes de départ', origine: 'depart' },
+    { titre: 'Domaines', origine: 'asymetrie' },
+    { titre: 'Cartes Avancée', origine: 'avancee' },
+  ] as const;
+  return (
+    <details className="deck-vainqueur">
+      <summary>
+        Voir le deck de {vainqueur.nom} ({deck.length} carte{deck.length > 1 ? 's' : ''})
+      </summary>
+      {groupes.map(({ titre, origine }) => {
+        const cartes = deck
+          .filter((id) => carte(id).origine === origine)
+          .sort((a, b) => carte(a).nom.localeCompare(carte(b).nom, 'fr'));
+        if (cartes.length === 0) return null;
+        return (
+          <div key={origine}>
+            <h4>
+              {titre} ({cartes.length})
+            </h4>
+            <div className="rangee">
+              {cartes.map((id) => (
+                <ImageCarte key={id} id={id} petite onSurvol={props.onSurvol} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </details>
+  );
+}
+
 function TableauDesStatistiques(props: { vue: Vue }) {
   const { vue } = props;
   const lignes: [string, (joueur: VueJoueur) => string | number][] = [
@@ -445,7 +482,10 @@ export function Table(props: {
 
         <section className="decision">
           {vue.vainqueur !== null ? (
-            <p className="question victoire">{vue.joueurs[vue.vainqueur]?.nom} remporte la partie !</p>
+            <>
+              <p className="question victoire">{vue.joueurs[vue.vainqueur]?.nom} remporte la partie !</p>
+              <DeckDuVainqueur vue={vue} onSurvol={setSurvol} />
+            </>
           ) : paiementsPossibles.length > 0 ? (
             <p className="question">
               Achat de {carte(achat!).nom} : quelles cartes de ton aire de jeu veux-tu défausser pour payer ?

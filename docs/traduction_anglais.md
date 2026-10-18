@@ -51,6 +51,19 @@ Les effets sont écrits à l'impératif, comme dans le livret (« Gain 3 Gold. �
 | Premier joueur | First player |
 | Dans le sens du tour | Clockwise |
 
+## Carte d'aide : les symboles
+
+| Français | Anglais |
+|---|---|
+| Acheter 1 carte | Buy 1 card |
+| Piocher 1 carte | Draw 1 card |
+| Choisir 1 carte dans son deck | Search your deck for 1 card |
+| Détruire 1 carte | Destroy 1 card |
+| Payer 5 Or | Pay 5 Gold |
+| Dépenser 1 Métal | Spend 1 Metal |
+| Dépenser 1 Métal ou 1 Pierre | Spend 1 Metal or 1 Stone |
+| Améliorer sa Population | Level up your Population |
+
 ## Le deck de départ
 
 | Français | Anglais | Effet | Effet Rouge |

@@ -54,7 +54,18 @@ export interface Vue {
   /** Joueurs ayant déjà appliqué l'Effet Rouge de la carte jouée pendant ce tour. */
   effetRougeUtilisePar: number[];
   vainqueur: number | null;
+  /**
+   * Le deck complet du vainqueur (pioche, main, aire de jeu et défausse), trié, montré à tous une fois
+   * la partie terminée. null tant que la partie n'est pas finie : pendant la partie, rien n'est révélé.
+   */
+  deckDuVainqueur: string[] | null;
   journal: { joueur: number | null; texte: string }[];
+}
+
+function deckDuVainqueur(etat: Etat): string[] | null {
+  const vainqueur = etat.vainqueur === null ? undefined : etat.joueurs[etat.vainqueur];
+  if (!vainqueur) return null;
+  return [...vainqueur.pioche, ...vainqueur.main, ...vainqueur.aireDeJeu, ...vainqueur.defausse].sort();
 }
 
 export function getPlayerView(etat: Etat, moi: number): Vue {
@@ -96,6 +107,7 @@ export function getPlayerView(etat: Etat, moi: number): Vue {
     toursSupplementaires: etat.toursSupplementaires,
     effetRougeUtilisePar: [...etat.effetRougeUtilisePar],
     vainqueur: etat.vainqueur,
+    deckDuVainqueur: deckDuVainqueur(etat),
     journal: etat.journal.map((entree) => ({
       joueur: entree.joueur,
       texte:

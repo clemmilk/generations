@@ -64,8 +64,8 @@ Voir le dossier /data pour le détail en csv de chaque élément du jeu. Chaque 
 Quand un joueur débute une nouvelle lignée, il applique les étapes suivantes, dans cet ordre :
 1. Il prend autant d'Or qu'indiqué par sa jauge d'Économie, ainsi que l'Or octroyé par ses tuiles Privilège.
 2. Il pioche autant de cartes qu'indiqué par sa jauge de Population.
-3. Il applique le Privilège 8, s'il le possède.
-4. Il applique le Privilège 12, s'il le possède.
+3. Il applique le Privilège 12, s'il le possède.
+4. Il applique le Privilège 8, s'il le possède.
 
 Si cette pioche lui fait piocher la dernière carte de son deck, il remporte immédiatement la partie, même si ce n'est pas son tour.
 

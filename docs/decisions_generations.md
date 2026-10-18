@@ -122,6 +122,7 @@ Fichiers `data/*_essai-17-10.csv` installés comme version active ; la version �
 ## Modifications du 18/10 (version active)
 - GG. Trash : à chaque trash (effets, Effets Rouges, Privilège 13), le joueur peut trasher la carte du dessus de sa pioche, au hasard, sans la regarder. Il peut le faire plusieurs fois quand l'effet trashe plusieurs cartes. Trasher la dernière carte de sa pioche fait gagner, comme la piocher. La carte trashée est publique, comme tout trash. Réglage `trashDessusPioche` dans `src/game/parametres.ts`.
 - HH. Privilège 15 : 6 Or (au lieu de 7) pour piocher 1 carte. Privilège 20 : 2 Or (au lieu de 1) chaque fois que le joueur joue une carte Avancée. Les effets des Privilèges sont codés dans `src/game/privileges.ts` (le texte du csv n'est que descriptif).
+- II. Début de lignée : le Privilège 12 s'applique avant le Privilège 8 (ordre inversé par rapport à la décision 37). **Pas encore appliqué dans le simulateur**, qui applique toujours le 8 puis le 12.
 
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ? → Réglé le 18/10 : nouveau visuel sans bandeau.

@@ -62,7 +62,8 @@ export function observerPartie(bots: Bot[], graine: number): ObservationPartie {
     const action = choisirAction(etat, bots[etat.attente!.joueur]!, hasard);
     if (!action) break;
     const avant = niveaux(etat);
-    // Achat par remplacement sur la pioche : la carte trashée est la première de la pioche, avant l'action.
+    // Achat par remplacement sur la pioche, ou trash du dessus de la pioche : la carte trashée est la première
+    // de la pioche, avant l'action.
     const dessusDePioche = etat.joueurs[action.joueur]!.pioche[0];
     etat = applyAction(etat, action);
 
@@ -73,6 +74,7 @@ export function observerPartie(bots: Bot[], graine: number): ObservationPartie {
     // Achat par remplacement : la carte remplacée est trashée.
     if (action.type === 'remplacer') note.trashs.push(action.carte);
     if (action.type === 'remplacerPioche' && dessusDePioche !== undefined) note.trashs.push(dessusDePioche);
+    if (action.type === 'trasherPioche' && dessusDePioche !== undefined) note.trashs.push(dessusDePioche);
     // Une action peut faire monter une jauge chez un autre joueur (Effet Rouge) : on les regarde tous.
     niveaux(etat).forEach(([economie, population, noblesse], j) => {
       const [e, p, n] = avant[j]!;

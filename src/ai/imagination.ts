@@ -28,6 +28,8 @@ export function imaginerEtat(vue: Vue, hasard: () => number): Etat {
   for (const joueur of vue.joueurs) {
     for (const id of [...joueur.aireDeJeu, ...joueur.defausse, ...joueur.cartesCacheesConnues]) situees.add(id);
   }
+  // Une carte achetée, en attente du choix de la carte qu'elle remplace, n'est dans aucune zone.
+  if (vue.attente?.type === 'remplacementAchat') situees.add(vue.attente.carte);
 
   // Les cartes Assymétrie jamais vues : chez un adversaire, ou écartées en début de partie.
   const asymetrieLibre = melanger(

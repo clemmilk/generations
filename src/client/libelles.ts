@@ -1,6 +1,7 @@
 import type { Action, Attente } from '../game/actions.ts';
 import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
+import { EFFETS_PRIVILEGES } from '../game/privileges.ts';
 import type { CoutEffet, Etape } from '../game/materiel/index.ts';
 import type { Vue } from '../game/vue.ts';
 
@@ -86,10 +87,12 @@ export function libelleAction(action: Action, attente: Attente | null): string {
       return `Remplacer ${carte(action.carte).nom}`;
     case 'remplacerPioche':
       return 'Remplacer la première carte de ma pioche';
-    case 'utiliserPrivilege':
+    case 'utiliserPrivilege': {
+      const verbe = EFFETS_PRIVILEGES[action.numero]?.type === 'actionTrash' ? 'trasher' : 'piocher';
       return action.paiement.length > 0
-        ? `Privilège ${action.numero} : piocher en défaussant ${nomsDesCartes(action.paiement)}`
-        : `Privilège ${action.numero} : payer pour piocher`;
+        ? `Privilège ${action.numero} : ${verbe} en défaussant ${nomsDesCartes(action.paiement)}`
+        : `Privilège ${action.numero} : payer pour ${verbe}`;
+    }
     case 'defausser':
       return `Défausser ${carte(action.carte).nom}`;
     case 'payer':
@@ -98,6 +101,8 @@ export function libelleAction(action: Action, attente: Attente | null): string {
         : 'Payer';
     case 'trasher':
       return `Trasher ${carte(action.carte).nom}`;
+    case 'trasherPioche':
+      return 'Trasher la carte du dessus de ma pioche (sans la voir)';
     case 'rechercher':
       return `Prendre ${carte(action.carte).nom}`;
     case 'vendre':

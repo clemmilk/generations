@@ -53,6 +53,24 @@ function cartesTrashables(joueur: Joueur): string[] {
   return [...joueur.main, ...joueur.aireDeJeu, ...joueur.defausse];
 }
 
+/** Décision GG : le joueur peut aussi trasher la carte du dessus de sa pioche, sans la regarder. */
+function peutTrasherPioche(joueur: Joueur): boolean {
+  return PARAMETRES.trashDessusPioche && joueur.pioche.length > 0;
+}
+
+function peutTrasher(joueur: Joueur): boolean {
+  return cartesTrashables(joueur).length > 0 || peutTrasherPioche(joueur);
+}
+
+/** Les choix d'un trash : une carte de sa main, de son aire de jeu ou de sa défausse, ou le dessus de sa pioche. */
+function actionsDeTrash(joueur: Joueur): Action[] {
+  const j = joueur.id;
+  return [
+    ...cartesTrashables(joueur).map((id): Action => ({ type: 'trasher', joueur: j, carte: id })),
+    ...(peutTrasherPioche(joueur) ? [{ type: 'trasherPioche', joueur: j } satisfies Action] : []),
+  ];
+}
+
 /** Les cartes de son aire de jeu qu'un joueur peut vendre (elles portent de la Pierre ou du Métal). */
 function cartesVendables(joueur: Joueur): string[] {
   return joueur.aireDeJeu.filter((id) => {
@@ -119,6 +137,26 @@ function trasher(etat: Etat, joueur: Joueur, id: string): void {
     throw new Error(`${joueur.nom} ne peut pas trasher ${id}`);
   }
   envoyerAuTrash(etat, joueur, id);
+}
+
+/** Trashe la carte du dessus de la pioche. Comme pour une pioche, prendre la dernière carte fait gagner. */
+function trasherDessusPioche(etat: Etat, joueur: Joueur): void {
+  const dessus = joueur.pioche.shift();
+  if (dessus === undefined) throw new Error(`${joueur.nom} n'a pas de pioche à trasher`);
+  noter(etat, joueur, `${joueur.nom} trashe la carte du dessus de sa pioche.`);
+  envoyerAuTrash(etat, joueur, dessus);
+  if (joueur.pioche.length === 0 && etat.vainqueur === null) {
+    etat.vainqueur = joueur.id;
+    noter(etat, joueur, `${joueur.nom} a trashé la dernière carte de sa pioche et remporte la partie !`);
+  }
+}
+
+/** Applique un choix de trash (« trasher » ou « trasherPioche »). Renvoie false pour toute autre action. */
+function executerTrash(etat: Etat, joueur: Joueur, action: Action): boolean {
+  if (action.type === 'trasher') trasher(etat, joueur, action.carte);
+  else if (action.type === 'trasherPioche') trasherDessusPioche(etat, joueur);
+  else return false;
+  return true;
 }
 
 /** Ce qui suit le retrait d'une carte trashée : trash public, Privilège 17, victoire si le deck est vide. */
@@ -218,7 +256,7 @@ function gainPossible(etat: Etat, joueur: Joueur, etape: Etape): boolean {
     case 'recherche':
       return joueur.pioche.length > 0;
     case 'trash':
-      return cartesTrashables(joueur).length > 0;
+      return peutTrasher(joueur);
     case 'vendre':
       return cartesVendables(joueur).length > 0;
     case 'achat':
@@ -320,7 +358,7 @@ function actionsDuTour(etat: Etat, joueur: Joueur): Action[] {
     }
   }
   for (const effet of effetsPrivilege(joueur, 'actionTrash')) {
-    for (const paiement of paiementsDuPrivilege(joueur, effet.cout, cartesTrashables(joueur).length > 0)) {
+    for (const paiement of paiementsDuPrivilege(joueur, effet.cout, peutTrasher(joueur))) {
       actions.push({ type: 'utiliserPrivilege', joueur: j, numero: effet.numero, paiement });
     }
   }
@@ -336,10 +374,7 @@ function actionsDuGain(etat: Etat, joueur: Joueur, attente: RefEtape): Action[] 
   const gain = etapeDe(attente).gain;
   switch (gain.type) {
     case 'trash':
-      return [
-        ...cartesTrashables(joueur).map((id): Action => ({ type: 'trasher', joueur: j, carte: id })),
-        passer,
-      ];
+      return [...actionsDeTrash(joueur), passer];
     case 'recherche':
       // Triées : la liste des choix ne doit pas révéler l'ordre de la pioche.
       return [
@@ -394,10 +429,7 @@ export function getLegalActions(etat: Etat, joueurId: number): Action[] {
       return actionsDuGain(etat, joueur, attente);
     case 'trashAchat':
     case 'trashPrivilege':
-      return [
-        ...cartesTrashables(joueur).map((id): Action => ({ type: 'trasher', joueur: j, carte: id })),
-        passer,
-      ];
+      return [...actionsDeTrash(joueur), passer];
     case 'remplacementAchat':
       // Obligatoire : pas de « passer ».
       return [
@@ -538,7 +570,8 @@ function executerGain(
   let encore = attente.restant - 1;
   switch (action.type) {
     case 'trasher':
-      trasher(etat, joueur, action.carte);
+    case 'trasherPioche':
+      executerTrash(etat, joueur, action);
       break;
     case 'rechercher':
       rechercher(etat, joueur, action.carte, true);
@@ -586,9 +619,9 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
       executerGain(etat, joueur, attente, action);
       return;
     case 'trashAchat':
-      if (action.type === 'trasher') {
+      if (action.type === 'trasher' || action.type === 'trasherPioche') {
         joueur.or -= PARAMETRES.surcoutTrashAchat;
-        trasher(etat, joueur, action.carte);
+        executerTrash(etat, joueur, action);
       }
       return;
     case 'remplacementAchat':
@@ -596,8 +629,7 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
       if (action.type === 'remplacerPioche') remplacer(etat, joueur, attente.carte, null);
       return;
     case 'trashPrivilege':
-      if (action.type !== 'trasher') return;
-      trasher(etat, joueur, action.carte);
+      if (!executerTrash(etat, joueur, action)) return;
       etat.file.unshift({ type: 'trashPrivilege', joueur: joueur.id, restant: attente.restant - 1 });
       return;
     case 'finNoblesse':
@@ -695,7 +727,7 @@ function traiterGain(etat: Etat, tache: RefEtape & { restant: number }): void {
       if (joueur.pioche.length === 0) return;
       break;
     case 'trash':
-      if (cartesTrashables(joueur).length === 0) return;
+      if (!peutTrasher(joueur)) return;
       break;
     case 'vendre':
       if (cartesVendables(joueur).length === 0) return;
@@ -740,7 +772,7 @@ function traiter(etat: Etat, tache: Tache): void {
       return;
     case 'trashAchat': {
       const joueur = etat.joueurs[tache.joueur]!;
-      if (joueur.or >= PARAMETRES.surcoutTrashAchat && cartesTrashables(joueur).length > 0) {
+      if (joueur.or >= PARAMETRES.surcoutTrashAchat && peutTrasher(joueur)) {
         etat.attente = { type: 'trashAchat', joueur: joueur.id };
       }
       return;
@@ -766,7 +798,7 @@ function traiter(etat: Etat, tache: Tache): void {
     }
     case 'trashPrivilege': {
       const joueur = etat.joueurs[tache.joueur]!;
-      if (tache.restant > 0 && cartesTrashables(joueur).length > 0) {
+      if (tache.restant > 0 && peutTrasher(joueur)) {
         etat.attente = { type: 'trashPrivilege', joueur: joueur.id, restant: tache.restant };
       }
       return;

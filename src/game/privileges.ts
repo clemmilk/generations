@@ -53,12 +53,12 @@ export const EFFETS_PRIVILEGES: Record<number, EffetPrivilege> = {
   12: { type: 'piocheEtDefausseDebutLignee', cartes: 1 },
   13: { type: 'actionTrash', cout: { or: 0, pierre: 3, metal: 0 }, cartes: 1 },
   14: { type: 'actionPioche', cout: { or: 0, pierre: 0, metal: 2 }, cartes: 1 },
-  15: { type: 'actionPioche', cout: { or: 7, pierre: 0, metal: 0 }, cartes: 1 },
+  15: { type: 'actionPioche', cout: { or: 6, pierre: 0, metal: 0 }, cartes: 1 },
   16: { type: 'erudit', nombre: 1 },
   17: { type: 'orParTrash', or: 2 },
   18: { type: 'conserveOr' },
   19: { type: 'orDebutLignee', or: 3, par: null },
-  20: { type: 'orParCarteAvanceeJouee', or: 1 },
+  20: { type: 'orParCarteAvanceeJouee', or: 2 },
 };
 
 type EffetDeType<T extends EffetPrivilege['type']> = Extract<EffetPrivilege, { type: T }>;

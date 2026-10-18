@@ -25,7 +25,7 @@ Voir le dossier /data pour le détail en csv de chaque élément du jeu. Chaque 
 - Main : les cartes qu'un joueur a en main à un instant T.
 - Aire de jeu : la zone où un joueur joue ses cartes. Elles restent dans son aire de jeu tant que les ressources de la carte n'ont pas été dépensées. Si une carte n'a pas de ressource, elle va directement dans la défausse.
 - Défausse : le lieu où les cartes d'un joueur sont placées une fois qu'elles sont jouées, si elles n'ont pas de ressources, ou une fois que leurs ressources ont été dépensées.
-- Trasher : l'action, pour un joueur, de retirer une carte de son deck. La carte peut être retirée depuis l'aire de jeu, la défausse ou la main du joueur. La carte est écartée définitivement du jeu. Un joueur peut trasher la carte qu'il vient de jouer.
+- Trasher : l'action, pour un joueur, de retirer une carte de son deck. La carte peut être retirée depuis l'aire de jeu, la défausse ou la main du joueur, ou bien être la carte du dessus de sa pioche, prise au hasard (sans la regarder). La carte est écartée définitivement du jeu. Un joueur peut trasher la carte qu'il vient de jouer. Cela vaut pour tous les trashs ; quand un effet permet de trasher plusieurs cartes, le joueur peut prendre plusieurs fois la carte du dessus de sa pioche.
 - Rechercher : consiste à regarder toutes les cartes de son deck pour choisir 1 carte et l'ajouter à sa main. Le deck est ensuite remélangé. Rechercher la dernière carte de son deck revient à la piocher : le joueur gagne la partie.
 - Rejouer : capacité qui permet de rejouer un tour juste après la fin de son tour. Ce tour supplémentaire est un tour complet (les 4 actions sont possibles). Les Effets Rouges de la carte jouée sont résolus avant le tour supplémentaire. Les « Rejouer » se cumulent. (Aucune carte ne l'utilise dans la version actuelle.)
 - Remplacer : quand un joueur achète une carte, elle remplace une carte de son deck, qui est trashée (voir « Acheter 1 carte »).
@@ -115,7 +115,7 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 - Quand la pioche de Privilèges est vide, les Privilèges visibles ne sont plus remplacés et on ne peut plus prendre de Privilège au hasard dans la pioche.
 - Le Privilège 16 compte comme 1 Érudit dans l'aire de jeu, y compris pour obtenir un Privilège en fin de lignée.
 - Privilèges 2, 3 et 4 : chaque carte Avancée de l'aire de jeu du joueur rapporte 1 Érudit (2), 1 Pierre (3) ou 1 Métal (4) de plus. Ces ressources comptent partout (paiements, jauges, Privilèges, effets par tranche). Une même carte peut recevoir le bonus de plusieurs de ces Privilèges.
-- Privilège 20 : chaque fois que le joueur joue une carte Avancée, il gagne 1 Or, même s'il n'applique pas l'effet de la carte.
+- Privilège 20 : chaque fois que le joueur joue une carte Avancée, il gagne 2 Or, même s'il n'applique pas l'effet de la carte.
 - Privilège 18 : l'Or qui reste après avoir payé la Population n'est pas défaussé.
 - Privilège 8 : prendre 1 carte dans son deck est obligatoire. Privilège 12 : défausser 1 carte est obligatoire. Les ressources et Érudits qu'ils ajoutent comptent partout : pour payer, pour augmenter sa Population, pour obtenir un Privilège et pour les effets des cartes.
 - Le Privilège 1 ne réduit que le coût en Or des cartes, qui ne peut pas descendre sous 0.
@@ -125,7 +125,7 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 
 ## Fin de partie
 Quand un joueur pioche la dernière carte de son deck, pour quelque raison que ce soit (y compris en la Recherchant ou lors de la pioche de début de lignée), il remporte immédiatement la partie. Si plusieurs joueurs piochent la dernière carte de leur deck en même temps, c'est le joueur dont c'est le tour qui l'emporte. S'il n'en fait pas partie, c'est le premier d'entre eux dans l'ordre du tour, en partant du joueur qui a joué la carte.
-Un joueur qui trashe la dernière carte de son deck (il ne lui reste plus aucune carte en pioche, en main, dans son aire de jeu ni dans sa défausse) remporte lui aussi immédiatement la partie. Un achat ne peut jamais vider le deck, puisque la carte achetée remplace la carte trashée.
+Un joueur qui trashe la dernière carte de son deck (il ne lui reste plus aucune carte en pioche, en main, dans son aire de jeu ni dans sa défausse) remporte lui aussi immédiatement la partie. De même, trasher la dernière carte de sa pioche (en trashant la carte du dessus de sa pioche) revient à la piocher : le joueur remporte la partie. Un achat ne peut jamais vider le deck, puisque la carte achetée remplace la carte trashée.
 Il n'y a qu'un vainqueur : les autres joueurs ne sont pas classés.
 
 

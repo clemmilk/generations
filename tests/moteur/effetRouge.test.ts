@@ -34,6 +34,7 @@ describe('Effet Rouge', () => {
     expect(paye.joueurs[1]!.or).toBe(0);
     expect(permises(paye)).toEqual([
       { type: 'trasher', carte: c('Cachot', 'jaune') },
+      { type: 'trasherPioche' },
       { type: 'passer' },
     ]);
     const fin = faire(paye, { type: 'trasher', carte: c('Cachot', 'jaune') });

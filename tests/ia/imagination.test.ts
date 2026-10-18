@@ -54,6 +54,8 @@ describe('imaginerEtat', () => {
         ...imagine.piocheCommune,
         ...imagine.trash,
         ...imagine.asymetrieEcartees,
+        // La carte achetée, en attente du choix de la carte qu'elle remplace.
+        ...(imagine.attente?.type === 'remplacementAchat' ? [imagine.attente.carte] : []),
       ];
       expect(cartes).toHaveLength(MATERIEL.cartes.length);
       expect(new Set(cartes).size).toBe(MATERIEL.cartes.length);

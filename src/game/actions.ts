@@ -11,6 +11,8 @@ export type Action =
   // Les réponses aux choix proposés pendant un effet ou une fin de lignée
   | { type: 'payer'; joueur: number; paiement: string[] }
   | { type: 'trasher'; joueur: number; carte: string }
+  /** Trasher la carte du dessus de sa pioche, sans la regarder (décision GG). */
+  | { type: 'trasherPioche'; joueur: number }
   | { type: 'rechercher'; joueur: number; carte: string }
   | { type: 'defausser'; joueur: number; carte: string }
   | { type: 'vendre'; joueur: number; carte: string }

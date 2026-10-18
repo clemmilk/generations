@@ -30,4 +30,9 @@ export const PARAMETRES = {
    *   gratuitement, et prend sa place (main, aire de jeu, défausse, ou dessus de la pioche).
    */
   carteAcheteeVa: 'remplacement' as 'main' | 'defausse' | 'remplacement',
+  /**
+   * Règle du 18/10 (décision GG) : à chaque trash, le joueur peut trasher la carte du dessus de sa pioche,
+   * sans la regarder. false : on ne trashe que dans sa main, son aire de jeu ou sa défausse.
+   */
+  trashDessusPioche: true as boolean,
 } as const;

@@ -98,6 +98,8 @@ describe('bot à préférences', () => {
   });
 
   describe('trash', () => {
+    // Le choix parmi les cartes visibles (main, aire de jeu, défausse), sans le dessus de la pioche.
+    avecReglage('trashDessusPioche', false);
     const apresPaiement = (zones: Parameters<typeof scene>[0]) =>
       faire(scene(zones), { type: 'jouer', carte: c('Tour de guet') }, { type: 'payer', paiement: [] });
 
@@ -142,6 +144,26 @@ describe('bot à préférences', () => {
       const depart = scene({ main: [c('Prison')], aire: [c('Alchimiste royale')], defausse: [c('Cour du roi'), c('Forgeron')] });
       depart.joueurs[0]!.niveauPopulation = 4;
       expect(choix(faire(depart, { type: 'jouer', carte: c('Prison') })).type).toBe('trasher');
+    });
+  });
+
+  describe('trash du dessus de la pioche (décision GG)', () => {
+    const prison = (pioche: string[]) =>
+      faire(
+        scene({ main: [c('Prison')], aire: [c('Alchimiste royale')], defausse: [c('Cour du roi'), c('Forgeron')], pioche }),
+        { type: 'jouer', carte: c('Prison') },
+      );
+
+    it('trashe la dernière carte de sa pioche pour gagner', () => {
+      const etat = prison([c('Cour du roi', 'jaune')]);
+      expect(choix(etat)).toEqual({ type: 'trasherPioche' });
+      expect(faire(etat, choix(etat)).vainqueur).toBe(0);
+    });
+
+    it('préfère le dessus de sa pioche quand elle ne contient que des cartes faibles', () => {
+      // Ses cartes visibles valent toutes plus que le seuil ; sa pioche n'a que des cartes de peu de valeur.
+      const etat = prison([c('Cachot'), c('Tour de guet'), c('Cachot', 'jaune'), c('Tour de guet', 'jaune')]);
+      expect(choix(etat)).toEqual({ type: 'trasherPioche' });
     });
   });
 

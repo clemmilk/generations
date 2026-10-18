@@ -119,5 +119,9 @@ Fichiers `data/*_essai-17-10.csv` installés comme version active ; la version �
 - EE. Privilèges 2, 3 et 4 : chaque carte Avancée de l'aire de jeu rapporte 1 Érudit / Pierre / Métal de plus, qui compte partout. Privilège 20 : +1 Or chaque fois que le joueur joue une carte Avancée, même sans appliquer son effet. Privilège 13 : 3 Pierres pour trasher 1 carte.
 - FF. Or de compensation au départ : 0 / 1 / 2 / 3. 2 cartes Assymétrie par joueur (8 Domaines : toutes distribuées à 4 joueurs).
 
+## Modifications du 18/10 (version active)
+- GG. Trash : à chaque trash (effets, Effets Rouges, Privilège 13), le joueur peut trasher la carte du dessus de sa pioche, au hasard, sans la regarder. Il peut le faire plusieurs fois quand l'effet trashe plusieurs cartes. Trasher la dernière carte de sa pioche fait gagner, comme la piocher. La carte trashée est publique, comme tout trash. Réglage `trashDessusPioche` dans `src/game/parametres.ts`.
+- HH. Privilège 15 : 6 Or (au lieu de 7) pour piocher 1 carte. Privilège 20 : 2 Or (au lieu de 1) chaque fois que le joueur joue une carte Avancée. Les effets des Privilèges sont codés dans `src/game/privileges.ts` (le texte du csv n'est que descriptif).
+
 ## Questions en attente
-- F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ?
+- F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ? → Réglé le 18/10 : nouveau visuel sans bandeau.

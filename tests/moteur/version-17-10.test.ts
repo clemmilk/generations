@@ -18,13 +18,13 @@ describe('Privilèges 2, 3 et 4 : chaque carte Avancée rapporte 1 ressource de 
   }
 });
 
-describe('Privilège 20 : 1 Or chaque fois que le joueur joue une carte Avancée', () => {
-  it('rapporte 1 Or en jouant une carte Avancée, même sans appliquer son effet', () => {
+describe('Privilège 20 : 2 Or chaque fois que le joueur joue une carte Avancée', () => {
+  it('rapporte 2 Or en jouant une carte Avancée, même sans appliquer son effet', () => {
     const etat = scene({ main: [avancee.id], or: 0 });
     etat.joueurs[0]!.privileges = [20];
     const apres = faire(etat, { type: 'jouer', carte: avancee.id });
     // Les effets de la carte peuvent ajouter de l'Or : on regarde le journal.
-    expect(apres.journal.some((e) => e.texte.includes('gagne 1 Or grâce à son Privilège'))).toBe(true);
+    expect(apres.journal.some((e) => e.texte.includes('gagne 2 Or grâce à son Privilège'))).toBe(true);
   });
 
   it('ne rapporte rien pour une carte de départ', () => {

@@ -311,9 +311,9 @@ describe('Privilège 12 : 1 carte de plus, puis défausser 1 carte', () => {
 describe('Privilèges 13, 14 et 15 : payer pour trasher ou piocher à la place de son action', () => {
   const privileges = (etat: Etat) => permises(etat).filter((a) => a.type === 'utiliserPrivilege');
 
-  it('Privilège 15 : 7 Or pour piocher 1 carte, et le tour est terminé', () => {
-    expect(privileges(avec([15], { or: 6 }))).toEqual([]);
-    const etat = avec([15], { or: 7 });
+  it('Privilège 15 : 6 Or pour piocher 1 carte, et le tour est terminé', () => {
+    expect(privileges(avec([15], { or: 5 }))).toEqual([]);
+    const etat = avec([15], { or: 6 });
     expect(privileges(etat)).toEqual([{ type: 'utiliserPrivilege', numero: 15, paiement: [] }]);
     const apres = faire(etat, { type: 'utiliserPrivilege', numero: 15, paiement: [] });
     expect(apres.joueurs[0]!.or).toBe(0);
@@ -347,7 +347,7 @@ describe('Privilèges 13, 14 et 15 : payer pour trasher ou piocher à la place d
   });
 
   it('ne déclenche aucun Effet Rouge', () => {
-    const etat = avec([15], { or: 7 });
+    const etat = avec([15], { or: 6 });
     installer(etat, 1, { or: 20 });
     const apres = faire(etat, { type: 'utiliserPrivilege', numero: 15, paiement: [] });
     expect(apres.joueurs[1]!.or).toBe(20);
@@ -414,17 +414,17 @@ describe('Privilège 18 : conserver son Or en fin de lignée', () => {
   });
 });
 
-describe('Privilège 20 : 1 Or chaque fois que le joueur joue une carte Avancée (décision EE)', () => {
+describe('Privilège 20 : 2 Or chaque fois que le joueur joue une carte Avancée (décisions EE et GG)', () => {
   it('rapporte 1 Or en plus de l\'effet de la carte Avancée', () => {
     // Carrière : Gagne 3 Or.
     const apres = faire(avec([20], { main: [c('Carrière')] }), { type: 'jouer', carte: c('Carrière') });
-    expect(apres.joueurs[0]!.or).toBe(3 + 1);
+    expect(apres.joueurs[0]!.or).toBe(3 + 2);
   });
 
-  it('rapporte 1 Or même si le joueur n\'applique pas l\'effet de la carte', () => {
+  it('rapporte 2 Or même si le joueur n\'applique pas l\'effet de la carte', () => {
     // Mine : Paye 9 Or pour trasher 2 cartes ; le joueur renonce à payer.
     const apres = faire(avec([20], { main: [c('Mine')], or: 9 }), { type: 'jouer', carte: c('Mine') }, { type: 'passer' });
-    expect(apres.joueurs[0]!.or).toBe(9 + 1);
+    expect(apres.joueurs[0]!.or).toBe(9 + 2);
   });
 
   it('ne rapporte rien pour une carte de départ ou une carte Assymétrie', () => {

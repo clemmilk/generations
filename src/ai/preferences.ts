@@ -324,17 +324,27 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
   }
 }
 
-/** Trasher la carte la moins utile, si elle est sous le seuil ; sinon ne rien trasher. */
+/**
+ * Trasher la carte la moins utile, si elle est sous le seuil ; sinon ne rien trasher.
+ * Le dessus de la pioche (décision GG) vaut la valeur moyenne de sa pioche, puisqu'il ne la voit pas.
+ */
 function choisirTrash(actions: Action[], moi: VueJoueur, p: Poids, cout: number, hasard: () => number): Action {
   const passer = actions.find((a) => a.type === 'passer');
-  const choix: Choix[] = actions.flatMap((action) =>
-    action.type === 'trasher' ? [{ action, note: -valeurCarte(moi, action.carte, p) }] : [],
-  );
+  const dessus = actions.find((a) => a.type === 'trasherPioche');
+  // Trasher la dernière carte de sa pioche fait gagner.
+  if (dessus && moi.nbCartesPioche === 1) return dessus;
+  const pioche = valeurMoyennePioche(moi, p);
+  const valeurs = new Map<Action, number>();
+  for (const action of actions) {
+    if (action.type === 'trasher') valeurs.set(action, valeurCarte(moi, action.carte, p));
+    if (action.type === 'trasherPioche' && pioche !== null) valeurs.set(action, pioche);
+  }
+  const choix: Choix[] = [...valeurs].map(([action, valeur]) => ({ action, note: -valeur }));
   if (choix.length === 0) return passer ?? actions[0]!;
   const action = meilleur(choix, hasard);
   // Trasher sa dernière carte fait gagner ; près du but, on trashe quoi qu'il arrive.
   if (nombreDeCartes(moi) === 1 || presDuBut(moi, p)) return action;
-  const valeur = action.type === 'trasher' ? valeurCarte(moi, action.carte, p) : Infinity;
+  const valeur = valeurs.get(action) ?? Infinity;
   return passer && valeur + cout >= p.seuilTrash ? passer : action;
 }
 

@@ -241,7 +241,7 @@
           "gain": {
             "type": "vendre",
             "orParPierre": 3,
-            "orParMetal": 4
+            "orParMetal": 3
           },
           "par": null,
           "repetable": false
@@ -253,14 +253,14 @@
           "gain": {
             "type": "vendre",
             "orParPierre": 2,
-            "orParMetal": 3
+            "orParMetal": 2
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal",
-      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
+      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or par ressource vendue",
+      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or par ressource vendue"
     },
     {
       "id": "carte_77",
@@ -611,7 +611,7 @@
           "gain": {
             "type": "vendre",
             "orParPierre": 3,
-            "orParMetal": 4
+            "orParMetal": 3
           },
           "par": null,
           "repetable": false
@@ -623,14 +623,14 @@
           "gain": {
             "type": "vendre",
             "orParPierre": 2,
-            "orParMetal": 3
+            "orParMetal": 2
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal",
-      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
+      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or par ressource vendue",
+      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or par ressource vendue"
     },
     {
       "id": "carte_50",
@@ -981,7 +981,7 @@
           "gain": {
             "type": "vendre",
             "orParPierre": 3,
-            "orParMetal": 4
+            "orParMetal": 3
           },
           "par": null,
           "repetable": false
@@ -993,14 +993,14 @@
           "gain": {
             "type": "vendre",
             "orParPierre": 2,
-            "orParMetal": 3
+            "orParMetal": 2
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal",
-      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
+      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or par ressource vendue",
+      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or par ressource vendue"
     },
     {
       "id": "carte_59",
@@ -1351,7 +1351,7 @@
           "gain": {
             "type": "vendre",
             "orParPierre": 3,
-            "orParMetal": 4
+            "orParMetal": 3
           },
           "par": null,
           "repetable": false
@@ -1363,14 +1363,14 @@
           "gain": {
             "type": "vendre",
             "orParPierre": 2,
-            "orParMetal": 3
+            "orParMetal": 2
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or pour chaque Pierre et 4 Or pour chaque Métal",
-      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or pour chaque Pierre et 3 Or pour chaque Métal"
+      "texteEffet": "Paye de la Pierre et du Métal pour gagner 3 Or par ressource vendue",
+      "texteEffetRouge": "Paye de la Pierre et du Métal pour gagner 2 Or par ressource vendue"
     },
     {
       "id": "carte_68",
@@ -1640,17 +1640,20 @@
       },
       "ressources": {
         "pierre": 0,
-        "metal": 1,
-        "erudit": 0
+        "metal": 0,
+        "erudit": 1
       },
       "effet": [
         {
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 3
+            "montant": 2
           },
-          "par": null,
+          "par": {
+            "compteur": "erudit",
+            "tranche": 1
+          },
           "repetable": false
         }
       ],
@@ -1661,12 +1664,15 @@
             "type": "or",
             "montant": 1
           },
-          "par": null,
+          "par": {
+            "compteur": "erudit",
+            "tranche": 1
+          },
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 3 Or",
-      "texteEffetRouge": "Gagne 1 Or"
+      "texteEffet": "Gagne 2 Or par Érudit",
+      "texteEffetRouge": "Gagne 1 Or par Érudit"
     },
     {
       "id": "carte_40",
@@ -1829,8 +1835,8 @@
         "ressource": 0
       },
       "ressources": {
-        "pierre": 1,
-        "metal": 0,
+        "pierre": 0,
+        "metal": 1,
         "erudit": 0
       },
       "effet": [
@@ -1941,12 +1947,12 @@
     },
     {
       "id": "carte_3",
-      "nom": "Halle des négociants",
+      "nom": "Négociant",
       "image": "visuels/cartes/avancées/carte_3.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 2,
+        "or": 4,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -1958,26 +1964,24 @@
       },
       "effet": [
         {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 3
+          "cout": {
+            "or": 0,
+            "pierre": 0,
+            "metal": 3
           },
-          "par": null,
-          "repetable": false
-        },
-        {
-          "cout": null,
           "gain": {
-            "type": "achat",
+            "type": "pioche",
             "nombre": 1
           },
-          "par": null,
+          "par": {
+            "compteur": "blason_population",
+            "tranche": 1
+          },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Gagne 3 Or puis Achète 1 carte",
+      "texteEffet": "Paye 3 Métal pour piocher 1 carte par blason Population",
       "texteEffetRouge": ""
     },
     {
@@ -2172,7 +2176,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 5
+            "montant": 6
           },
           "par": null,
           "repetable": false
@@ -2189,7 +2193,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 5 Or",
+      "texteEffet": "Gagne 6 Or",
       "texteEffetRouge": "Gagne 2 Or"
     },
     {
@@ -2214,7 +2218,7 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 4
+            "montant": 5
           },
           "par": null,
           "repetable": false
@@ -2231,7 +2235,7 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 4 Or",
+      "texteEffet": "Gagne 5 Or",
       "texteEffetRouge": "Gagne 2 Or"
     },
     {
@@ -2388,7 +2392,7 @@
     },
     {
       "id": "carte_13",
-      "nom": "Moulin",
+      "nom": "Meunière",
       "image": "visuels/cartes/avancées/carte_13.jpg",
       "origine": "avancee",
       "couleur": null,
@@ -2405,41 +2409,29 @@
       },
       "effet": [
         {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 4
+          "cout": {
+            "or": 12,
+            "pierre": 0,
+            "metal": 0
           },
-          "par": null,
-          "repetable": false
-        },
-        {
-          "cout": null,
           "gain": {
-            "type": "achat",
+            "type": "pioche",
             "nombre": 1
           },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 1
+          "par": {
+            "compteur": "blason_economie",
+            "tranche": 1
           },
-          "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 4 Or puis Achète 1",
-      "texteEffetRouge": "Gagne 1 Or"
+      "effetRouge": [],
+      "texteEffet": "Paye 12 Or pour piocher 1 carte par blason Économie",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_14",
-      "nom": "Apothicairerie",
+      "nom": "Apothicaire",
       "image": "visuels/cartes/avancées/carte_14.jpg",
       "origine": "avancee",
       "couleur": null,
@@ -2456,34 +2448,25 @@
       },
       "effet": [
         {
-          "cout": null,
+          "cout": {
+            "or": 10,
+            "pierre": 0,
+            "metal": 0
+          },
           "gain": {
-            "type": "or",
-            "montant": 2
+            "type": "pioche",
+            "nombre": 1
           },
           "par": {
-            "compteur": "erudit",
+            "compteur": "blason_noblesse",
             "tranche": 1
           },
           "repetable": false
         }
       ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 1
-          },
-          "par": {
-            "compteur": "erudit",
-            "tranche": 1
-          },
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Gagne 2 Or par Érudit",
-      "texteEffetRouge": "Gagne 1 Or par Érudit"
+      "effetRouge": [],
+      "texteEffet": "Paye 10 Or pour piocher 1 carte par blason Noblesse",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_15",
@@ -3460,7 +3443,7 @@
       "id": "privilege_15",
       "numero": 15,
       "image": "visuels/tuiles/privilege_15.jpg",
-      "texte": "À son tour, à la place de son action, le joueur peut payer 7 Or pour piocher 1 carte (1 fois par tour)"
+      "texte": "À son tour, à la place de son action, le joueur peut payer 6 Or pour piocher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_16",
@@ -3490,7 +3473,7 @@
       "id": "privilege_20",
       "numero": 20,
       "image": "visuels/tuiles/privilege_20.jpg",
-      "texte": "Chaque fois que le joueur joue 1 carte avancée, il gagne 1 Or"
+      "texte": "Chaque fois que le joueur joue 1 carte avancée, il gagne 2 Or"
     }
   ],
   "plateau": {

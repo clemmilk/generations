@@ -160,14 +160,7 @@ describe('entrainerContre', () => {
 });
 
 describe('IA entraînée', () => {
-  it('bat nettement l\'IA réglée à la main', () => {
-    let victoires = 0;
-    for (const graine of graines(40, 5000)) {
-      if (simulerPartie([BOTS.entrainee, BOTS.preferences], graine).vainqueur === 0) victoires++;
-      if (simulerPartie([BOTS.preferences, BOTS.entrainee], graine).vainqueur === 1) victoires++;
-    }
-    expect(victoires).toBeGreaterThanOrEqual(52); // 65 % de 80 parties
-  });
+  // « bat nettement l'IA réglée à la main » : dans ia-entrainee.test.ts, sur le vrai matériel.
 
   it('termine ses parties contre elle-même, à 2, 3 et 4 joueurs', () => {
     for (const n of [2, 3, 4]) {

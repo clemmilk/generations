@@ -123,6 +123,7 @@ describe('acheter une carte', () => {
         { type: 'trasher', carte: c('Cachot') },
         { type: 'trasher', carte: c('Remouleur ambulant') },
         { type: 'trasher', carte: c('Épicerie') },
+        { type: 'trasherPioche' },
         { type: 'passer' },
       ]);
     });

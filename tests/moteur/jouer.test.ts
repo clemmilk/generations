@@ -165,6 +165,7 @@ describe('jouer une carte', () => {
         { type: 'trasher', carte: c('Épicerie') },
         { type: 'trasher', carte: c('Tour de guet') },
         { type: 'trasher', carte: c('Marché') },
+        { type: 'trasherPioche' },
         { type: 'passer' },
       ]);
     });
@@ -281,7 +282,7 @@ describe('jouer une carte', () => {
         carte: c('Forgeron'),
       });
       expect(etat.attente).toMatchObject({ type: 'gain', restant: 1 });
-      expect(typesPermis(etat)).toEqual(['trasher', 'passer']);
+      expect(typesPermis(etat)).toEqual(['trasher', 'trasherPioche', 'passer']);
     });
 
     it('Éducation rapporte 2 Or par Érudit, le sien compris', () => {

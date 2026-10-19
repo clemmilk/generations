@@ -1,13 +1,14 @@
 import type { Action, Attente } from '../game/actions.ts';
 import { carte } from '../game/cartes.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
-import type { CoutEffet, Etape, Gain, Piste } from '../game/materiel/index.ts';
+import type { Etape, Gain, Piste } from '../game/materiel/index.ts';
 import { coutDAchat, coutEnOr, etapeDe, peutMonterEnFinDeLignee } from '../game/moteur.ts';
 import { PARAMETRES } from '../game/parametres.ts';
 import { effetsPrivilege, totalPrivilege } from '../game/privileges.ts';
 import { compter, ressourcesDe, ressourcesEnJeu } from '../game/ressources.ts';
 import type { Vue, VueJoueur } from '../game/vue.ts';
 import type { Bot } from './bot.ts';
+import { valeurCout, valeurGain, valeurMarginale } from './contexte.ts';
 import type { Poids } from './poids.ts';
 
 // Bot « à préférences » : il donne une note à chaque action permise et joue la mieux notée.
@@ -31,36 +32,6 @@ function valeurRessources(joueur: Pick<VueJoueur, 'privileges'>, id: string, p: 
   return r.pierre * p.pierre + r.metal * p.metal + r.erudit * p.erudit;
 }
 
-function valeurCout(cout: CoutEffet | null, p: Poids): number {
-  if (!cout) return 0;
-  return cout.or * p.or + cout.pierre * p.pierre + cout.metal * p.metal;
-}
-
-/** La valeur d'un gain obtenu 1 fois. */
-function valeurGain(gain: Gain, p: Poids): number {
-  switch (gain.type) {
-    case 'or':
-      return gain.montant * p.or;
-    case 'pioche':
-      return gain.nombre * p.pioche;
-    case 'trash':
-      return gain.nombre * p.trash;
-    case 'recherche':
-      return gain.nombre * p.recherche;
-    case 'lvlup':
-      return gain.piste === 'economie' ? p.lvlupEconomie : p.lvlupPopulation;
-    case 'privilege':
-      return p.privilege;
-    case 'rejouer':
-      return p.rejouer;
-    case 'vendre':
-      // Jugé au cas par cas au moment de vendre.
-      return 0;
-    case 'achat':
-      return gain.nombre * p.achatEffet;
-  }
-}
-
 /** La valeur d'une carte hors contexte : sert à choisir quoi acheter, trasher, rechercher ou défausser. */
 export function valeurCarte(joueur: Pick<VueJoueur, 'privileges'>, id: string, p: Poids): number {
   let valeur = valeurRessources(joueur, id, p);
@@ -70,6 +41,27 @@ export function valeurCarte(joueur: Pick<VueJoueur, 'privileges'>, id: string, p
   }
   return valeur;
 }
+
+/**
+ * La valeur d'une carte pour CE joueur : un mélange de sa valeur hors contexte et de ce qu'elle apporte
+ * à son deck (src/ai/contexte.ts), dosé par le poids « contexte » (0 : hors contexte seulement).
+ * Sert à choisir quoi acheter, trasher, remplacer, rechercher ou défausser.
+ */
+export function valeurPourMoi(joueur: VueJoueur, id: string, p: Poids): number {
+  const horsContexte = valeurCarte(joueur, id, p);
+  if (p.contexte <= 0) return horsContexte;
+  // La valeur dans le deck coûte cher à calculer : on la garde pour la durée de la décision
+  // (la vue d'un joueur est un nouvel objet à chaque décision).
+  let parPoids = memoire.get(joueur);
+  if (!parPoids) memoire.set(joueur, (parPoids = new WeakMap()));
+  let valeurs = parPoids.get(p);
+  if (!valeurs) parPoids.set(p, (valeurs = new Map()));
+  let marginale = valeurs.get(id);
+  if (marginale === undefined) valeurs.set(id, (marginale = valeurMarginale(joueur, id, p)));
+  return (1 - p.contexte) * horsContexte + p.contexte * marginale;
+}
+
+const memoire = new WeakMap<VueJoueur, WeakMap<Poids, Map<string, number>>>();
 
 function nombreDeCartes(joueur: VueJoueur): number {
   return joueur.nbCartesPioche + joueur.nbCartesMain + joueur.aireDeJeu.length + joueur.defausse.length;
@@ -89,13 +81,13 @@ function presDuBut(joueur: VueJoueur, p: Poids): boolean {
 function cartesFaibles(joueur: VueJoueur, p: Poids): string[] {
   const cartes = [...(joueur.main ?? []), ...joueur.aireDeJeu, ...joueur.defausse];
   if (presDuBut(joueur, p)) return cartes;
-  return cartes.filter((id) => valeurCarte(joueur, id, p) < p.seuilTrash);
+  return cartes.filter((id) => valeurPourMoi(joueur, id, p) < p.seuilTrash);
 }
 
 /** Le bot accepte-t-il de trasher cette carte lors d'un achat, pour 1 Or de plus ? */
 function trashAchatAccepte(joueur: VueJoueur, id: string, p: Poids): boolean {
   if (presDuBut(joueur, p)) return true;
-  return valeurCarte(joueur, id, p) + PARAMETRES.surcoutTrashAchat * p.or < p.seuilTrash;
+  return valeurPourMoi(joueur, id, p) + PARAMETRES.surcoutTrashAchat * p.or < p.seuilTrash;
 }
 
 /**
@@ -106,7 +98,7 @@ function carteARemplacer(joueur: VueJoueur, p: Poids, orRestant: number): string
   if (orRestant < PARAMETRES.surcoutTrashAchat) return null;
   let pire: string | null = null;
   for (const id of [...(joueur.main ?? []), ...joueur.aireDeJeu, ...joueur.defausse]) {
-    if (pire === null || valeurCarte(joueur, id, p) < valeurCarte(joueur, pire, p)) pire = id;
+    if (pire === null || valeurPourMoi(joueur, id, p) < valeurPourMoi(joueur, pire, p)) pire = id;
   }
   return pire !== null && trashAchatAccepte(joueur, pire, p) ? pire : null;
 }
@@ -130,7 +122,7 @@ function valeurDesPioches(
 ): number {
   // Ce qu'apporte la carte elle-même : le bot connaît le contenu de sa pioche, pas son ordre.
   // En piochant, il peut compter sur une carte moyenne ; en recherchant, sur la meilleure.
-  const valeurs = (joueur.contenuPioche ?? []).map((id) => valeurCarte(joueur, id, p));
+  const valeurs = (joueur.contenuPioche ?? []).map((id) => valeurPourMoi(joueur, id, p));
   let apport = 0;
   if (valeurs.length > 0) {
     apport =
@@ -222,12 +214,12 @@ function piocheDeLaProchaineLignee(joueur: VueJoueur): number {
 function valeurMoyennePioche(moi: VueJoueur, p: Poids): number | null {
   const pioche = moi.contenuPioche ?? [];
   if (pioche.length === 0) return null;
-  return pioche.reduce((total, id) => total + valeurCarte(moi, id, p), 0) / pioche.length;
+  return pioche.reduce((total, id) => total + valeurPourMoi(moi, id, p), 0) / pioche.length;
 }
 
 /** Achat par remplacement : la valeur de la carte qu'il sacrifierait (la moins utile de son deck). */
 function valeurDuRemplacement(moi: VueJoueur, p: Poids): number {
-  const valeurs = [...(moi.main ?? []), ...moi.aireDeJeu, ...moi.defausse].map((id) => valeurCarte(moi, id, p));
+  const valeurs = [...(moi.main ?? []), ...moi.aireDeJeu, ...moi.defausse].map((id) => valeurPourMoi(moi, id, p));
   const pioche = valeurMoyennePioche(moi, p);
   if (pioche !== null) valeurs.push(pioche);
   return valeurs.length > 0 ? Math.min(...valeurs) : 0;
@@ -237,14 +229,14 @@ function noteAchat(moi: VueJoueur, id: string, paiement: string[] | null, p: Poi
   const cout = coutEnOr(moi, id);
   if (PARAMETRES.carteAcheteeVa === 'remplacement') {
     // Le deck ne grossit pas : la carte achetée remplace la moins utile, trashée gratuitement.
-    let note = valeurCarte(moi, id, p) - valeurDuRemplacement(moi, p) - cout * p.or;
+    let note = valeurPourMoi(moi, id, p) - valeurDuRemplacement(moi, p) - cout * p.or;
     note += totalPrivilege(moi, 'orParTrash', (effet) => effet.or) * p.or;
     if (paiement) for (const carteDonnee of paiement) note -= valeurRessources(moi, carteDonnee, p);
     else note -= coutDAchat(moi, id).ressource * Math.min(p.pierre, p.metal);
     return note;
   }
   // Une carte de plus dans le deck…
-  let note = valeurCarte(moi, id, p) + p.achat - cout * p.or;
+  let note = valeurPourMoi(moi, id, p) + p.achat - cout * p.or;
   if (paiement) for (const carteDonnee of paiement) note -= valeurRessources(moi, carteDonnee, p);
   else note -= coutDAchat(moi, id).ressource * Math.min(p.pierre, p.metal);
   // … sauf que, pour 1 Or de plus, l'achat permet de trasher une carte : le deck ne grossit pas.
@@ -281,7 +273,12 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
     case 'jouer': {
       const c = carte(action.carte);
       // La carte jouée compte dans son propre effet : on l'imagine déjà dans l'aire de jeu.
-      const apres: VueJoueur = { ...moi, aireDeJeu: [...moi.aireDeJeu, c.id], nbCartesMain: moi.nbCartesMain - 1 };
+      const apres: VueJoueur = {
+        ...moi,
+        aireDeJeu: [...moi.aireDeJeu, c.id],
+        main: moi.main?.filter((id) => id !== c.id) ?? null,
+        nbCartesMain: moi.nbCartesMain - 1,
+      };
       let note = valeurRessources(moi, c.id, p);
       // Privilège 20 : jouer une carte Avancée rapporte de l'Or.
       if (c.origine === 'avancee') note += totalPrivilege(moi, 'orParCarteAvanceeJouee', (effet) => effet.or) * p.or;
@@ -336,7 +333,7 @@ function choisirTrash(actions: Action[], moi: VueJoueur, p: Poids, cout: number,
   const pioche = valeurMoyennePioche(moi, p);
   const valeurs = new Map<Action, number>();
   for (const action of actions) {
-    if (action.type === 'trasher') valeurs.set(action, valeurCarte(moi, action.carte, p));
+    if (action.type === 'trasher') valeurs.set(action, valeurPourMoi(moi, action.carte, p));
     if (action.type === 'trasherPioche' && pioche !== null) valeurs.set(action, pioche);
   }
   const choix: Choix[] = [...valeurs].map(([action, valeur]) => ({ action, note: -valeur }));
@@ -358,7 +355,7 @@ function choisirPrivilege(actions: Action[], p: Poids, hasard: () => number): Ac
 /** Choisit la carte la plus utile (ou la moins utile) parmi des actions qui portent sur une carte. */
 function choisirCarte(actions: Action[], moi: VueJoueur, p: Poids, sens: 1 | -1, hasard: () => number): Action {
   const choix: Choix[] = actions.flatMap((action) =>
-    'carte' in action ? [{ action, note: sens * valeurCarte(moi, action.carte, p) }] : [],
+    'carte' in action ? [{ action, note: sens * valeurPourMoi(moi, action.carte, p) }] : [],
   );
   return choix.length > 0 ? meilleur(choix, hasard) : actions[0]!;
 }
@@ -429,7 +426,7 @@ function choisir(vue: Vue, actions: Action[], p: Poids, hasard: () => number): A
         if (action.type === 'remplacerPioche') return pioche === null ? [] : [{ action, note: -pioche + 0.5 * p.pioche }];
         if (action.type !== 'remplacer') return [];
         const enMain = (moi.main ?? []).includes(action.carte);
-        return [{ action, note: -valeurCarte(moi, action.carte, p) + (enMain ? p.pioche : 0) }];
+        return [{ action, note: -valeurPourMoi(moi, action.carte, p) + (enMain ? p.pioche : 0) }];
       });
       return meilleur(choix, hasard);
     }

@@ -30,6 +30,7 @@ const POIDS_REGLABLES = [
   'effetRouge',
   'seuilTrash',
   'parTranche',
+  'contexte',
 ] as const satisfies readonly (keyof Poids)[];
 
 /** Un tirage selon une loi normale (moyenne 0, écart-type 1). */
@@ -51,6 +52,8 @@ export function muter(poids: Poids, hasard: () => number, force = 1): Poids {
       variante[cle] = arrondi(poids[cle] + normale(hasard) * pas);
     }
   }
+  // La part du contexte reste entre 0 et 1.
+  variante.contexte = Math.min(1, Math.max(0, variante.contexte));
   // Nombre de cartes de trop à partir duquel le bot trashe tout : un entier, modifié plus rarement.
   if (hasard() < 0.2) {
     variante.margeFinale = Math.min(6, Math.max(0, poids.margeFinale + (hasard() < 0.5 ? -1 : 1)));

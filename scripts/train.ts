@@ -14,6 +14,8 @@
 //                      pour être enregistré (1.03 par défaut) ; sinon les poids de départ sont gardés
 //   --depuis manuel|entraine   poids de départ : les réglages manuels (par défaut) ou le dernier entraînement
 //   --graine N         graine de l'entraînement (1 par défaut)
+//   --contexte X       part du contexte dans la valeur des cartes au départ, entre 0 et 1 (src/ai/contexte.ts) ;
+//                      par défaut, celle des poids de départ
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { entrainer, mesurer } from '../src/ai/entrainement.ts';
@@ -36,6 +38,8 @@ if (depuis === 'entraine') {
   }
   depart = completer(JSON.parse(readFileSync(fichier, 'utf8')).poids);
 }
+const contexte = option('contexte', '');
+if (contexte !== '') depart = { ...depart, contexte: Math.min(1, Math.max(0, Number(contexte))) };
 
 const options = {
   depart,

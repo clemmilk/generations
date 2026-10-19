@@ -295,14 +295,15 @@ describe('Privilège 12 : 1 carte de plus, puis défausser 1 carte', () => {
     expect(apres.vainqueur).toBe(0);
   });
 
-  it('s\'applique après le Privilège 8 quand le joueur possède les deux', () => {
+  it('s\'applique avant le Privilège 8 quand le joueur possède les deux (décision II)', () => {
+    // 3 cartes - 1 (Privilège 8) = 2 cartes, puis 1 de plus (Privilège 12).
     let apres = finirLignee(avec([12, 8], { pioche: [...pioche, c('Ferrailleur'), c('Colporteur')] }));
+    expect(apres.joueurs[0]!.main).toHaveLength(3);
+    expect(apres.attente?.type).toBe('debutDefausse');
+    apres = faire(apres, { type: 'defausser', carte: apres.joueurs[0]!.main[0]! });
     expect(apres.joueurs[0]!.main).toHaveLength(2);
     expect(apres.attente?.type).toBe('debutRecherche');
     apres = faire(apres, { type: 'rechercher', carte: apres.joueurs[0]!.pioche[0]! });
-    expect(apres.joueurs[0]!.main).toHaveLength(4);
-    expect(apres.attente?.type).toBe('debutDefausse');
-    apres = faire(apres, { type: 'defausser', carte: apres.joueurs[0]!.main[0]! });
     expect(apres.joueurs[0]!.main).toHaveLength(3);
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
   });

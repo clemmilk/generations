@@ -52,6 +52,12 @@ export interface Poids {
   margeFinale: number;
   /** Pour juger une carte hors contexte : combien de fois on suppose qu'un effet « par… » s'applique. */
   parTranche: number;
+  /**
+   * Part du contexte dans la valeur d'une carte, entre 0 et 1. À 0, une carte vaut la même chose dans
+   * tous les decks (valeur hors contexte). À 1, elle vaut ce qu'elle apporte au deck du joueur :
+   * un effet « par Pierre » vaut plus dans un deck riche en Pierres (src/ai/contexte.ts).
+   */
+  contexte: number;
   /** Préférence pour chaque tuile Privilège, par numéro (1 par défaut). */
   privileges: Record<number, number>;
 }
@@ -77,5 +83,6 @@ export const POIDS_MANUELS: Poids = {
   seuilTrash: 6,
   margeFinale: 2,
   parTranche: 1,
+  contexte: 0,
   privileges: {},
 };

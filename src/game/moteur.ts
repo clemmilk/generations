@@ -748,17 +748,18 @@ function reformerDeck(etat: Etat, joueur: Joueur): void {
   joueur.aireDeJeu = [];
   melanger(etat, joueur.pioche);
   debuterLignee(etat, joueur);
-  // Après l'Or et les cartes : le Privilège 8 (recherche), puis le Privilège 12 (pioche et défausse).
+  // Après l'Or et les cartes : le Privilège 12 (pioche et défausse), puis le Privilège 8 (recherche).
+  // Décision II.
   const recherches = totalPrivilege(joueur, 'rechercheDebutLignee', (effet) => effet.cartes);
   const enPlus = totalPrivilege(joueur, 'piocheEtDefausseDebutLignee', (effet) => effet.cartes);
   const suite: Tache[] = [];
-  if (recherches > 0) suite.push({ type: 'debutRecherche', joueur: joueur.id, restant: recherches });
   if (enPlus > 0) {
     suite.push(
       { type: 'debutPioche', joueur: joueur.id, cartes: enPlus },
       { type: 'debutDefausse', joueur: joueur.id, restant: enPlus },
     );
   }
+  if (recherches > 0) suite.push({ type: 'debutRecherche', joueur: joueur.id, restant: recherches });
   etat.file.unshift(...suite);
 }
 

@@ -113,8 +113,9 @@ describe('statistiques des joueurs', () => {
       const etat = scene({ defausse: [c('Forgeron')] });
       etat.joueurs[0]!.privileges = [8, 12];
       let apres = faire(etat, { type: 'finLignee' });
-      apres = faire(apres, { type: 'rechercher', carte: apres.joueurs[0]!.pioche[0]! });
+      // Privilège 12 (défausser) avant le Privilège 8 (rechercher) : décision II.
       apres = faire(apres, { type: 'defausser', carte: apres.joueurs[0]!.main[0]! });
+      apres = faire(apres, { type: 'rechercher', carte: apres.joueurs[0]!.pioche[0]! });
       expect(apres.joueurs[0]!.statistiques.piochesSupplementaires).toBe(0);
     });
   });

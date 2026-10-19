@@ -1,0 +1,69 @@
+{
+  "strategie": "privileges",
+  "description": "Vise les Privilèges et les Érudits avant tout.",
+  "bornes": {
+    "privilege": {
+      "min": 14
+    },
+    "erudit": {
+      "min": 4
+    }
+  },
+  "contreLeChampion": {
+    "avantEntrainement": {
+      "force": 0.74,
+      "victoiresA2": 36.2,
+      "victoiresA4": 18.8
+    },
+    "apresEntrainement": {
+      "force": 0.97,
+      "victoiresA2": 51.4,
+      "victoiresA4": 22.8
+    }
+  },
+  "adoptions": 6,
+  "poids": {
+    "or": 1,
+    "pioche": 0.26,
+    "piocheCarte": -1.42,
+    "piocheProche": 5.3,
+    "trash": 9.79,
+    "recherche": 5.54,
+    "lvlupEconomie": 1.48,
+    "lvlupPopulation": 0.77,
+    "privilege": 16.3,
+    "rejouer": 0.25,
+    "pierre": 3.82,
+    "metal": 10.11,
+    "erudit": 4,
+    "achat": -13.29,
+    "achatEffet": 3.05,
+    "finLignee": 1.18,
+    "effetRouge": 0.26,
+    "seuilTrash": 15.62,
+    "margeFinale": 3,
+    "parTranche": 0.54,
+    "privileges": {
+      "1": 0.25,
+      "2": 1.25,
+      "3": 2.46,
+      "4": 2.97,
+      "5": 2.3,
+      "6": 0.04,
+      "7": 0,
+      "8": 4.8,
+      "9": 0.96,
+      "10": 1.58,
+      "11": 2.94,
+      "12": 3.37,
+      "13": 0.79,
+      "14": 0.31,
+      "15": 0.36,
+      "16": 1.4,
+      "17": 1.48,
+      "18": 3.8,
+      "19": 0.35,
+      "20": 0.77
+    }
+  }
+}

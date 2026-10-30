@@ -82,11 +82,11 @@ describe('trasher la carte du dessus de sa pioche', () => {
     }
   });
 
-  it('déclenche le Privilège 17 (2 Or par carte trashée)', () => {
+  it('déclenche le Privilège 17 (1 Or par carte trashée)', () => {
     const etat = scene({ main: [hote], pioche: [c('Forgeron'), c('Marché')] });
     etat.joueurs[0]!.privileges = [17];
     const apres = faire(etat, { type: 'jouer', carte: hote }, { type: 'trasherPioche' });
-    expect(apres.joueurs[0]!.or).toBe(2);
+    expect(apres.joueurs[0]!.or).toBe(1);
   });
 
   it('permet d\'utiliser le Privilège 13 même sans carte en main, en jeu ni en défausse', () => {

@@ -1,5 +1,5 @@
 Dossier,Identifiant,Effet
-visuels\tuiles,privilege_1,Toutes les cartes de la pioche commune coûtent 2 Or de moins
+visuels\tuiles,privilege_1,Toutes les cartes de la pioche commune coûtent 3 Or de moins
 visuels\tuiles,privilege_2,Chaque carte avancée rapporte également 1 Érudit
 visuels\tuiles,privilege_3,Chaque carte avancée rapporte également 1 Pierre
 visuels\tuiles,privilege_4,Chaque carte avancée rapporte également 1 Metal
@@ -15,7 +15,7 @@ visuels\tuiles,privilege_13,"À son tour, à la place de son action, le joueur p
 visuels\tuiles,privilege_14,"À son tour, à la place de son action, le joueur peut payer 2 Métal pour piocher 1 carte (1 fois par tour)"
 visuels\tuiles,privilege_15,"À son tour, à la place de son action, le joueur peut payer 6 Or pour piocher 1 carte (1 fois par tour)"
 visuels\tuiles,privilege_16,"1 symbole Érudit, valable pour toutes les effets demandant des Érudit, comme si elle était sur une carte de sa zone de jeu"
-visuels\tuiles,privilege_17,"Chaque fois que le joueur trash 1 carte, il gagne 2 Or"
+visuels\tuiles,privilege_17,"Chaque fois que le joueur trash 1 carte, il gagne 1 Or"
 visuels\tuiles,privilege_18,"Chaque fois que le joueur met fin à sa lignée, après avoir augmenté sa jauge d'Économie, il conserve son Or restant"
 visuels\tuiles,privilege_19,"Au début de chaque nouvelle lignée, le joueur gagne 3 Or supplémentaires"
 visuels\tuiles,privilege_20,"Chaque fois que le joueur joue 1 carte avancée, il gagne 2 Or"

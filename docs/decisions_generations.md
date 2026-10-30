@@ -124,5 +124,9 @@ Fichiers `data/*_essai-17-10.csv` installés comme version active ; la version �
 - HH. Privilège 15 : 6 Or (au lieu de 7) pour piocher 1 carte. Privilège 20 : 2 Or (au lieu de 1) chaque fois que le joueur joue une carte Avancée. Les effets des Privilèges sont codés dans `src/game/privileges.ts` (le texte du csv n'est que descriptif).
 - II. Début de lignée : le Privilège 12 s'applique avant le Privilège 8 (ordre inversé par rapport à la décision 37). Appliqué dans le simulateur le 19/10 (`reformerDeck` dans `src/game/moteur.ts`).
 
+## Version du 30/10 (version active)
+- JJ. Effet Rouge : seul le joueur assis à droite du joueur actif (celui qui a joué juste avant lui) peut l'appliquer. Réglage `effetRougePour` (« precedent ») dans `src/game/parametres.ts` ; « tous » redonne l'ancienne règle.
+- KK. Nouvelles cartes et nouveau plateau (fichiers csv du 30/10). Deck de départ : Cachot et Forgeron, Marché et Ferrailleur échangent leurs effets ; Marché : Gagne 2 Or, Effet Rouge Gagne 1 Or (le csv codait 1 Or sans Effet Rouge ; corrigé d'après le visuel, à la demande du 30/10). Économie : 1 / 2 / 2 / 3 Ressources ; Population : 3 / 6 / 9 / 12 Or. Privilège 1 : 3 Or de réduction ; Privilège 17 : 1 Or par carte trashée.
+
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ? → Réglé le 18/10 : nouveau visuel sans bandeau.

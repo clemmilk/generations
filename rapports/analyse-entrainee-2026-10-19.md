@@ -184,3 +184,41 @@ Posséder un Privilège est en partie une conséquence du fait de bien jouer (il
 | Grand argentier | 0.25 | 0.10 |
 | Contremaître | 0.22 | 0.19 |
 | Histoire | 0.21 | 0.21 |
+
+## Effets Rouges par carte
+
+Combien de fois les adversaires profitent de l'Effet Rouge d'une carte, quand elle est jouée. Une carte jouée à 4 joueurs peut servir jusqu'à 3 fois (une par adversaire). « Choisi » : l'adversaire a payé ou fait un choix ; sinon, c'est un gain automatique.
+
+| Carte | Fois jouée (toutes parties) | Effet Rouge utilisé, pour 1 carte jouée | dont choisi | Utilisé par partie (vainqueurs) | Utilisé par partie (perdants) |
+|---|---:|---:|---:|---:|---:|
+| Épicerie | 10741 | 2.19 | 0.0 % | 2.44 | 2.69 |
+| Salle du trésor | 9862 | 2.19 | 0.0 % | 2.25 | 2.47 |
+| Cachot | 12265 | 1.43 | 100.0 % | 1.93 | 1.96 |
+| Progrès | 3620 | 2.13 | 0.0 % | 0.76 | 0.91 |
+| Aqueduc | 2106 | 1.45 | 100.0 % | 0.32 | 0.35 |
+| Forge | 1174 | 2.12 | 0.0 % | 0.28 | 0.27 |
+| Carrière | 1181 | 2.06 | 0.0 % | 0.27 | 0.27 |
+| Ferme | 1904 | 1.28 | 100.0 % | 0.26 | 0.27 |
+| Histoire | 1876 | 1.29 | 0.0 % | 0.26 | 0.27 |
+| Économie | 1592 | 1.54 | 100.0 % | 0.24 | 0.29 |
+| Banque | 1351 | 1.28 | 100.0 % | 0.22 | 0.18 |
+| Hôtel des impôts | 1067 | 1.98 | 0.0 % | 0.22 | 0.24 |
+| Production | 811 | 2.06 | 0.0 % | 0.18 | 0.19 |
+| Maison du commerce | 1864 | 1.06 | 100.0 % | 0.18 | 0.24 |
+| Comptoir maritime | 1057 | 1.07 | 100.0 % | 0.12 | 0.13 |
+| Diplomatie | 520 | 1.84 | 0.0 % | 0.11 | 0.10 |
+| Hôpital | 510 | 1.51 | 0.0 % | 0.09 | 0.08 |
+| Ambassade | 586 | 0.96 | 0.0 % | 0.06 | 0.06 |
+| Mairie | 229 | 1.81 | 0.0 % | 0.05 | 0.04 |
+| Justice | 69 | 0.75 | 0.0 % | 0.00 | 0.01 |
+| Tour de guet | 5114 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Marché | 5745 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Religion | 1050 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Science | 1422 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Prison | 1456 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Cabinet d'architecte | 365 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Chancellerie | 178 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Tribunal | 39 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Mine | 835 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Loge des bâtisseurs | 899 | 0.00 | 0.0 % | 0.00 | 0.00 |
+| Cour du roi | 1456 | 0.00 | 0.0 % | 0.00 | 0.00 |

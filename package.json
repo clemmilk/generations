@@ -20,6 +20,8 @@
     "analyse": "node scripts/analyse.ts",
     "pretournoi": "npm run import",
     "tournoi": "node scripts/tournoi.ts",
+    "preclassement": "npm run import",
+    "classement": "node scripts/classement.ts",
     "prevaleurs": "npm run import",
     "valeurs": "node scripts/valeurs.ts",
     "prevalorisation": "npm run import",

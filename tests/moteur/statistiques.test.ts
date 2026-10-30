@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createGame, getPlayerView } from '../../src/game/index.ts';
-import { c, faire, inscriptions, installer, scene } from './outils.ts';
+import { avecReglage, c, faire, inscriptions, installer, scene } from './outils.ts';
 
 const VIDES = {
   tours: 0,
@@ -121,6 +121,8 @@ describe('statistiques des joueurs', () => {
   });
 
   describe('Effets Rouges utilisés', () => {
+    // Avec l'ancienne règle (chaque adversaire), pour compter plusieurs bénéficiaires.
+    avecReglage('effetRougePour', 'tous');
     it('comptent un Effet Rouge reçu automatiquement (gain d\'Or)', () => {
       const etat = faire(scene({ main: [c('Épicerie')] }, 3), { type: 'jouer', carte: c('Épicerie') });
       expect(etat.joueurs.map((j) => j.statistiques.effetsRougesAutomatiques)).toEqual([0, 1, 1]);

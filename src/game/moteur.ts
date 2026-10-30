@@ -495,7 +495,13 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
       }
       etat.effetRougeUtilisePar = [];
       // D'abord l'effet du joueur actif, puis l'Effet Rouge de chaque adversaire dans l'ordre du tour.
-      const adversaires = ordreDuTour(etat, j).slice(1);
+      const tousLesAdversaires = ordreDuTour(etat, j).slice(1);
+      const adversaires =
+        PARAMETRES.effetRougePour === 'suivant'
+          ? tousLesAdversaires.slice(0, 1)
+          : PARAMETRES.effetRougePour === 'precedent'
+            ? tousLesAdversaires.slice(-1)
+            : tousLesAdversaires;
       etat.file = [
         ...c.effet.map((_, index): Tache => ({ type: 'etape', joueur: j, carte: c.id, index, rouge: false })),
         ...adversaires.flatMap((adversaire) =>

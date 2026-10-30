@@ -41,7 +41,7 @@ Voir le dossier /data pour le détail en csv de chaque élément du jeu. Chaque 
 - Noblesse : niveau de noblesse consigné sur le plateau personnel de chaque joueur. La piste Noblesse est constituée de 4 emplacements de tuiles Privilège : le niveau de Noblesse d'un joueur est le nombre de Privilèges qu'il possède. À certains niveaux, le joueur gagne 1 blason Noblesse.
 - Blason : le nombre de blasons d'un joueur, dans chaque type, est celui affiché à son niveau actuel sur la piste correspondante (ce n'est pas un cumul des niveaux précédents), plus les éventuels blasons donnés par ses Privilèges.
 - Lvl up : le fait d'augmenter d'un niveau sa jauge de Population ou d'Économie. Un Lvl up obtenu par l'effet d'une carte remplace le coût indiqué sur la piste. On ne peut pas dépasser le niveau maximum d'une piste.
-- Effet rouge : quand un joueur joue une carte qui possède un effet rouge, tous ses adversaires peuvent, après qu'il ait joué, appliquer l'éventuel Effet Rouge de la carte qu'il a joué.
+- Effet rouge : quand un joueur joue une carte qui possède un effet rouge, seul le joueur assis à sa droite (celui qui a joué juste avant lui) peut, après qu'il ait joué, appliquer l'Effet Rouge de la carte qu'il a jouée.
 
 
 ## Mise en place
@@ -80,7 +80,7 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
   - la **première carte de sa pioche** (sans la regarder) : elle est trashée et la carte achetée est posée à sa place, sur le dessus de la pioche.
 
   Un achat ne change donc pas le nombre de cartes du deck. La carte achetée est remplacée, dans la rivière, par la première carte de la pioche commune, qui est révélée. Quand la pioche commune est vide, la rivière n'est plus complétée : on peut encore acheter les cartes qui y restent, jusqu'à ce qu'elle soit vide.
-- **Jouer 1 carte :** le joueur joue une carte de sa main. Si la carte contient des ressources, il la place dans son aire de jeu puis applique son effet. Si elle n'en contient pas, il la place dans sa défausse puis applique son effet. L'effet est facultatif : le joueur peut jouer une carte « à vide », sans appliquer son effet. Tous les autres joueurs peuvent ensuite appliquer l'Effet Rouge de la carte qui vient d'être jouée, que le joueur actif ait appliqué son effet ou non.
+- **Jouer 1 carte :** le joueur joue une carte de sa main. Si la carte contient des ressources, il la place dans son aire de jeu puis applique son effet. Si elle n'en contient pas, il la place dans sa défausse puis applique son effet. L'effet est facultatif : le joueur peut jouer une carte « à vide », sans appliquer son effet. Le joueur assis à sa droite (celui qui a joué juste avant lui) peut ensuite appliquer l'Effet Rouge de la carte qui vient d'être jouée, que le joueur actif ait appliqué son effet ou non. Les autres joueurs n'en profitent pas.
 - **Utiliser un Privilège d'action :** si le joueur possède le Privilège 13, 14 ou 15, il peut en payer le coût pour trasher 1 carte (Privilège 13) ou piocher 1 carte (Privilèges 14 et 15). Cela remplace l'action de son tour : c'est donc 1 seule fois par tour, mais il peut le refaire lors de tours suivants, tant qu'il peut payer.
 - **Mettre fin à sa lignée :** si le joueur possède 0 ou 1 carte en main, il peut mettre fin à sa lignée. Il applique alors les étapes suivantes, dans cet ordre :
   1. **Noblesse :** il regarde s'il possède suffisamment d'Érudits dans son aire de jeu pour recevoir un nouveau Privilège. Le nombre d'Érudits requis est celui indiqué sur le premier emplacement libre de sa piste Noblesse (1 pour le premier Privilège, 2 pour le deuxième, 3 pour le troisième, 4 pour le quatrième). Les Érudits ne sont pas dépensés. Si c'est le cas, il peut en prendre un parmi les 4 disponibles et l'ajouter à son plateau. Ce n'est pas obligatoire. Il ne peut prendre qu'1 seul Privilège par fin de lignée. Le Privilège qu'il a choisi est remplacé par le premier de la pioche Privilège afin qu'il y ait 4 choix pour le prochain joueur.
@@ -104,7 +104,7 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 
 
 ## Effets Rouges
-- Les adversaires du joueur actif appliquent l'Effet Rouge chacun à leur tour, dans l'ordre du tour, en commençant par le joueur qui suit le joueur actif.
+- Seul le joueur assis à droite du joueur actif (celui qui a joué juste avant lui dans l'ordre du tour) peut appliquer l'Effet Rouge. À 2 joueurs, c'est l'adversaire.
 - Chaque adversaire utilise ses propres ressources, son propre Or et son propre plateau.
 
 

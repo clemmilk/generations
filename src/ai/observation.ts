@@ -25,6 +25,11 @@ export interface ObservationJoueur {
   achats: string[];
   jouees: string[];
   trashs: string[];
+  /**
+   * Les Effets Rouges des adversaires que ce joueur a utilisés : la carte jouée par l'adversaire, et
+   * « choisi » s'il a payé ou fait un choix (false : gain automatique, comme « Gagne 1 Or »).
+   */
+  effetsRouges: { carte: string; choisi: boolean }[];
   /** Les jauges montées, dans l'ordre (un Privilège obtenu compte comme une montée de Noblesse). */
   montees: Jauge[];
   deckFinal: string[];
@@ -55,8 +60,11 @@ export function observerPartie(bots: Bot[], graine: number): ObservationPartie {
     achats: [] as string[],
     jouees: [] as string[],
     trashs: [] as string[],
+    effetsRouges: [] as { carte: string; choisi: boolean }[],
     montees: [] as Jauge[],
   }));
+  // Un Effet Rouge vient toujours de la dernière carte jouée.
+  let derniereCarteJouee: string | null = null;
 
   for (let i = 0; i < ACTIONS_MAX && !isGameOver(etat); i++) {
     const action = choisirAction(etat, bots[etat.attente!.joueur]!, hasard);
@@ -65,7 +73,15 @@ export function observerPartie(bots: Bot[], graine: number): ObservationPartie {
     // Achat par remplacement sur la pioche, ou trash du dessus de la pioche : la carte trashée est la première
     // de la pioche, avant l'action.
     const dessusDePioche = etat.joueurs[action.joueur]!.pioche[0];
+    const rougesAvant = etat.joueurs.map((j) => [j.statistiques.effetsRougesChoisis, j.statistiques.effetsRougesAutomatiques]);
+    if (action.type === 'jouer') derniereCarteJouee = action.carte;
     etat = applyAction(etat, action);
+    etat.joueurs.forEach((j, k) => {
+      if (derniereCarteJouee === null) return;
+      const [choisis, automatiques] = rougesAvant[k]!;
+      for (let x = choisis!; x < j.statistiques.effetsRougesChoisis; x++) notes[k]!.effetsRouges.push({ carte: derniereCarteJouee, choisi: true });
+      for (let x = automatiques!; x < j.statistiques.effetsRougesAutomatiques; x++) notes[k]!.effetsRouges.push({ carte: derniereCarteJouee, choisi: false });
+    });
 
     const note = notes[action.joueur]!;
     if (action.type === 'acheter') note.achats.push(action.carte);

@@ -35,4 +35,11 @@ export const PARAMETRES = {
    * sans la regarder. false : on ne trashe que dans sa main, son aire de jeu ou sa défausse.
    */
   trashDessusPioche: true as boolean,
+  /**
+   * Qui peut appliquer l'Effet Rouge d'une carte jouée :
+   * - « tous » (règle actuelle) : chaque adversaire, dans l'ordre du tour ;
+   * - « suivant » (essai) : seulement le joueur qui joue juste après ;
+   * - « precedent » (essai) : seulement le joueur qui a joué juste avant.
+   */
+  effetRougePour: 'precedent' as 'tous' | 'suivant' | 'precedent',
 } as const;

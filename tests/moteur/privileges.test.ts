@@ -29,18 +29,18 @@ it('chaque tuile Privilège du csv a un effet défini', () => {
   expect(Object.keys(EFFETS_PRIVILEGES)).toHaveLength(MATERIEL.privileges.length);
 });
 
-describe('Privilège 1 : les cartes coûtent 2 Or de moins', () => {
+describe('Privilège 1 : les cartes coûtent 3 Or de moins (décision KK)', () => {
   const marche = (privileges: number[], or: number, riviere: string) => {
     const etat = avec(privileges, { or });
     etat.riviere = [c(riviere)];
     return etat;
   };
 
-  it('rend achetable une carte à 4 Or avec 2 Or, et ne fait payer que 2 Or', () => {
-    expect(permises(marche([], 2, 'Assassin')).filter((a) => a.type === 'acheter')).toEqual([]);
+  it('rend achetable une carte à 4 Or avec 1 Or, et ne fait payer que 1 Or', () => {
+    expect(permises(marche([], 3, 'Assassin')).filter((a) => a.type === 'acheter')).toEqual([]);
     const etat = marche([1], 3, 'Assassin');
     const apres = faire(etat, { type: 'acheter', carte: c('Assassin'), paiement: [] }, { type: 'remplacerPioche' });
-    expect(apres.joueurs[0]!.or).toBe(1);
+    expect(apres.joueurs[0]!.or).toBe(2);
   });
 
   it('ne fait jamais descendre le coût sous 0', () => {
@@ -367,7 +367,7 @@ describe('Privilèges 13, 14 et 15 : payer pour trasher ou piocher à la place d
   });
 });
 
-describe('Privilège 17 : 2 Or par carte trashée', () => {
+describe('Privilège 17 : 1 Or par carte trashée (décision KK)', () => {
   it('s\'applique à un trash par effet de carte', () => {
     const apres = faire(
       avec([17], { main: [c('Tour de guet'), c('Cachot')], or: 4 }),
@@ -375,10 +375,10 @@ describe('Privilège 17 : 2 Or par carte trashée', () => {
       { type: 'payer', paiement: [] },
       { type: 'trasher', carte: c('Cachot') },
     );
-    expect(apres.joueurs[0]!.or).toBe(2);
+    expect(apres.joueurs[0]!.or).toBe(1);
   });
 
-  it('s\'applique à la carte remplacée lors d\'un achat (trash gratuit, 2 Or gagnés)', () => {
+  it('s\'applique à la carte remplacée lors d\'un achat (trash gratuit, 1 Or gagné)', () => {
     const etat = avec([17], { main: [c('Cachot')], or: 2 });
     etat.riviere = [c('Remouleur ambulant')];
     const apres = faire(
@@ -386,7 +386,7 @@ describe('Privilège 17 : 2 Or par carte trashée', () => {
       { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] },
       { type: 'remplacer', carte: c('Cachot') },
     );
-    expect(apres.joueurs[0]!.or).toBe(2);
+    expect(apres.joueurs[0]!.or).toBe(1);
   });
 
   it('rapporte pour chaque carte trashée', () => {
@@ -398,7 +398,7 @@ describe('Privilège 17 : 2 Or par carte trashée', () => {
       { type: 'trasher', carte: c('Cachot') },
       { type: 'trasher', carte: c('Marché') },
     );
-    expect(apres.joueurs[0]!.or).toBe(4);
+    expect(apres.joueurs[0]!.or).toBe(2);
   });
 });
 

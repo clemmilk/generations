@@ -18,6 +18,7 @@ import type { Jauge, ObservationJoueur } from '../src/ai/observation.ts';
 import { creerBotPlanificateur } from '../src/ai/planification.ts';
 import { carte } from '../src/game/cartes.ts';
 import { MATERIEL } from '../src/game/materiel/index.ts';
+import { PARAMETRES } from '../src/game/parametres.ts';
 
 function option(nom: string, defaut: string): string {
   const position = process.argv.indexOf(`--${nom}`);
@@ -28,6 +29,14 @@ const parties = Number(option('games', '2000'));
 const type = option('bot', 'entrainee') as TypeDeBot;
 const simulations = Number(option('simulations', '40'));
 const premiereGraine = Number(option('graine', '1'));
+// Essai d'une variante de règle : --effet-rouge suivant|precedent (le nom du rapport porte la variante).
+const effetRouge = option('effet-rouge', 'tous');
+if (!['tous', 'suivant', 'precedent'].includes(effetRouge)) {
+  console.error(`--effet-rouge : tous, suivant ou precedent.`);
+  process.exit(1);
+}
+(PARAMETRES as Record<string, unknown>).effetRougePour = effetRouge;
+const variante = effetRouge === 'tous' ? '' : `-effet-rouge-${effetRouge}`;
 if (!(type in BOTS)) {
   console.error(`Bot inconnu « ${type} ». Bots disponibles : ${Object.keys(BOTS).join(', ')}.`);
   process.exit(1);
@@ -345,11 +354,48 @@ section(
   ),
 );
 
+// ───────────────────────── 9. Effets Rouges par carte ─────────────────────────
+
+const avecEffetRouge = [...new Set(MATERIEL.cartes.filter((c) => c.effetRouge.length > 0).map((c) => c.nom))];
+const fois = (liste: { carte: string }[], n: string) => liste.filter((e) => nom(e.carte) === n).length;
+section(
+  'Effets Rouges par carte',
+  "Combien de fois les adversaires profitent de l'Effet Rouge d'une carte, quand elle est jouée. " +
+    "Une carte jouée à 4 joueurs peut servir jusqu'à 3 fois (une par adversaire). " +
+    "« Choisi » : l'adversaire a payé ou fait un choix ; sinon, c'est un gain automatique.",
+  tableau(
+    [
+      'Carte',
+      'Fois jouée (toutes parties)',
+      'Effet Rouge utilisé, pour 1 carte jouée',
+      'dont choisi',
+      'Utilisé par partie (vainqueurs)',
+      'Utilisé par partie (perdants)',
+    ],
+    avecEffetRouge
+      .map((n) => {
+        const jouee = joueurs.reduce((t, j) => t + j.jouees.filter((id) => nom(id) === n).length, 0);
+        const utilisations = joueurs.flatMap((j) => j.effetsRouges.filter((e) => nom(e.carte) === n));
+        return {
+          n,
+          jouee,
+          parCarte: jouee > 0 ? utilisations.length / jouee : 0,
+          choisi: utilisations.length > 0 ? utilisations.filter((e) => e.choisi).length / utilisations.length : 0,
+          v: moyenne(vainqueurs, (j) => fois(j.effetsRouges, n)),
+          p: moyenne(perdants, (j) => fois(j.effetsRouges, n)),
+        };
+      })
+      .filter((x) => x.jouee > 0)
+      .sort((a, b) => b.v - a.v)
+      .map((x) => [x.n, String(x.jouee), dec(x.parCarte, 2), pc(x.choisi), dec(x.v, 2), dec(x.p, 2)]),
+  ),
+);
+
 // ───────────────────────── Écriture du rapport ─────────────────────────
 
 const date = new Date().toISOString().slice(0, 10);
 const rapport = [
-  `# Analyse des parties entre IA — ${date}`,
+  `# Analyse des parties entre IA — ${date}${variante ? ` (essai : Effet Rouge pour le joueur ${effetRouge === 'suivant' ? 'suivant' : 'précédent'} seulement)` : ''}`,
   `Bot : **${bot.nom}** à tous les sièges. ${parties} parties par taille de table (2, 3 et 4 joueurs), graines ${premiereGraine} à ${premiereGraine + parties - 1}.`,
   `${joueurs.length} joueurs observés, dont ${vainqueurs.length} vainqueurs.`,
   '> Ces chiffres décrivent la façon de jouer de ce bot, pas celle d\'un joueur humain. Une carte peu utilisée peut être faible, ou simplement ignorée par le bot.',
@@ -357,6 +403,6 @@ const rapport = [
 ].join('\n\n');
 
 mkdirSync(new URL('../rapports/', import.meta.url), { recursive: true });
-const fichier = new URL(`../rapports/analyse-${type}-${date}.md`, import.meta.url);
+const fichier = new URL(`../rapports/analyse-${type}-${date}${variante}.md`, import.meta.url);
 writeFileSync(fichier, rapport + '\n');
-console.log(`\nRapport écrit dans rapports/analyse-${type}-${date}.md (${((Date.now() - debut) / 1000).toFixed(0)} s).`);
+console.log(`\nRapport écrit dans rapports/analyse-${type}-${date}${variante}.md (${((Date.now() - debut) / 1000).toFixed(0)} s).`);

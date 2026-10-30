@@ -54,9 +54,9 @@ describe.runIf(PARAMETRES.carteAcheteeVa === 'remplacement')('achat par remplace
     expect(apres.trash).toEqual([dessus]);
   });
 
-  it('le Privilège 17 rapporte 2 Or pour la carte remplacée', () => {
+  it('le Privilège 17 rapporte 1 Or pour la carte remplacée', () => {
     const { etat, main } = apresAchat([17]);
     const or = etat.joueurs[0]!.or;
-    expect(faire(etat, { type: 'remplacer', carte: main }).joueurs[0]!.or).toBe(or + 2);
+    expect(faire(etat, { type: 'remplacer', carte: main }).joueurs[0]!.or).toBe(or + 1);
   });
 });

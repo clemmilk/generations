@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { getPlayerView } from '../../src/game/index.ts';
-import { c, faire, installer, permises, scene, verifierAucuneFuite } from './outils.ts';
+import { avecReglage, c, faire, installer, permises, scene, verifierAucuneFuite } from './outils.ts';
+
+// Ces tests vérifient l'ancienne règle, toujours disponible par le réglage effetRougePour : 'tous'
+// (chaque adversaire peut appliquer l'Effet Rouge). La règle actuelle (décision JJ) : effet-rouge-voisin.test.ts.
+avecReglage('effetRougePour', 'tous');
 
 // Dans ces tests, Alice (joueur 0) joue une carte ; Bob (1), Chloé (2) et David (3) sont ses adversaires.
 

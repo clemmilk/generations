@@ -22,6 +22,8 @@
     "tournoi": "node scripts/tournoi.ts",
     "preclassement": "npm run import",
     "classement": "node scripts/classement.ts",
+    "preforce-cartes": "npm run import",
+    "force-cartes": "node scripts/force-cartes.ts",
     "prevaleurs": "npm run import",
     "valeurs": "node scripts/valeurs.ts",
     "prevalorisation": "npm run import",

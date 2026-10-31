@@ -29,12 +29,19 @@ export interface ResultatPartie {
   /** Cartes Avancée dans le deck du vainqueur à la fin. */
   deckVainqueur: string[];
   privilegesVainqueur: number[];
+  /** Les cartes Assymétrie (Domaines) reçues au départ, par siège. */
+  asymetrieDeDepart: string[][];
+  /** Les cartes Avancée achetées, par siège. */
+  achatsParSiege: string[][];
 }
 
 /** Fait jouer une partie complète aux bots donnés (un par siège). La même graine redonne la même partie. */
 export function simulerPartie(bots: Bot[], graine: number): ResultatPartie {
   const inscriptions = bots.map((bot, i) => ({ nom: `${bot.nom} ${i + 1}`, couleur: COULEURS[i]! }));
   let etat: Etat = createGame(inscriptions, graine);
+  const asymetrieDeDepart = etat.joueurs.map((joueur) =>
+    [...joueur.main, ...joueur.pioche].filter((id) => carte(id).origine === 'asymetrie'),
+  );
   const des = { rng: graine ^ 0x5bd1e995 };
   const hasard = () => alea(des);
 
@@ -66,6 +73,10 @@ export function simulerPartie(bots: Bot[], graine: number): ResultatPartie {
         )
       : [],
     privilegesVainqueur: gagnant ? [...gagnant.privileges] : [],
+    asymetrieDeDepart,
+    achatsParSiege: etat.joueurs.map((joueur) =>
+      etat.historique.flatMap((action) => (action.type === 'acheter' && action.joueur === joueur.id ? [action.carte] : [])),
+    ),
   };
 }
 

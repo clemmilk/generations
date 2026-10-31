@@ -9,16 +9,20 @@
 //   --bot nom         le bot qui tient tous les sièges (entrainee par défaut)
 //   --simulations N   pour le bot planificatrice : parties simulées par décision (40 par défaut ici, pour aller vite)
 //   --graine N        graine de la première partie (1 par défaut)
+//   --joueurs 3       seulement ces tailles de table, séparées par des virgules (2,3,4 par défaut)
+//   --coeurs N        nombre de cœurs du processeur utilisés (1 par défaut ; 12 pour aller vite)
 
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { Worker } from 'node:worker_threads';
 import { BOTS } from '../src/ai/index.ts';
 import type { TypeDeBot } from '../src/ai/index.ts';
 import { observerPartie } from '../src/ai/observation.ts';
-import type { Jauge, ObservationJoueur } from '../src/ai/observation.ts';
+import type { Jauge, ObservationJoueur, ObservationPartie } from '../src/ai/observation.ts';
 import { creerBotPlanificateur } from '../src/ai/planification.ts';
 import { carte } from '../src/game/cartes.ts';
 import { MATERIEL } from '../src/game/materiel/index.ts';
 import { PARAMETRES } from '../src/game/parametres.ts';
+import type { PaquetAnalyse, ReglagesOuvrier, ResultatAnalyse } from './analyse-ouvrier.ts';
 
 function option(nom: string, defaut: string): string {
   const position = process.argv.indexOf(`--${nom}`);
@@ -29,14 +33,27 @@ const parties = Number(option('games', '2000'));
 const type = option('bot', 'entrainee') as TypeDeBot;
 const simulations = Number(option('simulations', '40'));
 const premiereGraine = Number(option('graine', '1'));
-// Essai d'une variante de règle : --effet-rouge suivant|precedent (le nom du rapport porte la variante).
-const effetRouge = option('effet-rouge', 'tous');
+const tables = option('joueurs', '2,3,4').split(',').map(Number);
+const coeurs = Number(option('coeurs', '1'));
+if (tables.some((t) => ![2, 3, 4].includes(t))) {
+  console.error('--joueurs : 2, 3 et/ou 4, séparés par des virgules.');
+  process.exit(1);
+}
+if (!Number.isInteger(coeurs) || coeurs < 1) {
+  console.error('--coeurs attend un nombre entier positif.');
+  process.exit(1);
+}
+// Essai d'une variante de règle : --effet-rouge tous|suivant|precedent (le nom du rapport porte la variante).
+// Sans cette option, c'est la règle en vigueur (src/game/parametres.ts) qui s'applique.
+const regleEnVigueur = PARAMETRES.effetRougePour;
+const effetRouge = option('effet-rouge', regleEnVigueur);
 if (!['tous', 'suivant', 'precedent'].includes(effetRouge)) {
   console.error(`--effet-rouge : tous, suivant ou precedent.`);
   process.exit(1);
 }
 (PARAMETRES as Record<string, unknown>).effetRougePour = effetRouge;
-const variante = effetRouge === 'tous' ? '' : `-effet-rouge-${effetRouge}`;
+const variante =
+  (tables.length < 3 ? `-${tables.join('-')}j` : '') + (effetRouge === regleEnVigueur ? '' : `-effet-rouge-${effetRouge}`);
 if (!(type in BOTS)) {
   console.error(`Bot inconnu « ${type} ». Bots disponibles : ${Object.keys(BOTS).join(', ')}.`);
   process.exit(1);
@@ -54,11 +71,51 @@ type Joueur = ObservationJoueur & { table: number };
 const joueurs: Joueur[] = [];
 const parTable = new Map<number, { parties: number; terminees: number }>();
 const debut = Date.now();
-for (const table of [2, 3, 4]) {
+
+/** Joue les parties d'une taille de table, sur un seul cœur ou en les répartissant sur plusieurs. */
+async function jouer(table: number): Promise<ObservationPartie[]> {
+  if (coeurs === 1) return Array.from({ length: parties }, (_, i) => observerPartie(Array(table).fill(bot), premiereGraine + i));
+  // Des paquets assez petits pour bien répartir le travail entre les cœurs.
+  const taille = type === 'planificatrice' ? 1 : 50;
+  const paquets: PaquetAnalyse[] = [];
+  for (let i = 0; i < parties; i += taille) paquets.push({ table, premiere: premiereGraine + i, nombre: Math.min(taille, parties - i) });
+  const resultats: ObservationPartie[] = [];
+  let dernierAffichage = Date.now();
+  await new Promise<void>((fini, echec) => {
+    let actifs = 0;
+    for (let c = 0; c < Math.min(coeurs, paquets.length); c++) {
+      const ouvrier = new Worker(new URL('./analyse-ouvrier.ts', import.meta.url), {
+        workerData: { type, simulations, effetRouge } satisfies ReglagesOuvrier,
+      });
+      actifs++;
+      const suivant = () => {
+        const paquet = paquets.shift();
+        if (paquet) ouvrier.postMessage(paquet);
+        else {
+          void ouvrier.terminate();
+          if (--actifs === 0) fini();
+        }
+      };
+      ouvrier.on('message', (resultat: ResultatAnalyse) => {
+        resultats.push(...resultat.parties);
+        if (Date.now() - dernierAffichage > 60_000) {
+          dernierAffichage = Date.now();
+          console.log(`  ${table} joueurs : ${resultats.length}/${parties} parties (${((Date.now() - debut) / 1000).toFixed(0)} s)`);
+        }
+        suivant();
+      });
+      ouvrier.on('error', echec);
+      suivant();
+    }
+  });
+  // Dans l'ordre des graines, comme sur un seul cœur : le rapport est le même.
+  return resultats.sort((a, b) => a.graine - b.graine);
+}
+
+for (const table of tables) {
   const compte = { parties: 0, terminees: 0 };
   parTable.set(table, compte);
-  for (let i = 0; i < parties; i++) {
-    const partie = observerPartie(Array(table).fill(bot), premiereGraine + i);
+  for (const partie of await jouer(table)) {
     compte.parties++;
     if (!partie.terminee) continue;
     compte.terminees++;
@@ -120,17 +177,17 @@ const section = (titre: string, ...contenu: string[]) => sections.push(`## ${tit
 section(
   'Vue d\'ensemble',
   tableau(
-    ['', '2 joueurs', '3 joueurs', '4 joueurs'],
+    ['', ...tables.map((t) => `${t} joueurs`)],
     [
-      ['Parties terminées', ...[2, 3, 4].map((t) => `${parTable.get(t)!.terminees} / ${parTable.get(t)!.parties}`)],
+      ['Parties terminées', ...tables.map((t) => `${parTable.get(t)!.terminees} / ${parTable.get(t)!.parties}`)],
       [
         'Tours de table du vainqueur',
-        ...[2, 3, 4].map((t) => dec(moyenne(vainqueurs.filter((j) => j.table === t), (j) => j.statistiques.tours - j.statistiques.toursRejoues))),
+        ...tables.map((t) => dec(moyenne(vainqueurs.filter((j) => j.table === t), (j) => j.statistiques.tours - j.statistiques.toursRejoues))),
       ],
-      ['Lignées du vainqueur', ...[2, 3, 4].map((t) => dec(moyenne(vainqueurs.filter((j) => j.table === t), (j) => j.statistiques.lignees)))],
-      ...[0, 1, 2, 3].map((place) => [
+      ['Lignées du vainqueur', ...tables.map((t) => dec(moyenne(vainqueurs.filter((j) => j.table === t), (j) => j.statistiques.lignees)))],
+      ...[0, 1, 2, 3].filter((place) => place < Math.max(...tables)).map((place) => [
         `Victoires du ${place + 1}${place === 0 ? 'er' : 'e'} joueur`,
-        ...[2, 3, 4].map((t) => (place < t ? pc(part(vainqueurs.filter((j) => j.table === t), (j) => j.place === place)) : '—')),
+        ...tables.map((t) => (place < t ? pc(part(vainqueurs.filter((j) => j.table === t), (j) => j.place === place)) : '—')),
       ]),
     ],
   ),
@@ -168,7 +225,7 @@ section(
   'Cartes Assymétrie reçues au départ',
   'Ces cartes sont distribuées au hasard : c\'est la mesure la plus fiable de ce rapport, car elle ne dépend d\'aucun choix du joueur.',
   tableau(
-    ['Carte', 'Joueurs l\'ayant reçue', 'Indice de victoire', 'À 2', 'À 3', 'À 4', 'Encore dans le deck des vainqueurs'],
+    ['Carte', 'Joueurs l\'ayant reçue', 'Indice de victoire', ...tables.map((t) => `À ${t}`), 'Encore dans le deck des vainqueurs'],
     MATERIEL.cartes
       .filter((c) => c.origine === 'asymetrie')
       .map((c) => {
@@ -180,7 +237,7 @@ section(
             c.nom,
             tous.nombre,
             afficherIndice(tous),
-            ...[2, 3, 4].map((t) => afficherIndice(indice((j) => j.table === t && j.asymetrie.includes(c.id)))),
+            ...tables.map((t) => afficherIndice(indice((j) => j.table === t && j.asymetrie.includes(c.id)))),
             pc(gardee),
           ],
         };
@@ -395,8 +452,8 @@ section(
 
 const date = new Date().toISOString().slice(0, 10);
 const rapport = [
-  `# Analyse des parties entre IA — ${date}${variante ? ` (essai : Effet Rouge pour le joueur ${effetRouge === 'suivant' ? 'suivant' : 'précédent'} seulement)` : ''}`,
-  `Bot : **${bot.nom}** à tous les sièges. ${parties} parties par taille de table (2, 3 et 4 joueurs), graines ${premiereGraine} à ${premiereGraine + parties - 1}.`,
+  `# Analyse des parties entre IA — ${date}${variante ? ` (essai : Effet Rouge ${effetRouge === 'tous' ? 'pour tous les adversaires' : `pour le joueur ${effetRouge === 'suivant' ? 'suivant' : 'précédent'} seulement`})` : ''}`,
+  `Bot : **${bot.nom}** à tous les sièges. ${parties} parties par taille de table (${tables.join(', ')} joueurs), graines ${premiereGraine} à ${premiereGraine + parties - 1}.`,
   `${joueurs.length} joueurs observés, dont ${vainqueurs.length} vainqueurs.`,
   '> Ces chiffres décrivent la façon de jouer de ce bot, pas celle d\'un joueur humain. Une carte peu utilisée peut être faible, ou simplement ignorée par le bot.',
   ...sections,

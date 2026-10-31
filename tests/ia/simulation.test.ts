@@ -41,6 +41,8 @@ describe('resumer', () => {
     achats: [],
     deckVainqueur: [],
     privilegesVainqueur: [],
+    asymetrieDeDepart: [],
+    achatsParSiege: [],
     ...donnees,
   });
 

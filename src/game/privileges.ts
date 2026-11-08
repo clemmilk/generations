@@ -26,9 +26,9 @@ export type EffetPrivilege =
   | { type: 'rechercheDebutLignee'; cartes: number }
   /** Début de lignée : pioche des cartes en plus, puis en défausse autant de sa main. */
   | { type: 'piocheEtDefausseDebutLignee'; cartes: number }
-  /** À la place de l'action de son tour : payer pour piocher. */
+  /** En plus de l'action de son tour, 1 fois par tour : payer pour piocher. */
   | { type: 'actionPioche'; cout: CoutEffet; cartes: number }
-  /** À la place de l'action de son tour : payer pour trasher. */
+  /** En plus de l'action de son tour, 1 fois par tour : payer pour trasher. */
   | { type: 'actionTrash'; cout: CoutEffet; cartes: number }
   | { type: 'orParTrash'; or: number }
   /** Or gagné chaque fois que le joueur joue une carte Avancée (même sans appliquer son effet). */

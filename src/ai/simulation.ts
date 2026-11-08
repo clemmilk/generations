@@ -53,7 +53,7 @@ export function simulerPartie(bots: Bot[], graine: number): ResultatPartie {
 
   const vainqueur = etat.vainqueur;
   const gagnant = vainqueur === null ? null : etat.joueurs[vainqueur]!;
-  const actionsDeTour = ['jouer', 'acheter', 'finLignee', 'utiliserPrivilege'];
+  const actionsDeTour = ['jouer', 'acheter', 'finLignee'];
   return {
     graine,
     vainqueur,

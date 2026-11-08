@@ -346,23 +346,78 @@ function paiementsDuPrivilege(joueur: Joueur, cout: CoutEffet, possible: boolean
   return optionsDePaiement(joueur, { pierre: cout.pierre, metal: cout.metal, ressource: 0 });
 }
 
+/** Le joueur peut-il encore faire l'action de son tour ? (La fin de lignée lui est interdite s'il a utilisé un Privilège.) */
+function peutFaireSonAction(etat: Etat, joueur: Joueur): boolean {
+  return joueur.main.length > 0 || achatsPossibles(etat, joueur).length > 0;
+}
+
+/** Une copie pour tester un choix : l'état de la partie n'est jamais touché. */
+function copieDesCartes(joueur: Joueur): Joueur {
+  return {
+    ...joueur,
+    main: [...joueur.main],
+    aireDeJeu: [...joueur.aireDeJeu],
+    defausse: [...joueur.defausse],
+    pioche: [...joueur.pioche],
+  };
+}
+
+/**
+ * Les choix d'un trash de Privilège. Avant l'action du tour, on retire ceux qui laisseraient le joueur
+ * sans aucune action possible, sauf le trash qui lui fait gagner la partie.
+ */
+function choixDuTrashPrivilege(etat: Etat, joueur: Joueur, avantAction: boolean): Action[] {
+  const passer: Action = { type: 'passer', joueur: joueur.id };
+  if (!avantAction) return [...actionsDeTrash(joueur), passer];
+  const orGagne = totalPrivilege(joueur, 'orParTrash', (effet) => effet.or);
+  const choix = actionsDeTrash(joueur).filter((action) => {
+    const copie = copieDesCartes(joueur);
+    copie.or += orGagne;
+    if (action.type === 'trasherPioche') copie.pioche.shift();
+    if (action.type === 'trasher' && !retirer(copie.main, action.carte) && !retirer(copie.aireDeJeu, action.carte)) {
+      retirer(copie.defausse, action.carte);
+    }
+    return copie.pioche.length + cartesTrashables(copie).length === 0 || peutFaireSonAction(etat, copie);
+  });
+  return peutFaireSonAction(etat, joueur) ? [...choix, passer] : choix;
+}
+
+/** Les Privilèges d'action encore utilisables pendant ce tour : chaque tuile sert 1 fois par tour. */
+function actionsDePrivilege(etat: Etat, joueur: Joueur, avantAction: boolean): Action[] {
+  const j = joueur.id;
+  const actions: Action[] = [];
+  const disponible = (numero: number) => !etat.privilegesUtilises.includes(numero);
+  for (const effet of effetsPrivilege(joueur, 'actionPioche')) {
+    if (!disponible(effet.numero)) continue;
+    for (const paiement of paiementsDuPrivilege(joueur, effet.cout, joueur.pioche.length > 0)) {
+      actions.push({ type: 'utiliserPrivilege', joueur: j, numero: effet.numero, paiement });
+    }
+  }
+  for (const effet of effetsPrivilege(joueur, 'actionTrash')) {
+    if (!disponible(effet.numero)) continue;
+    for (const paiement of paiementsDuPrivilege(joueur, effet.cout, peutTrasher(joueur))) {
+      if (avantAction) {
+        // Un Privilège qui laisserait le joueur sans aucune action possible est interdit.
+        const copie = copieDesCartes(joueur);
+        copie.or -= effet.cout.or;
+        defausserDeLAire(copie, paiement);
+        if (choixDuTrashPrivilege(etat, copie, true).length === 0) continue;
+      }
+      actions.push({ type: 'utiliserPrivilege', joueur: j, numero: effet.numero, paiement });
+    }
+  }
+  return actions;
+}
+
 // ───────────────────────── Actions permises ─────────────────────────
 
 function actionsDuTour(etat: Etat, joueur: Joueur): Action[] {
   const j = joueur.id;
   const actions: Action[] = joueur.main.map((id) => ({ type: 'jouer', joueur: j, carte: id }));
   actions.push(...achatsPossibles(etat, joueur));
-  for (const effet of effetsPrivilege(joueur, 'actionPioche')) {
-    for (const paiement of paiementsDuPrivilege(joueur, effet.cout, joueur.pioche.length > 0)) {
-      actions.push({ type: 'utiliserPrivilege', joueur: j, numero: effet.numero, paiement });
-    }
-  }
-  for (const effet of effetsPrivilege(joueur, 'actionTrash')) {
-    for (const paiement of paiementsDuPrivilege(joueur, effet.cout, peutTrasher(joueur))) {
-      actions.push({ type: 'utiliserPrivilege', joueur: j, numero: effet.numero, paiement });
-    }
-  }
-  if (joueur.main.length <= PARAMETRES.mainMaxPourFinDeLignee) {
+  actions.push(...actionsDePrivilege(etat, joueur, true));
+  // Un tour avec une fin de lignée ne comporte aucun Privilège d'action.
+  if (joueur.main.length <= PARAMETRES.mainMaxPourFinDeLignee && etat.privilegesUtilises.length === 0) {
     actions.push({ type: 'finLignee', joueur: j });
   }
   return actions;
@@ -428,8 +483,11 @@ export function getLegalActions(etat: Etat, joueurId: number): Action[] {
     case 'gain':
       return actionsDuGain(etat, joueur, attente);
     case 'trashAchat':
-    case 'trashPrivilege':
       return [...actionsDeTrash(joueur), passer];
+    case 'trashPrivilege':
+      return choixDuTrashPrivilege(etat, joueur, attente.avantAction);
+    case 'apresAction':
+      return [...actionsDePrivilege(etat, joueur, false), passer];
     case 'remplacementAchat':
       // Obligatoire : pas de « passer ».
       return [
@@ -472,8 +530,37 @@ function cle(action: Action): string {
 
 // ───────────────────────── Exécution d'une action ─────────────────────────
 
+/** Paie un Privilège d'action et applique son effet. « ensuite » : la tâche à résoudre après lui. */
+function utiliserPrivilege(
+  etat: Etat,
+  joueur: Joueur,
+  action: Extract<Action, { type: 'utiliserPrivilege' }>,
+  avantAction: boolean,
+  ensuite: Tache,
+): void {
+  const effet = [...effetsPrivilege(joueur, 'actionPioche'), ...effetsPrivilege(joueur, 'actionTrash')].find(
+    (e) => e.numero === action.numero,
+  );
+  if (!effet) return;
+  joueur.or -= effet.cout.or;
+  defausserDeLAire(joueur, action.paiement);
+  etat.privilegesUtilises.push(effet.numero);
+  noter(etat, joueur, `${joueur.nom} utilise son Privilège ${effet.numero}.`);
+  if (effet.type === 'actionPioche') {
+    joueur.statistiques.piochesSupplementaires += piocher(etat, joueur, effet.cartes).length;
+    etat.file.unshift(ensuite);
+  } else {
+    etat.file.unshift({ type: 'trashPrivilege', joueur: joueur.id, restant: effet.cartes, avantAction }, ensuite);
+  }
+}
+
 function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
   const j = joueur.id;
+  // Un Privilège d'action s'ajoute à l'action du tour : le joueur doit encore la faire.
+  if (action.type === 'utiliserPrivilege') {
+    utiliserPrivilege(etat, joueur, action, true, { type: 'retourAuTour', joueur: j });
+    return;
+  }
   joueur.statistiques.tours++;
   switch (action.type) {
     case 'jouer': {
@@ -509,30 +596,15 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
             (_, index): Tache => ({ type: 'etape', joueur: adversaire.id, carte: c.id, index, rouge: true }),
           ),
         ),
+        { type: 'apresAction', joueur: j },
         { type: 'finDeTour' },
       ];
       return;
     }
     case 'acheter':
       acheter(etat, joueur, action.carte, action.paiement);
-      etat.file = [apresAchat(joueur, action.carte), { type: 'finDeTour' }];
+      etat.file = [apresAchat(joueur, action.carte), { type: 'apresAction', joueur: j }, { type: 'finDeTour' }];
       return;
-    case 'utiliserPrivilege': {
-      const effet = [...effetsPrivilege(joueur, 'actionPioche'), ...effetsPrivilege(joueur, 'actionTrash')].find(
-        (e) => e.numero === action.numero,
-      );
-      if (!effet) return;
-      joueur.or -= effet.cout.or;
-      defausserDeLAire(joueur, action.paiement);
-      noter(etat, joueur, `${joueur.nom} utilise son Privilège ${effet.numero}.`);
-      if (effet.type === 'actionPioche') {
-        joueur.statistiques.piochesSupplementaires += piocher(etat, joueur, effet.cartes).length;
-        etat.file = [{ type: 'finDeTour' }];
-      } else {
-        etat.file = [{ type: 'trashPrivilege', joueur: j, restant: effet.cartes }, { type: 'finDeTour' }];
-      }
-      return;
-    }
     case 'finLignee':
       noter(etat, joueur, `${joueur.nom} met fin à sa lignée.`);
       etat.file = [
@@ -636,7 +708,17 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
       return;
     case 'trashPrivilege':
       if (!executerTrash(etat, joueur, action)) return;
-      etat.file.unshift({ type: 'trashPrivilege', joueur: joueur.id, restant: attente.restant - 1 });
+      etat.file.unshift({
+        type: 'trashPrivilege',
+        joueur: joueur.id,
+        restant: attente.restant - 1,
+        avantAction: attente.avantAction,
+      });
+      return;
+    case 'apresAction':
+      if (action.type === 'utiliserPrivilege') {
+        utiliserPrivilege(etat, joueur, action, false, { type: 'apresAction', joueur: joueur.id });
+      }
       return;
     case 'finNoblesse':
       if (action.type === 'prendrePrivilege') prendrePrivilegeVisible(etat, joueur, action.numero);
@@ -806,8 +888,21 @@ function traiter(etat: Etat, tache: Tache): void {
     case 'trashPrivilege': {
       const joueur = etat.joueurs[tache.joueur]!;
       if (tache.restant > 0 && peutTrasher(joueur)) {
-        etat.attente = { type: 'trashPrivilege', joueur: joueur.id, restant: tache.restant };
+        etat.attente = {
+          type: 'trashPrivilege',
+          joueur: joueur.id,
+          restant: tache.restant,
+          avantAction: tache.avantAction,
+        };
       }
+      return;
+    }
+    case 'retourAuTour':
+      etat.attente = { type: 'tour', joueur: tache.joueur };
+      return;
+    case 'apresAction': {
+      const joueur = etat.joueurs[tache.joueur]!;
+      if (actionsDePrivilege(etat, joueur, false).length > 0) etat.attente = { type: 'apresAction', joueur: joueur.id };
       return;
     }
     case 'finJauges':
@@ -839,6 +934,7 @@ function traiter(etat: Etat, tache: Tache): void {
       }
       return;
     case 'finDeTour': {
+      etat.privilegesUtilises = [];
       if (etat.toursSupplementaires > 0) {
         etat.toursSupplementaires--;
         etat.joueurs[etat.joueurActif]!.statistiques.toursRejoues++;

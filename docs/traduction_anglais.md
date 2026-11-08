@@ -43,7 +43,6 @@ Les effets sont écrits à l'impératif, comme dans le livret (« Gain 3 Gold. �
 | Payer | Pay |
 | Acheter 1 carte | Buy 1 card |
 | Jouer 1 carte | Play 1 card |
-| Utiliser un Privilège | Use a Privilege |
 | Mettre fin à sa lignée | End your lineage |
 | Débuter une lignée | Start a lineage |
 | Lvl up | Level up |
@@ -69,14 +68,14 @@ Les effets sont écrits à l'impératif, comme dans le livret (« Gain 3 Gold. �
 | Français | Anglais | Effet | Effet Rouge |
 |---|---|---|---|
 | Salle du trésor | Treasury | Gain 3 Gold. | Gain 1 Gold. |
-| Forgeron | Blacksmith | Pay 2 Gold to draw 1 card. | — |
-| Tour de guet | Watchtower | Destroy 1 card for every 2 Metal in your play area. | Pay 7 Gold to destroy 1 card. |
-| Cachot | Dungeon | Draw 1 card for every 2 Stone in your play area. | Pay 4 Gold to draw 1 card. |
+| Forgeron | Blacksmith | Draw 1 card for every 2 Stone in your play area. | — |
+| Tour de guet | Watchtower | Pay 5 Gold to destroy 1 card. | Pay 6 Gold to destroy 1 card. |
+| Cachot | Dungeon | Pay 2 Gold to draw 1 card. | Pay 4 Gold to draw 1 card. |
 | Épicerie | Grocer | Gain 2 Gold. | Gain 1 Gold. |
-| Marché | Market | Pay Stone and Metal to gain 3 Gold per resource sold. | Pay Stone and Metal to gain 2 Gold per resource sold. |
+| Marché | Market | Gain 2 Gold. | Gain 1 Gold. |
 | Imprimeur | Printer | Search for 1 card for every 3 Scholars in your play area. | — |
-| Ferrailleur | Scrap Dealer | Gain 2 Gold. | — |
-| Colporteur | Peddler | Gain 1 Gold, then buy 1 card. | — |
+| Ferrailleur | Scrap dealer | Gain 1 Gold per Resource in your play area. | — |
+| Colporteur | Peddler | Buy 1 card. | — |
 
 ## Les 8 Domaines
 
@@ -86,10 +85,10 @@ Les effets sont écrits à l'impératif, comme dans le livret (« Gain 3 Gold. �
 | Diplomatie | Diplomacy | Gain 2 Gold per Population crest. | Gain 1 Gold per Population crest. |
 | Économie | Economy | Pay 2 Gold to level up Economy. | Pay 4 Gold to level up Economy. |
 | Histoire | History | Gain 2 Gold per Scholar. | Gain 1 Gold per Scholar. |
-| Religion | Religion | Pay 1 Metal to take 1 of the 4 face-up Privileges. | Pay 5 Gold to take 1 Privilege at random from the pile. |
+| Religion | Religion | Pay 2 Stone to take 1 of the 4 face-up Privileges. | Pay 4 Gold to take 1 Privilege at random from the pile. |
 | Production | Production | Gain 2 Gold per Economy crest. | Gain 1 Gold per Economy crest. |
-| Science | Science | Pay 2 Stone to level up Population. | Pay 6 Gold to level up Population. |
-| Progrès | Progress | Gain 5 Gold. | Gain 2 Gold. |
+| Science | Science | Pay 2 Metal to level up Population. | Pay 5 Gold to level up Population. |
+| Progrès | Progress | Gain 4 Gold. | Gain 2 Gold. |
 
 ## Cartes Avancée citées dans le livret
 

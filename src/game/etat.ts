@@ -92,6 +92,8 @@ export interface Etat {
   file: Tache[];
   /** Nombre de tours que le joueur actif rejouera après celui-ci (Rejouer). */
   toursSupplementaires: number;
+  /** Les Privilèges d'action (13, 14, 15) déjà utilisés pendant ce tour. */
+  privilegesUtilises: number[];
   /** Joueurs ayant déjà appliqué l'Effet Rouge de la carte en cours de résolution. */
   effetRougeUtilisePar: number[];
   vainqueur: number | null;

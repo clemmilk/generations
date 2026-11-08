@@ -89,12 +89,13 @@ describe('trasher la carte du dessus de sa pioche', () => {
     expect(apres.joueurs[0]!.or).toBe(1);
   });
 
-  it('permet d\'utiliser le Privilège 13 même sans carte en main, en jeu ni en défausse', () => {
+  it('permet d\'utiliser le Privilège 13 même sans carte en main, s\'il reste un achat possible', () => {
     // Les 3 Pierres viennent de l'aire de jeu : payées, ces cartes vont en défausse.
-    const etat = scene({ aire: [c('Cour du roi')], pioche: [c('Forgeron'), c('Marché')] });
+    const etat = scene({ aire: [c('Cour du roi')], pioche: [c('Forgeron'), c('Marché')], or: 20 });
+    etat.riviere = [c('Remouleur ambulant')];
     etat.joueurs[0]!.privileges = [13];
     let apres = faire(etat, { type: 'utiliserPrivilege', numero: 13, paiement: [c('Cour du roi')] });
-    expect(apres.attente).toEqual({ type: 'trashPrivilege', joueur: 0, restant: 1 });
+    expect(apres.attente).toEqual({ type: 'trashPrivilege', joueur: 0, restant: 1, avantAction: true });
     apres = faire(apres, { type: 'trasherPioche' });
     expect(apres.trash).toEqual([c('Forgeron')]);
   });

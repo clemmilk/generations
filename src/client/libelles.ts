@@ -51,6 +51,8 @@ export function question(vue: Vue): string {
       return `${nom}, choisis la carte que ${carte(attente.carte).nom} va remplacer (elle sera trashée).`;
     case 'trashPrivilege':
       return `${nom}, choisis 1 carte à trasher (Privilège).`;
+    case 'apresAction':
+      return `${nom}, tu peux encore utiliser un Privilège avant de terminer ton tour.`;
     case 'finNoblesse':
       return `${nom}, tu as assez d'Érudits : veux-tu prendre un Privilège ?`;
     case 'finJauges': {
@@ -114,6 +116,7 @@ export function libelleAction(action: Action, attente: Attente | null): string {
     case 'monter':
       return action.piste === 'economie' ? 'Monter en Économie' : 'Monter en Population';
     case 'passer':
+      if (attente?.type === 'apresAction') return 'Terminer mon tour';
       return attente?.type === 'gain' ? 'Arrêter là' : 'Non merci';
   }
 }

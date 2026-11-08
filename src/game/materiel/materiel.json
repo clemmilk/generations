@@ -3442,19 +3442,19 @@
       "id": "privilege_13",
       "numero": 13,
       "image": "visuels/tuiles/privilege_13.jpg",
-      "texte": "À son tour, à la place de son action, le joueur peut payer 3 Pierres pour trasher 1 carte (1 fois par tour)"
+      "texte": "À son tour, en plus de son action, le joueur peut payer 3 Pierres pour trasher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_14",
       "numero": 14,
       "image": "visuels/tuiles/privilege_14.jpg",
-      "texte": "À son tour, à la place de son action, le joueur peut payer 2 Métal pour piocher 1 carte (1 fois par tour)"
+      "texte": "À son tour, en plus de son action, le joueur peut payer 2 Métal pour piocher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_15",
       "numero": 15,
       "image": "visuels/tuiles/privilege_15.jpg",
-      "texte": "À son tour, à la place de son action, le joueur peut payer 6 Or pour piocher 1 carte (1 fois par tour)"
+      "texte": "À son tour, en plus de son action, le joueur peut payer 6 Or pour piocher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_16",

@@ -3,7 +3,8 @@
 - `livret_fr.html`, `livret_en.html` : le texte des livrets, en français et en anglais. Ce sont aussi les pages publiées sur le web.
 - `impression.css` : la mise en page d'impression (pages de 160 × 190 mm, une page par bloc, 12 pages en tout).
 - `impression_en.css` : un petit réglage pour la version anglaise, dont le texte est un peu plus long.
-- `img/` : les visuels utilisés (copies allégées de `visuels-web/`, renommées). Si un visuel change dans `visuels/`, lancer `npm run images`, puis recopier le fichier ici sous le même nom.
+- `img/` : les visuels du livret français (copies allégées de `visuels-web/`, renommées). Si un visuel change dans `visuels/`, lancer `npm run images`, puis recopier le fichier ici sous le même nom.
+- `img/cartes_en/` et `img/plateau_en.jpg` : les visuels du livret anglais, découpés dans `visuels/generations_v2_a4_en.pdf` (le plateau est en page 12).
 
 ## Refaire les PDF
 

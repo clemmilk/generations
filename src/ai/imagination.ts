@@ -96,6 +96,7 @@ export function imaginerEtat(vue: Vue, hasard: () => number): Etat {
     attente: vue.attente === null ? null : { ...vue.attente },
     file: vue.file.map((tache) => ({ ...tache })),
     toursSupplementaires: vue.toursSupplementaires,
+    privilegesUtilises: [...vue.privilegesUtilises],
     effetRougeUtilisePar: [...vue.effetRougeUtilisePar],
     vainqueur: vue.vainqueur,
     journal: [],

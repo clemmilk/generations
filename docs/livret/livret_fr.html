@@ -334,7 +334,7 @@ dl.mots { margin: 0 0 1rem; }
       <h2><span class="num">3</span>Lire une carte</h2>
       <div class="anatomie">
         <figure>
-          <img src="img/cartes/banque.jpg" alt="La carte Banque : 1 Pierre, coût 1 Ressource, pioche 1 carte pour chaque 2 Pierres, Effet Rouge : paye 4 Or pour piocher 1 carte.">
+          <img src="img/cartes/banque.jpg" alt="La carte Banque : 1 Pierre, coût 3 Or, pioche 1 carte pour chaque 2 Pierres, Effet Rouge : paye 4 Or pour piocher 1 carte.">
           <span class="repere" style="left: 4%; top: 2%">1</span>
           <span class="repere" style="right: 2%; top: 1%">2</span>
           <span class="repere" style="left: 45%; top: 1%">3</span>
@@ -344,7 +344,7 @@ dl.mots { margin: 0 0 1rem; }
         </figure>
         <ol class="legende">
           <li><div><strong>Ressources.</strong> Ce que la carte rapporte une fois posée dans votre aire de jeu : Pierre <img class="ico" src="img/ico/pierre.png" alt="Pierre">, Métal <img class="ico" src="img/ico/metal.png" alt="Métal"> ou Érudit <img class="ico" src="img/ico/erudit.png" alt="Érudit">. La Banque porte 1 Pierre.</div></li>
-          <li><div><strong>Coût d'achat.</strong> Seules les cartes Avancée en ont un : de l'Or, ou une Ressource (Pierre ou Métal, au choix). La Banque coûte 1 Ressource.</div></li>
+          <li><div><strong>Coût d'achat.</strong> Seules les cartes Avancée en ont un : de l'Or, une Ressource (Pierre ou Métal, au choix), ou les deux. La Banque coûte 3 Or.</div></li>
           <li><div><strong>Bandeau.</strong> Il indique d'où vient la carte : la couleur du joueur pour une carte de départ, violet pour un Domaine, noir pour une carte Avancée. Il n'a aucun effet en jeu.</div></li>
           <li><div><strong>Nom</strong> de la carte.</div></li>
           <li><div><strong>Effet.</strong> Ce que vous pouvez faire en jouant la carte. Ici : piochez 1 carte pour chaque tranche de 2 Pierres dans votre aire de jeu.</div></li>
@@ -385,7 +385,7 @@ dl.mots { margin: 0 0 1rem; }
       <p>Votre plateau porte trois jauges. Elles progressent en fin de lignée, d'un niveau au plus par jauge, et rendent chacune de vos lignées suivantes plus fortes.</p>
       <div class="vue-plateau">
         <figure>
-          <img src="img/plateau.webp" alt="Le plateau personnel : la piste Noblesse à gauche, l'Économie en haut à droite, la Population en bas à droite.">
+          <img src="img/plateau_en.jpg" alt="Le plateau personnel : la piste Noblesse à gauche, l'Économie en haut à droite, la Population en bas à droite.">
         </figure>
         <div class="lecture">
           <div class="zone p-noblesse"><h4>À gauche : la Noblesse</h4><p>4 emplacements pour vos tuiles Privilège, du bas vers le haut. Le chiffre indique les Érudits <img class="ico" src="img/ico/erudit.png" alt="Érudits"> nécessaires ; les couronnes, les blasons Noblesse gagnés.</p></div>
@@ -418,7 +418,7 @@ dl.mots { margin: 0 0 1rem; }
     <!-- 7 -->
     <section class="chapitre" id="tour">
       <h2><span class="num">7</span>Le tour de jeu</h2>
-      <p>En commençant par le premier joueur, puis dans le sens du tour, chaque joueur effectue <strong>une seule action</strong> parmi les quatre suivantes. Il est interdit de passer son tour.</p>
+      <p>En commençant par le premier joueur, puis dans le sens du tour, chaque joueur effectue <strong>une seule action</strong> parmi les trois suivantes. Il est interdit de passer son tour.</p>
       <div class="actions">
         <article class="action">
           <h3>Jouer 1 carte</h3>
@@ -431,13 +431,13 @@ dl.mots { margin: 0 0 1rem; }
           <p>La carte achetée <strong>remplace obligatoirement</strong> une carte de votre deck, qui est détruite gratuitement. Elle prend sa place (voir ci-dessous). Complétez ensuite la Rivière avec la première carte de la pioche commune.</p>
         </article>
         <article class="action">
-          <h3>Utiliser un Privilège</h3>
-          <p>Si vous possédez le Privilège 13, 14 ou 15, payez son coût pour détruire ou piocher 1 carte. Cela remplace votre action : une seule fois par tour, mais vous pouvez recommencer aux tours suivants.</p>
-        </article>
-        <article class="action">
           <h3>Mettre fin à sa lignée</h3>
           <p>Si vous avez <strong>0 ou 1 carte</strong> en main, vous pouvez clore votre lignée : vos jauges progressent, puis vous repartez avec tout votre deck. Voir le chapitre suivant.</p>
         </article>
+        <div class="encadre retenir">
+          <span class="etiq">Privilèges 13, 14 et 15</span>
+          <p>Avec l'une de ces tuiles, vous pouvez, <strong>en plus de votre action</strong> (avant ou après), payer son coût pour détruire ou piocher 1 carte. 1 fois par tour et par tuile.</p>
+        </div>
       </div>
 
       <h3>Où va la carte achetée</h3>
@@ -491,7 +491,7 @@ dl.mots { margin: 0 0 1rem; }
         <h3 class="titre-partie">Les effets des cartes</h3>
         <ul>
           <li>Tous les effets sont <strong>facultatifs</strong>. Vous pouvez jouer une carte « à vide », sans appliquer son effet.</li>
-          <li>Quand un effet a plusieurs parties (« Gagne 1 Or puis Achète 1 carte »), elles sont indépendantes : vous pouvez appliquer la seconde sans la première.</li>
+          <li>Quand un effet a plusieurs parties (« Paye 5 Or pour détruire 1 carte, puis paye 5 Or pour détruire 1 carte »), elles sont indépendantes : vous pouvez appliquer la seconde sans la première.</li>
           <li>Quand un effet compte quelque chose (ressources, Érudits, blasons), on ne regarde que ce que possède le joueur qui l'applique : son aire de jeu et son plateau. La carte que vous venez de jouer compte pour son propre effet.</li>
         </ul>
         <dl class="deux-col mots">
@@ -507,7 +507,6 @@ dl.mots { margin: 0 0 1rem; }
           <li><strong>« Paye 3 Métal pour piocher 1 carte par blason Population »</strong> : payez une seule fois, puis piochez autant de cartes que vous avez de blasons Population.</li>
           <li>Quand un effet fait payer puis compte, on <strong>compte avant de payer</strong> : les ressources défaussées pour payer comptent encore.</li>
           <li><strong>« Paye X Or pour piocher (ou détruire) 1 carte »</strong> : une seule fois par carte jouée.</li>
-          <li><strong>Marché</strong> : vendez autant de Pierres et de Métal que vous le souhaitez. Chaque ressource des cartes défaussées rapporte : une carte portant 1 Pierre et 1 Métal rapporte 2 fois.</li>
         </ul>
         <div class="encadre rouge">
           <span class="etiq">Les Effets Rouges</span>
@@ -522,9 +521,10 @@ dl.mots { margin: 0 0 1rem; }
           <li>Un Privilège obtenu par une carte occupe lui aussi un emplacement de votre piste Noblesse : il ne demande pas d'Érudits, mais il donne les blasons de l'emplacement et rend le Privilège suivant plus exigeant.</li>
           <li>Sauf mention « au hasard dans la pioche », on choisit parmi les 4 Privilèges visibles. Quand la pioche de Privilèges est vide, ils ne sont plus remplacés.</li>
           <li>Les ressources ajoutées par les Privilèges comptent partout : pour payer, pour les jauges, pour les Privilèges et pour les effets des cartes.</li>
+          <li><strong>Privilèges 13, 14 et 15</strong> : 1 fois par tour et par tuile, avant ou après votre action (après l'Effet Rouge). Interdits lors d'un tour de fin de lignée, ou s'ils vous laissent sans action possible (sauf s'ils vous font gagner).</li>
         </ul>
         <ul class="privileges">
-          <li><b>1</b><span>Les cartes de la Rivière vous coûtent 2 Or de moins (jamais moins de 0 ; le coût en Ressources ne change pas).</span></li>
+          <li><b>1</b><span>Les cartes de la Rivière vous coûtent 3 Or de moins (jamais moins de 0 ; le coût en Ressources ne change pas).</span></li>
           <li><b>2</b><span>Chaque carte Avancée de votre aire de jeu rapporte aussi 1 Érudit.</span></li>
           <li><b>3</b><span>Chaque carte Avancée de votre aire de jeu rapporte aussi 1 Pierre.</span></li>
           <li><b>4</b><span>Chaque carte Avancée de votre aire de jeu rapporte aussi 1 Métal.</span></li>
@@ -536,11 +536,11 @@ dl.mots { margin: 0 0 1rem; }
           <li><b>10</b><span>Début de lignée : gagnez 2 Or de plus par blason Noblesse.</span></li>
           <li><b>11</b><span>Début de lignée : gagnez 2 Or de plus par blason Économie.</span></li>
           <li><b>12</b><span>Début de lignée : piochez 1 carte de plus, puis défaussez 1 carte de votre main (obligatoire ; elle n'est pas détruite).</span></li>
-          <li><b>13</b><span>À la place de votre action : payez 3 Pierres pour détruire 1 carte.</span></li>
-          <li><b>14</b><span>À la place de votre action : payez 2 Métal pour piocher 1 carte.</span></li>
-          <li><b>15</b><span>À la place de votre action : payez 6 Or pour piocher 1 carte.</span></li>
+          <li><b>13</b><span>En plus de votre action : payez 3 Pierres pour détruire 1 carte.</span></li>
+          <li><b>14</b><span>En plus de votre action : payez 2 Métal pour piocher 1 carte.</span></li>
+          <li><b>15</b><span>En plus de votre action : payez 6 Or pour piocher 1 carte.</span></li>
           <li><b>16</b><span>1 Érudit permanent, comme s'il était sur une carte de votre aire de jeu, y compris pour obtenir un Privilège.</span></li>
-          <li><b>17</b><span>Chaque fois que vous détruisez 1 carte, y compris la carte remplacée lors d'un achat, gagnez 2 Or.</span></li>
+          <li><b>17</b><span>Chaque fois que vous détruisez 1 carte, y compris la carte remplacée lors d'un achat, gagnez 1 Or.</span></li>
           <li><b>18</b><span>En fin de lignée, vous gardez l'Or qui vous reste au lieu de le défausser.</span></li>
           <li><b>19</b><span>Début de lignée : gagnez 3 Or de plus.</span></li>
           <li><b>20</b><span>Chaque fois que vous jouez une carte Avancée, gagnez 2 Or, même sans appliquer son effet.</span></li>
@@ -552,14 +552,14 @@ dl.mots { margin: 0 0 1rem; }
         <h3 class="titre-partie">Le deck de départ <small>9 cartes, identiques pour chaque couleur</small></h3>
         <div class="galerie">
           <div class="carte-ligne"><img src="img/cartes/salle-du-tresor.jpg" alt=""><div><h4>Salle du trésor</h4><p class="res">1 Pierre</p><p>Gagne 3 Or.</p><p class="er">Effet Rouge : gagne 1 Or.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/forgeron.jpg" alt=""><div><h4>Forgeron</h4><p class="res">1 Érudit</p><p>Paye 2 Or pour piocher 1 carte.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/tour-de-guet.jpg" alt=""><div><h4>Tour de guet</h4><p class="res">1 Pierre</p><p>Détruit 1 carte pour chaque 2 Métal dans son aire de jeu.</p><p class="er">Effet Rouge : paye 7 Or pour détruire 1 carte.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/cachot.jpg" alt=""><div><h4>Cachot</h4><p class="res">1 Pierre</p><p>Pioche 1 carte pour chaque 2 Pierres dans son aire de jeu.</p><p class="er">Effet Rouge : paye 4 Or pour piocher 1 carte.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/forgeron.jpg" alt=""><div><h4>Forgeron</h4><p class="res">1 Pierre</p><p>Pioche 1 carte pour chaque 2 Pierres dans son aire de jeu.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/tour-de-guet.jpg" alt=""><div><h4>Tour de guet</h4><p class="res">1 Métal</p><p>Paye 5 Or pour détruire 1 carte.</p><p class="er">Effet Rouge : paye 6 Or pour détruire 1 carte.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/cachot.jpg" alt=""><div><h4>Cachot</h4><p class="res">1 Érudit</p><p>Paye 2 Or pour piocher 1 carte.</p><p class="er">Effet Rouge : paye 4 Or pour piocher 1 carte.</p></div></div>
           <div class="carte-ligne"><img src="img/cartes/epicerie.jpg" alt=""><div><h4>Épicerie</h4><p class="res">1 Métal</p><p>Gagne 2 Or.</p><p class="er">Effet Rouge : gagne 1 Or.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/marche.jpg" alt=""><div><h4>Marché</h4><p class="res">1 Métal</p><p>Paye de la Pierre et du Métal pour gagner 3 Or par ressource vendue.</p><p class="er">Effet Rouge : idem, 2 Or par ressource vendue.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/marche.jpg" alt=""><div><h4>Marché</h4><p class="res">1 Érudit</p><p>Gagne 2 Or.</p><p class="er">Effet Rouge : gagne 1 Or.</p></div></div>
           <div class="carte-ligne"><img src="img/cartes/imprimeur.jpg" alt=""><div><h4>Imprimeur</h4><p class="res">1 Érudit</p><p>Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/ferrailleur.jpg" alt=""><div><h4>Ferrailleur</h4><p class="res">1 Érudit</p><p>Gagne 2 Or.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/colporteur.jpg" alt=""><div><h4>Colporteur</h4><p class="res">1 Érudit</p><p>Gagne 1 Or, puis achète 1 carte.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/ferrailleur.jpg" alt=""><div><h4>Ferrailleur</h4><p class="res">1 Pierre</p><p>Gagne 1 Or par Ressource dans son aire de jeu.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/colporteur.jpg" alt=""><div><h4>Colporteur</h4><p class="res">1 Pierre</p><p>Achète 1 carte.</p></div></div>
         </div>
       </div>
 
@@ -570,10 +570,10 @@ dl.mots { margin: 0 0 1rem; }
           <div class="carte-ligne"><img src="img/cartes/diplomatie.jpg" alt=""><div><h4>Diplomatie</h4><p class="res">1 Érudit</p><p>Gagne 2 Or par blason Population.</p><p class="er">Effet Rouge : gagne 1 Or par blason Population.</p></div></div>
           <div class="carte-ligne"><img src="img/cartes/economie.jpg" alt=""><div><h4>Économie</h4><p class="res">1 Pierre</p><p>Paye 2 Or pour Lvl up Économie.</p><p class="er">Effet Rouge : paye 4 Or pour Lvl up Économie.</p></div></div>
           <div class="carte-ligne"><img src="img/cartes/histoire.jpg" alt=""><div><h4>Histoire</h4><p class="res">1 Érudit</p><p>Gagne 2 Or par Érudit.</p><p class="er">Effet Rouge : gagne 1 Or par Érudit.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/religion.jpg" alt=""><div><h4>Religion</h4><p class="res">1 Pierre</p><p>Paye 1 Métal pour prendre 1 Privilège parmi les 4 visibles.</p><p class="er">Effet Rouge : paye 5 Or pour prendre 1 Privilège au hasard dans la pioche.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/religion.jpg" alt=""><div><h4>Religion</h4><p class="res">1 Pierre</p><p>Paye 2 Pierres pour prendre 1 Privilège parmi les 4 visibles.</p><p class="er">Effet Rouge : paye 4 Or pour prendre 1 Privilège au hasard dans la pioche.</p></div></div>
           <div class="carte-ligne"><img src="img/cartes/production.jpg" alt=""><div><h4>Production</h4><p class="res">1 Érudit</p><p>Gagne 2 Or par blason Économie.</p><p class="er">Effet Rouge : gagne 1 Or par blason Économie.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/science.jpg" alt=""><div><h4>Science</h4><p class="res">1 Métal</p><p>Paye 2 Pierres pour Lvl up Population.</p><p class="er">Effet Rouge : paye 6 Or pour Lvl up Population.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/progres.jpg" alt=""><div><h4>Progrès</h4><p class="res">1 Métal</p><p>Gagne 5 Or.</p><p class="er">Effet Rouge : gagne 2 Or.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/science.jpg" alt=""><div><h4>Science</h4><p class="res">1 Métal</p><p>Paye 2 Métal pour Lvl up Population.</p><p class="er">Effet Rouge : paye 5 Or pour Lvl up Population.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes/progres.jpg" alt=""><div><h4>Progrès</h4><p class="res">1 Métal</p><p>Gagne 4 Or.</p><p class="er">Effet Rouge : gagne 2 Or.</p></div></div>
         </div>
       </div>
     </section>
@@ -594,7 +594,6 @@ dl.mots { margin: 0 0 1rem; }
         <div class="resume-actions">
           <div><strong>Jouer 1 carte</strong><span>Posez-la dans votre aire de jeu et appliquez son effet. Le joueur à votre droite peut appliquer son Effet Rouge.</span></div>
           <div><strong>Acheter 1 carte</strong><span>Payez une carte de la Rivière. Elle remplace une carte de votre deck, qui est détruite.</span></div>
-          <div><strong>Utiliser un Privilège</strong><span>Avec le Privilège 13, 14 ou 15 : payez pour détruire ou piocher 1 carte.</span></div>
           <div><strong>Mettre fin à sa lignée</strong><span>Avec 0 ou 1 carte en main : Noblesse, Population, Économie, puis nouveau deck.</span></div>
         </div>
       </div>

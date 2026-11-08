@@ -106,7 +106,7 @@ describe('statistiques des joueurs', () => {
       const etat = scene({ or: 7 });
       etat.joueurs[0]!.privileges = [15];
       const apres = faire(etat, { type: 'utiliserPrivilege', numero: 15, paiement: [] });
-      expect(apres.joueurs[0]!.statistiques).toEqual({ ...VIDES, tours: 1, piochesSupplementaires: 1 });
+      expect(apres.joueurs[0]!.statistiques).toEqual({ ...VIDES, tours: 0, piochesSupplementaires: 1 });
     });
 
     it('ne comptent ni la pioche de début de lignée, ni celles des Privilèges 8 et 12', () => {

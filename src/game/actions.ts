@@ -6,7 +6,7 @@ export type Action =
   | { type: 'jouer'; joueur: number; carte: string }
   | { type: 'acheter'; joueur: number; carte: string; paiement: string[] }
   | { type: 'finLignee'; joueur: number }
-  /** Privilèges d'action (13, 14, 15) : payer pour piocher ou trasher, à la place de l'action du tour. */
+  /** Privilèges d'action (13, 14, 15) : payer pour piocher ou trasher, en plus de l'action du tour, 1 fois par tuile et par tour. */
   | { type: 'utiliserPrivilege'; joueur: number; numero: number; paiement: string[] }
   // Les réponses aux choix proposés pendant un effet ou une fin de lignée
   | { type: 'payer'; joueur: number; paiement: string[] }
@@ -45,8 +45,10 @@ export type Attente =
   | ({ type: 'gain'; restant: number } & RefEtape)
   /** Après un achat : payer 1 Or de plus pour trasher 1 carte. */
   | { type: 'trashAchat'; joueur: number }
-  /** Privilège d'action de trash : choisir encore « restant » carte(s) à trasher. */
-  | { type: 'trashPrivilege'; joueur: number; restant: number }
+  /** Privilège d'action de trash : choisir encore « restant » carte(s) à trasher. « avantAction » : l'action du tour reste à faire. */
+  | { type: 'trashPrivilege'; joueur: number; restant: number; avantAction: boolean }
+  /** L'action du tour est résolue : le joueur peut encore utiliser ses Privilèges d'action avant de finir son tour. */
+  | { type: 'apresAction'; joueur: number }
   /** Achat par remplacement : choisir la carte que la carte achetée remplace. */
   | { type: 'remplacementAchat'; joueur: number; carte: string }
   | { type: 'finNoblesse'; joueur: number }
@@ -62,7 +64,10 @@ export type Tache =
   | ({ type: 'etape' } & RefEtape)
   | ({ type: 'gain'; restant: number } & RefEtape)
   | { type: 'trashAchat'; joueur: number }
-  | { type: 'trashPrivilege'; joueur: number; restant: number }
+  | { type: 'trashPrivilege'; joueur: number; restant: number; avantAction: boolean }
+  /** Le Privilège d'action a été utilisé avant l'action : le joueur doit encore faire son action. */
+  | { type: 'retourAuTour'; joueur: number }
+  | { type: 'apresAction'; joueur: number }
   | { type: 'remplacementAchat'; joueur: number; carte: string }
   | { type: 'finNoblesse'; joueur: number }
   | { type: 'finJauges'; joueur: number; ressourcesUtilisees: number; montees: Piste[]; seule?: Piste }

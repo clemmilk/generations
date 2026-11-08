@@ -366,11 +366,22 @@ function choisir(vue: Vue, actions: Action[], p: Poids, hasard: () => number): A
   const passer = actions.find((a) => a.type === 'passer');
 
   switch (attente.type) {
-    case 'tour':
-      return meilleur(
-        actions.map((action) => ({ action, note: noterActionDeTour(action, moi, vue, p) })),
-        hasard,
-      );
+    case 'tour': {
+      // Un Privilège d'action ne remplace pas l'action du tour : il ne vaut la peine que s'il rapporte quelque chose.
+      const choix = actions
+        .map((action) => ({ action, note: noterActionDeTour(action, moi, vue, p) }))
+        .filter(({ action, note }) => action.type !== 'utiliserPrivilege' || note > 0);
+      return meilleur(choix, hasard);
+    }
+
+    case 'apresAction': {
+      const rentables = actions.flatMap((action) => {
+        if (action.type !== 'utiliserPrivilege') return [];
+        const note = noterActionDeTour(action, moi, vue, p);
+        return note > 0 ? [{ action, note }] : [];
+      });
+      return rentables.length > 0 ? meilleur(rentables, hasard) : (passer ?? actions[0]!);
+    }
 
     case 'payer': {
       const etape = etapeDe(attente);

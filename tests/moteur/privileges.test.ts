@@ -1,3 +1,4 @@
+import type { Action } from '../../src/game/actions.ts';
 import { describe, expect, it } from 'vitest';
 import type { Etat } from '../../src/game/index.ts';
 import { MATERIEL } from '../../src/game/materiel/index.ts';
@@ -309,31 +310,32 @@ describe('Privilège 12 : 1 carte de plus, puis défausser 1 carte', () => {
   });
 });
 
-describe('Privilèges 13, 14 et 15 : payer pour trasher ou piocher à la place de son action', () => {
+describe('Privilèges 13, 14 et 15 : payer pour trasher ou piocher en plus de son action', () => {
   const privileges = (etat: Etat) => permises(etat).filter((a) => a.type === 'utiliserPrivilege');
+  const quinze: Omit<Extract<Action, { type: 'utiliserPrivilege' }>, 'joueur'> = { type: 'utiliserPrivilege', numero: 15, paiement: [] };
 
-  it('Privilège 15 : 6 Or pour piocher 1 carte, et le tour est terminé', () => {
+  it('Privilège 15 : 6 Or pour piocher 1 carte, et le joueur doit encore faire son action', () => {
     expect(privileges(avec([15], { or: 5 }))).toEqual([]);
     const etat = avec([15], { or: 6 });
-    expect(privileges(etat)).toEqual([{ type: 'utiliserPrivilege', numero: 15, paiement: [] }]);
-    const apres = faire(etat, { type: 'utiliserPrivilege', numero: 15, paiement: [] });
+    expect(privileges(etat)).toEqual([quinze]);
+    const apres = faire(etat, quinze);
     expect(apres.joueurs[0]!.or).toBe(0);
     expect(apres.joueurs[0]!.main).toHaveLength(1);
-    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 0 });
   });
 
   it('Privilège 13 : 3 Pierres, payées en défaussant des cartes de l\'aire de jeu, pour trasher 1 carte', () => {
     expect(privileges(avec([13], { main: [c('Épicerie')], aire: [c('Cachot'), c('Ferrailleur')] }))).toEqual([]);
-    const etat = avec([13], { main: [c('Épicerie')], aire: [c('Cachot'), c('Cour du roi')] });
+    const etat = avec([13], { main: [c('Épicerie'), c('Marché')], aire: [c('Cachot'), c('Cour du roi')] });
     expect(privileges(etat)).toEqual([
       { type: 'utiliserPrivilege', numero: 13, paiement: [c('Cour du roi')] },
     ]);
     let apres = faire(etat, { type: 'utiliserPrivilege', numero: 13, paiement: [c('Cour du roi')] });
     expect(apres.joueurs[0]!.defausse).toEqual([c('Cour du roi')]);
-    expect(apres.attente).toEqual({ type: 'trashPrivilege', joueur: 0, restant: 1 });
+    expect(apres.attente).toEqual({ type: 'trashPrivilege', joueur: 0, restant: 1, avantAction: true });
     apres = faire(apres, { type: 'trasher', carte: c('Épicerie') });
     expect(apres.trash).toEqual([c('Épicerie')]);
-    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 0 });
   });
 
   it('Privilège 14 : 2 Métal', () => {
@@ -350,20 +352,88 @@ describe('Privilèges 13, 14 et 15 : payer pour trasher ou piocher à la place d
   it('ne déclenche aucun Effet Rouge', () => {
     const etat = avec([15], { or: 6 });
     installer(etat, 1, { or: 20 });
-    const apres = faire(etat, { type: 'utiliserPrivilege', numero: 15, paiement: [] });
+    const apres = faire(etat, quinze);
     expect(apres.joueurs[1]!.or).toBe(20);
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 0 });
+  });
+
+  it('chaque tuile sert 1 fois par tour, et redevient disponible au tour suivant', () => {
+    const etat = avec([15], { or: 30, pioche: [c('Épicerie'), c('Cachot'), c('Marché')] });
+    const apres = faire(etat, quinze);
+    expect(privileges(apres)).toEqual([]);
+    const tourSuivant = faire(apres, { type: 'jouer', carte: c('Épicerie') });
+    expect(tourSuivant.privilegesUtilises).toEqual([]);
+  });
+
+  it('deux tuiles différentes s\'utilisent chacune 1 fois dans le même tour', () => {
+    const etat = avec([14, 15], { or: 6, aire: [c('Contremaître')], pioche: [c('Épicerie'), c('Cachot'), c('Marché')] });
+    const apres = faire(etat, quinze);
+    expect(privileges(apres).map((a) => (a as { numero: number }).numero)).toEqual([14]);
+  });
+
+  it('s\'utilise aussi après l\'action, avant de finir le tour', () => {
+    const etat = avec([15], { or: 6, main: [c('Forgeron')], pioche: [c('Épicerie'), c('Cachot')] });
+    const apres = faire(etat, { type: 'jouer', carte: c('Forgeron') });
+    expect(apres.attente).toEqual({ type: 'apresAction', joueur: 0 });
+    expect(permises(apres)).toEqual([quinze, { type: 'passer' }]);
+    const fini = faire(apres, quinze);
+    expect(fini.joueurs[0]!.main).toEqual([c('Épicerie')]);
+    expect(fini.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  it('après l\'action, le joueur peut refuser et finir son tour', () => {
+    const etat = avec([15], { or: 6, main: [c('Forgeron')], pioche: [c('Épicerie'), c('Cachot')] });
+    const apres = faire(etat, { type: 'jouer', carte: c('Forgeron') }, { type: 'passer' });
+    expect(apres.joueurs[0]!.or).toBe(6);
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
   });
 
-  it('peut être réutilisé à un tour suivant, et fait gagner sur la dernière carte', () => {
-    const etat = avec([15], { or: 14, pioche: [c('Épicerie'), c('Cachot')] });
-    etat.toursSupplementaires = 1;
-    const apres = faire(
-      etat,
-      { type: 'utiliserPrivilege', numero: 15, paiement: [] },
-      { type: 'utiliserPrivilege', numero: 15, paiement: [] },
-    );
-    expect(apres.vainqueur).toBe(0);
+  it('après l\'action, il n\'y a rien à décider si aucune tuile n\'est utilisable', () => {
+    const etat = avec([15], { or: 5, main: [c('Forgeron')], pioche: [c('Épicerie'), c('Cachot')] });
+    const apres = faire(etat, { type: 'jouer', carte: c('Forgeron') });
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  it('s\'utilise après la résolution de l\'Effet Rouge de la carte jouée', () => {
+    const etat = avec([15], { or: 6, main: [c('Tour de guet')], pioche: [c('Épicerie'), c('Cachot')] });
+    installer(etat, etat.joueurs.length - 1, { or: 20, main: [], pioche: [c('Marché'), c('Forgeron')] });
+    const apres = faire(etat, { type: 'jouer', carte: c('Tour de guet') }, { type: 'passer' });
+    expect(apres.attente?.joueur).toBe(etat.joueurs.length - 1);
+    expect(faire(apres, { type: 'passer' }).attente).toEqual({ type: 'apresAction', joueur: 0 });
+  });
+
+  it('un tour avec une fin de lignée n\'en comporte aucun : plus de fin de lignée après un usage', () => {
+    const etat = avec([15], { or: 6, main: [], pioche: [c('Épicerie'), c('Cachot')] });
+    expect(permises(etat)).toContainEqual({ type: 'finLignee' });
+    const apres = faire(etat, quinze);
+    expect(permises(apres)).not.toContainEqual({ type: 'finLignee' });
+  });
+
+  it('un tour avec une fin de lignée n\'en comporte aucun : pas d\'usage après la fin de lignée', () => {
+    const etat = avec([15], { or: 0, main: [], defausse: [c('Forgeron')], pioche: [c('Épicerie'), c('Cachot'), c('Marché'), c('Ferrailleur'), c('Imprimeur')] });
+    const apres = faire(etat, { type: 'finLignee' });
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  it('est interdit s\'il laisse le joueur sans aucune action possible', () => {
+    // Main vide, rien à acheter : payer le Privilège 13 lui interdirait ensuite de finir sa lignée.
+    const etat = avec([13], { main: [], aire: [c('Cour du roi')], pioche: [c('Forgeron'), c('Marché')], or: 0 });
+    etat.riviere = [];
+    expect(privileges(etat)).toEqual([]);
+  });
+
+  it('ne permet pas de trasher sa dernière carte en main si plus rien n\'est possible ensuite', () => {
+    const etat = avec([13], { main: [c('Épicerie')], aire: [c('Cour du roi')], pioche: [c('Forgeron'), c('Marché')], or: 0 });
+    etat.riviere = [];
+    const apres = faire(etat, { type: 'utiliserPrivilege', numero: 13, paiement: [c('Cour du roi')] });
+    expect(permises(apres)).not.toContainEqual({ type: 'trasher', carte: c('Épicerie') });
+    expect(permises(apres)).toContainEqual({ type: 'passer' });
+  });
+
+  it('reste permis sans autre action possible s\'il fait gagner la partie', () => {
+    const etat = avec([15], { or: 6, main: [], pioche: [c('Épicerie')] });
+    etat.riviere = [];
+    expect(faire(etat, quinze).vainqueur).toBe(0);
   });
 });
 

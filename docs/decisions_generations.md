@@ -128,5 +128,13 @@ Fichiers `data/*_essai-17-10.csv` installés comme version active ; la version �
 - JJ. Effet Rouge : seul le joueur assis à droite du joueur actif (celui qui a joué juste avant lui) peut l'appliquer. Réglage `effetRougePour` (« precedent ») dans `src/game/parametres.ts` ; « tous » redonne l'ancienne règle.
 - KK. Nouvelles cartes et nouveau plateau (fichiers csv du 30/10). Deck de départ : Cachot et Forgeron, Marché et Ferrailleur échangent leurs effets ; Marché : Gagne 2 Or, Effet Rouge Gagne 1 Or (le csv codait 1 Or sans Effet Rouge ; corrigé d'après le visuel, à la demande du 30/10). Économie : 1 / 2 / 2 / 3 Ressources ; Population : 3 / 6 / 9 / 12 Or. Privilège 1 : 3 Or de réduction ; Privilège 17 : 1 Or par carte trashée.
 
+## Version du 05/11
+- LL. Privilèges 13, 14 et 15 : ils s'utilisent en plus de l'action du tour, et non plus à sa place. Cette décision remplace les décisions 5 et 15. Précisions données le 05/11 :
+  - avant ou après l'action, et après l'Effet Rouge de la carte jouée ;
+  - chaque tuile sert 1 fois par tour ;
+  - un tour où le joueur met fin à sa lignée n'en comporte aucun, ni avant ni après ;
+  - un Privilège qui laisserait le joueur sans aucune action possible est interdit. Appliqué aussi au choix de la carte trashée, et levé si ce Privilège fait gagner la partie.
+- MM. Livret anglais : visuels tirés de `visuels/generations_v2_a4_en.pdf` (cartes en anglais, plateau en page 12).
+
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ? → Réglé le 18/10 : nouveau visuel sans bandeau.

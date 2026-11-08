@@ -283,9 +283,9 @@ dl.mots { margin: 0 0 1rem; }
         </div>
       </div>
       <div class="eventail" aria-hidden="true">
-        <img src="img/cartes/forgeron.jpg" alt="">
-        <img src="img/cartes/negociant.jpg" alt="">
-        <img src="img/cartes/progres.jpg" alt="">
+        <img src="img/cartes_en/forgeron.jpg" alt="">
+        <img src="img/cartes_en/negociant.jpg" alt="">
+        <img src="img/cartes_en/progres.jpg" alt="">
       </div>
     </header>
 
@@ -334,7 +334,7 @@ dl.mots { margin: 0 0 1rem; }
       <h2><span class="num">3</span>Reading a card</h2>
       <div class="anatomie">
         <figure>
-          <img src="img/cartes/banque.jpg" alt="The Bank card: 1 Stone, costs 1 Resource, draw 1 card for every 2 Stone, Red Effect: pay 4 Gold to draw 1 card.">
+          <img src="img/cartes_en/banque.jpg" alt="The Bank card: 1 Stone, costs 3 Gold, draw 1 card for every 2 Stone, Red Effect: pay 4 Gold to draw 1 card.">
           <span class="repere" style="left: 4%; top: 2%">1</span>
           <span class="repere" style="right: 2%; top: 1%">2</span>
           <span class="repere" style="left: 45%; top: 1%">3</span>
@@ -344,7 +344,7 @@ dl.mots { margin: 0 0 1rem; }
         </figure>
         <ol class="legende">
           <li><div><strong>Resources.</strong> What the card provides once it is in your play area: Stone <img class="ico" src="img/ico/pierre.png" alt="Stone">, Metal <img class="ico" src="img/ico/metal.png" alt="Metal"> or Scholar <img class="ico" src="img/ico/erudit.png" alt="Scholar">. The Bank provides 1 Stone.</div></li>
-          <li><div><strong>Purchase cost.</strong> Only Advanced cards have one: Gold, or a Resource (Stone or Metal, your choice). The Bank costs 1 Resource.</div></li>
+          <li><div><strong>Purchase cost.</strong> Only Advanced cards have one: Gold, a Resource (Stone or Metal, your choice), or both. The Bank costs 3 Gold.</div></li>
           <li><div><strong>Banner.</strong> It shows where the card comes from: the player's colour for a starting card, purple for a Domain, black for an Advanced card. It has no effect on play.</div></li>
           <li><div>The card's <strong>name</strong>.</div></li>
           <li><div><strong>Effect.</strong> What you may do when you play the card. Here: draw 1 card for every 2 Stone in your play area.</div></li>
@@ -385,7 +385,7 @@ dl.mots { margin: 0 0 1rem; }
       <p>Your board has three tracks. They move up when you end a lineage, by one level at most per track, and make each of your following lineages stronger.</p>
       <div class="vue-plateau">
         <figure>
-          <img src="img/plateau.webp" alt="The player board: the Nobility track on the left, Economy at the top right, Population at the bottom right.">
+          <img src="img/plateau_en.jpg" alt="The player board: the Nobility track on the left, Economy at the top right, Population at the bottom right.">
         </figure>
         <div class="lecture">
           <div class="zone p-noblesse"><h4>Left: Nobility</h4><p>4 spaces for your Privilege tiles, from bottom to top. The number shows the Scholars <img class="ico" src="img/ico/erudit.png" alt="Scholars"> required; the crowns show the Nobility crests gained.</p></div>
@@ -418,7 +418,7 @@ dl.mots { margin: 0 0 1rem; }
     <!-- 7 -->
     <section class="chapitre" id="tour">
       <h2><span class="num">7</span>Your turn</h2>
-      <p>Starting with the first player, then clockwise, each player takes <strong>a single action</strong> from the following four. You may not pass.</p>
+      <p>Starting with the first player, then clockwise, each player takes <strong>a single action</strong> from the following three. You may not pass.</p>
       <div class="actions">
         <article class="action">
           <h3>Play 1 card</h3>
@@ -431,13 +431,13 @@ dl.mots { margin: 0 0 1rem; }
           <p>The card you buy <strong>must replace</strong> a card of your deck, which is destroyed for free. It takes that card's place (see below). Then refill the River with the top card of the common deck.</p>
         </article>
         <article class="action">
-          <h3>Use a Privilege</h3>
-          <p>If you have Privilege 13, 14 or 15, pay its cost to destroy or draw 1 card. This replaces your action: only once per turn, but you may do it again on later turns.</p>
-        </article>
-        <article class="action">
           <h3>End your lineage</h3>
           <p>If you have <strong>0 or 1 card</strong> in hand, you may end your lineage: your tracks move up, then you start again with your whole deck. See the next chapter.</p>
         </article>
+        <div class="encadre retenir">
+          <span class="etiq">Privileges 13, 14 and 15</span>
+          <p>If you own one of these tiles, you may use it <strong>in addition to your action</strong>, before or after it: pay its cost to destroy or draw 1 card. Each tile can be used once per turn. See “Privileges” in the Reference chapter.</p>
+        </div>
       </div>
 
       <h3>Where the bought card goes</h3>
@@ -491,7 +491,7 @@ dl.mots { margin: 0 0 1rem; }
         <h3 class="titre-partie">Card effects</h3>
         <ul>
           <li>All effects are <strong>optional</strong>. You may play a card without applying its effect.</li>
-          <li>When an effect has several parts (“Gain 1 Gold, then Buy 1 card”), they are independent: you may apply the second without the first.</li>
+          <li>When an effect has several parts (“Pay 5 Gold to destroy 1 card, then pay 5 Gold to destroy 1 card”), they are independent: you may apply the second without the first.</li>
           <li>When an effect counts something (resources, Scholars, crests), only count what the player applying it owns: their play area and their board. The card you have just played counts for its own effect.</li>
         </ul>
         <dl class="deux-col mots">
@@ -507,7 +507,6 @@ dl.mots { margin: 0 0 1rem; }
           <li><strong>“Pay 3 Metal to draw 1 card per Population crest”</strong>: pay only once, then draw as many cards as you have Population crests.</li>
           <li>When an effect makes you pay and then counts, you <strong>count before paying</strong>: resources discarded to pay still count.</li>
           <li><strong>“Pay X Gold to draw (or destroy) 1 card”</strong>: only once per card played.</li>
-          <li><strong>Market</strong>: sell as much Stone and Metal as you wish. Every resource on the discarded cards earns Gold: a card providing 1 Stone and 1 Metal earns twice.</li>
         </ul>
         <div class="encadre rouge">
           <span class="etiq">Red Effects</span>
@@ -522,9 +521,10 @@ dl.mots { margin: 0 0 1rem; }
           <li>A Privilege gained through a card also takes a space on your Nobility track: it requires no Scholars, but it gives that space's crests and makes the next Privilege harder to get.</li>
           <li>Unless it says “at random from the pile”, you choose among the 4 face-up Privileges. When the Privilege pile is empty, they are no longer replaced.</li>
           <li>Resources added by Privileges count everywhere: for paying, for tracks, for Privileges and for card effects.</li>
+          <li><strong>Privileges 13, 14 and 15</strong>: use each tile once per turn, before or after your action (after any Red Effect). You cannot use them on a turn when you end your lineage, nor if it would leave you with no possible action, unless it wins you the game.</li>
         </ul>
         <ul class="privileges">
-          <li><b>1</b><span>River cards cost you 2 Gold less (never below 0; the Resource cost does not change).</span></li>
+          <li><b>1</b><span>River cards cost you 3 Gold less (never below 0; the Resource cost does not change).</span></li>
           <li><b>2</b><span>Each Advanced card in your play area also provides 1 Scholar.</span></li>
           <li><b>3</b><span>Each Advanced card in your play area also provides 1 Stone.</span></li>
           <li><b>4</b><span>Each Advanced card in your play area also provides 1 Metal.</span></li>
@@ -536,11 +536,11 @@ dl.mots { margin: 0 0 1rem; }
           <li><b>10</b><span>Start of a lineage: gain 2 extra Gold per Nobility crest.</span></li>
           <li><b>11</b><span>Start of a lineage: gain 2 extra Gold per Economy crest.</span></li>
           <li><b>12</b><span>Start of a lineage: draw 1 extra card, then discard 1 card from your hand (mandatory; it is not destroyed).</span></li>
-          <li><b>13</b><span>Instead of your action: pay 3 Stone to destroy 1 card.</span></li>
-          <li><b>14</b><span>Instead of your action: pay 2 Metal to draw 1 card.</span></li>
-          <li><b>15</b><span>Instead of your action: pay 6 Gold to draw 1 card.</span></li>
+          <li><b>13</b><span>On your turn, in addition to your action: pay 3 Stone to destroy 1 card.</span></li>
+          <li><b>14</b><span>On your turn, in addition to your action: pay 2 Metal to draw 1 card.</span></li>
+          <li><b>15</b><span>On your turn, in addition to your action: pay 6 Gold to draw 1 card.</span></li>
           <li><b>16</b><span>1 permanent Scholar, as if it were on a card in your play area, including to gain a Privilege.</span></li>
-          <li><b>17</b><span>Each time you destroy 1 card, including the card replaced by a purchase, gain 2 Gold.</span></li>
+          <li><b>17</b><span>Each time you destroy 1 card, including the card replaced by a purchase, gain 1 Gold.</span></li>
           <li><b>18</b><span>When you end a lineage, keep your remaining Gold instead of discarding it.</span></li>
           <li><b>19</b><span>Start of a lineage: gain 3 extra Gold.</span></li>
           <li><b>20</b><span>Each time you play an Advanced card, gain 2 Gold, even if you do not apply its effect.</span></li>
@@ -551,38 +551,38 @@ dl.mots { margin: 0 0 1rem; }
       <div class="partie" id="depart">
         <h3 class="titre-partie">The starting deck <small>9 cards, identical for every colour</small></h3>
         <div class="galerie">
-          <div class="carte-ligne"><img src="img/cartes/salle-du-tresor.jpg" alt=""><div><h4>Treasury</h4><p class="res">1 Stone</p><p>Gain 3 Gold.</p><p class="er">Red Effect: gain 1 Gold.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/forgeron.jpg" alt=""><div><h4>Blacksmith</h4><p class="res">1 Scholar</p><p>Pay 2 Gold to draw 1 card.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/tour-de-guet.jpg" alt=""><div><h4>Watchtower</h4><p class="res">1 Stone</p><p>Destroy 1 card for every 2 Metal in your play area.</p><p class="er">Red Effect: pay 7 Gold to destroy 1 card.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/cachot.jpg" alt=""><div><h4>Dungeon</h4><p class="res">1 Stone</p><p>Draw 1 card for every 2 Stone in your play area.</p><p class="er">Red Effect: pay 4 Gold to draw 1 card.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/epicerie.jpg" alt=""><div><h4>Grocer</h4><p class="res">1 Metal</p><p>Gain 2 Gold.</p><p class="er">Red Effect: gain 1 Gold.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/marche.jpg" alt=""><div><h4>Market</h4><p class="res">1 Metal</p><p>Pay Stone and Metal to gain 3 Gold per resource sold.</p><p class="er">Red Effect: same, 2 Gold per resource sold.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/imprimeur.jpg" alt=""><div><h4>Printer</h4><p class="res">1 Scholar</p><p>Search for 1 card for every 3 Scholars in your play area.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/ferrailleur.jpg" alt=""><div><h4>Scrap Dealer</h4><p class="res">1 Scholar</p><p>Gain 2 Gold.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/colporteur.jpg" alt=""><div><h4>Peddler</h4><p class="res">1 Scholar</p><p>Gain 1 Gold, then buy 1 card.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/salle-du-tresor.jpg" alt=""><div><h4>Treasury</h4><p class="res">1 Stone</p><p>Gain 3 Gold.</p><p class="er">Red Effect: gain 1 Gold.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/forgeron.jpg" alt=""><div><h4>Blacksmith</h4><p class="res">1 Stone</p><p>Draw 1 card for every 2 Stone in your play area.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/tour-de-guet.jpg" alt=""><div><h4>Watchtower</h4><p class="res">1 Metal</p><p>Pay 5 Gold to destroy 1 card.</p><p class="er">Red Effect: pay 6 Gold to destroy 1 card.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/cachot.jpg" alt=""><div><h4>Dungeon</h4><p class="res">1 Scholar</p><p>Pay 2 Gold to draw 1 card.</p><p class="er">Red Effect: pay 4 Gold to draw 1 card.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/epicerie.jpg" alt=""><div><h4>Grocer</h4><p class="res">1 Metal</p><p>Gain 2 Gold.</p><p class="er">Red Effect: gain 1 Gold.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/marche.jpg" alt=""><div><h4>Market</h4><p class="res">1 Scholar</p><p>Gain 2 Gold.</p><p class="er">Red Effect: gain 1 Gold.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/imprimeur.jpg" alt=""><div><h4>Printer</h4><p class="res">1 Scholar</p><p>Search for 1 card for every 3 Scholars in your play area.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/ferrailleur.jpg" alt=""><div><h4>Scrap dealer</h4><p class="res">1 Stone</p><p>Gain 1 Gold per Resource in your play area.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/colporteur.jpg" alt=""><div><h4>Peddler</h4><p class="res">1 Stone</p><p>Buy 1 card.</p></div></div>
         </div>
       </div>
 
       <div class="partie" id="domaines">
         <h3 class="titre-partie">The 8 Domains</h3>
         <div class="galerie">
-          <div class="carte-ligne"><img src="img/cartes/justice.jpg" alt=""><div><h4>Justice</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Nobility crest.</p><p class="er">Red Effect: gain 1 Gold per Nobility crest.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/diplomatie.jpg" alt=""><div><h4>Diplomacy</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Population crest.</p><p class="er">Red Effect: gain 1 Gold per Population crest.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/economie.jpg" alt=""><div><h4>Economy</h4><p class="res">1 Stone</p><p>Pay 2 Gold to level up Economy.</p><p class="er">Red Effect: pay 4 Gold to level up Economy.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/histoire.jpg" alt=""><div><h4>History</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Scholar.</p><p class="er">Red Effect: gain 1 Gold per Scholar.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/religion.jpg" alt=""><div><h4>Religion</h4><p class="res">1 Stone</p><p>Pay 1 Metal to take 1 of the 4 face-up Privileges.</p><p class="er">Red Effect: pay 5 Gold to take 1 Privilege at random from the pile.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/production.jpg" alt=""><div><h4>Production</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Economy crest.</p><p class="er">Red Effect: gain 1 Gold per Economy crest.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/science.jpg" alt=""><div><h4>Science</h4><p class="res">1 Metal</p><p>Pay 2 Stone to level up Population.</p><p class="er">Red Effect: pay 6 Gold to level up Population.</p></div></div>
-          <div class="carte-ligne"><img src="img/cartes/progres.jpg" alt=""><div><h4>Progress</h4><p class="res">1 Metal</p><p>Gain 5 Gold.</p><p class="er">Red Effect: gain 2 Gold.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/justice.jpg" alt=""><div><h4>Justice</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Nobility crest.</p><p class="er">Red Effect: gain 1 Gold per Nobility crest.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/diplomatie.jpg" alt=""><div><h4>Diplomacy</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Population crest.</p><p class="er">Red Effect: gain 1 Gold per Population crest.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/economie.jpg" alt=""><div><h4>Economy</h4><p class="res">1 Stone</p><p>Pay 2 Gold to level up Economy.</p><p class="er">Red Effect: pay 4 Gold to level up Economy.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/histoire.jpg" alt=""><div><h4>History</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Scholar.</p><p class="er">Red Effect: gain 1 Gold per Scholar.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/religion.jpg" alt=""><div><h4>Religion</h4><p class="res">1 Stone</p><p>Pay 2 Stone to take 1 of the 4 face-up Privileges.</p><p class="er">Red Effect: pay 4 Gold to take 1 Privilege at random from the pile.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/production.jpg" alt=""><div><h4>Production</h4><p class="res">1 Scholar</p><p>Gain 2 Gold per Economy crest.</p><p class="er">Red Effect: gain 1 Gold per Economy crest.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/science.jpg" alt=""><div><h4>Science</h4><p class="res">1 Metal</p><p>Pay 2 Metal to level up Population.</p><p class="er">Red Effect: pay 5 Gold to level up Population.</p></div></div>
+          <div class="carte-ligne"><img src="img/cartes_en/progres.jpg" alt=""><div><h4>Progress</h4><p class="res">1 Metal</p><p>Gain 4 Gold.</p><p class="er">Red Effect: gain 2 Gold.</p></div></div>
         </div>
       </div>
     </section>
 
     <footer class="dos">
       <div class="eventail" aria-hidden="true">
-        <img src="img/cartes/cachot.jpg" alt="">
-        <img src="img/cartes/banque.jpg" alt="">
-        <img src="img/cartes/religion.jpg" alt="">
+        <img src="img/cartes_en/cachot.jpg" alt="">
+        <img src="img/cartes_en/banque.jpg" alt="">
+        <img src="img/cartes_en/religion.jpg" alt="">
       </div>
       <div>
         <p class="titre-dos">Generations</p>
@@ -594,7 +594,6 @@ dl.mots { margin: 0 0 1rem; }
         <div class="resume-actions">
           <div><strong>Play 1 card</strong><span>Place it in your play area and apply its effect. The player to your right may apply its Red Effect.</span></div>
           <div><strong>Buy 1 card</strong><span>Pay for a card from the River. It replaces a card of your deck, which is destroyed.</span></div>
-          <div><strong>Use a Privilege</strong><span>With Privilege 13, 14 or 15: pay to destroy or draw 1 card.</span></div>
           <div><strong>End your lineage</strong><span>With 0 or 1 card in hand: Nobility, Population, Economy, then a new deck.</span></div>
         </div>
       </div>

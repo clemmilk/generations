@@ -321,54 +321,107 @@ describe('Privilège 12 : révéler 1 carte en début de lignée', () => {
   });
 });
 
-describe('Privilège 9 : après chaque achat, un 2e achat (décision XX)', () => {
+describe('Privilège 9 : après chaque achat, jouer 1 carte de sa main (décision XX)', () => {
   const riviere = (etat: Etat) => {
     etat.riviere = [c('Remouleur ambulant'), c('Halle des négociants')];
     return etat;
   };
+  /** Prête à l'Épicerie l'effet indiqué le temps du test. */
+  const avecEffet = (effet: (typeof MATERIEL.cartes)[number]['effet'], test: (epicerie: string) => void) => {
+    const epicerie = c('Épicerie');
+    const fiche = MATERIEL.cartes.find((carte) => carte.id === epicerie)!;
+    const avant = fiche.effet;
+    fiche.effet = effet;
+    try {
+      test(epicerie);
+    } finally {
+      fiche.effet = avant;
+    }
+  };
+  const achat = { cout: null, gain: { type: 'achat' as const, nombre: 1 }, par: null, repetable: false };
+  const or4 = { cout: null, gain: { type: 'or' as const, montant: 4 }, par: null, repetable: false };
 
-  it('propose un achat en plus après l\'action Acheter, une fois la carte remplacée', () => {
-    const etat = riviere(avec([9], { or: 10 }));
+  it('après l\'action Acheter, une fois la carte remplacée, propose de jouer 1 carte de sa main', () => {
+    const etat = riviere(avec([9], { main: [c('Épicerie')], or: 10 }));
     const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
-    expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0, privilege9: false });
-    expect(permises(apres)).toContainEqual({ type: 'acheter', carte: c('Halle des négociants'), paiement: [] });
+    expect(apres.attente).toEqual({ type: 'jouerEnPlus', joueur: 0, restant: 1 });
+    expect(permises(apres)).toContainEqual({ type: 'jouer', carte: c('Épicerie') });
     expect(permises(apres)).toContainEqual({ type: 'passer' });
+    expect(typesPermis(apres)).not.toContain('acheter');
   });
 
-  it('l\'achat en plus ne donne droit à aucun autre', () => {
-    const etat = riviere(avec([9], { or: 10 }));
-    etat.piocheCommune = [c('Banque'), ...etat.piocheCommune];
+  it('la carte jouée est une carte jouée normale : effet et Effet Rouge', () => {
+    const etat = riviere(avec([9], { main: [c('Épicerie')], or: 10 }));
+    const orDeBob = etat.joueurs[1]!.or;
     const apres = faire(
       etat,
       { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] },
       { type: 'remplacerPioche' },
-      { type: 'acheter', carte: c('Halle des négociants'), paiement: [] },
-      { type: 'remplacerPioche' },
+      { type: 'jouer', carte: c('Épicerie') },
     );
-    expect(apres.joueurs[0]!.statistiques.cartesAchetees).toBe(2);
-    expect(apres.joueurs[0]!.or).toBe(6);
+    expect(apres.joueurs[0]!.or).toBe(8 + 4);
+    expect(apres.joueurs[1]!.or).toBe(orDeBob + 2);
+    expect(apres.joueurs[0]!.statistiques.cartesJouees).toBe(1);
+    expect(apres.joueurs[0]!.main).toEqual([]);
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
   });
 
-  it('s\'applique aussi à un achat fait par une carte', () => {
-    const epicerie = c('Épicerie');
-    const effet = MATERIEL.cartes.find((carte) => carte.id === epicerie)!;
-    const avant = effet.effet;
-    effet.effet = [{ cout: null, gain: { type: 'achat', nombre: 1 }, par: null, repetable: false }];
-    try {
-      const etat = riviere(avec([9], { main: [epicerie], or: 10 }));
-      let apres = faire(etat, { type: 'jouer', carte: epicerie });
-      apres = faire(apres, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
-      expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0, privilege9: false });
-    } finally {
-      effet.effet = avant;
-    }
+  it('le joueur peut refuser', () => {
+    const etat = riviere(avec([9], { main: [c('Épicerie')], or: 10 }));
+    const apres = faire(
+      etat,
+      { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] },
+      { type: 'remplacerPioche' },
+      { type: 'passer' },
+    );
+    expect(apres.joueurs[0]!.main).toEqual([c('Épicerie')]);
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
   });
 
-  it('ne propose rien si plus aucun achat n\'est possible', () => {
-    const etat = riviere(avec([9], { or: 2 }));
+  it('ne propose rien sans carte en main', () => {
+    const etat = riviere(avec([9], { main: [], or: 10 }));
     const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  it('sans le Privilège 9, rien n\'est proposé après un achat', () => {
+    const etat = riviere(avec([], { main: [c('Épicerie')], or: 10 }));
+    const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  it('achat fait par une carte : la carte en plus se joue une fois cette carte entièrement résolue', () => {
+    avecEffet([achat, or4], (epicerie) => {
+      const etat = riviere(avec([9], { main: [epicerie, c('Cachot')], or: 10 }));
+      const orDeBob = etat.joueurs[1]!.or;
+      let apres = faire(etat, { type: 'jouer', carte: epicerie });
+      apres = faire(apres, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
+      // La suite de l'effet (4 Or) et l'Effet Rouge de Bob (2 Or) sont résolus avant.
+      expect(apres.joueurs[0]!.or).toBe(8 + 4);
+      expect(apres.joueurs[1]!.or).toBe(orDeBob + 2);
+      expect(apres.attente).toEqual({ type: 'jouerEnPlus', joueur: 0, restant: 1 });
+      expect(permises(apres)).toContainEqual({ type: 'jouer', carte: c('Cachot') });
+    });
+  });
+
+  it('s\'enchaîne : si la carte jouée fait acheter, le Privilège 9 se déclenche de nouveau', () => {
+    avecEffet([achat], (epicerie) => {
+      const etat = riviere(avec([9], { main: [epicerie, c('Cachot')], or: 10 }));
+      etat.piocheCommune = [c('Banque'), ...etat.piocheCommune];
+      let apres = faire(
+        etat,
+        { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] },
+        { type: 'remplacerPioche' },
+        { type: 'jouer', carte: epicerie },
+        { type: 'acheter', carte: c('Halle des négociants'), paiement: [] },
+        { type: 'remplacerPioche' },
+      );
+      expect(apres.joueurs[0]!.statistiques.cartesAchetees).toBe(2);
+      expect(apres.attente).toEqual({ type: 'jouerEnPlus', joueur: 0, restant: 1 });
+      expect(permises(apres)).toContainEqual({ type: 'jouer', carte: c('Cachot') });
+      apres = faire(apres, { type: 'passer' });
+      expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+    });
   });
 });
 
@@ -382,7 +435,7 @@ describe('Privilège 10 : acheter 1 carte une fois la nouvelle lignée en place 
 
   it('propose un achat après la pioche, avec l\'Or de la nouvelle lignée', () => {
     const apres = faire(prete([10]), { type: 'finLignee' });
-    expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0, privilege9: true });
+    expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0 });
     expect(apres.joueurs[0]!.main).toHaveLength(3);
     expect(apres.joueurs[0]!.or).toBe(3);
   });
@@ -405,10 +458,10 @@ describe('Privilège 10 : acheter 1 carte une fois la nouvelle lignée en place 
     expect(apres.attente?.type).toBe('achatEnPlus');
   });
 
-  it('le Privilège 9 s\'y applique : un 2e achat', () => {
-    let apres = faire(prete([10, 9, 19]), { type: 'finLignee' });
+  it('le Privilège 9 s\'y applique : jouer 1 carte de sa main, tout de suite après l\'achat', () => {
+    let apres = faire(prete([10, 9]), { type: 'finLignee' });
     apres = faire(apres, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
-    expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0, privilege9: false });
+    expect(apres.attente).toEqual({ type: 'jouerEnPlus', joueur: 0, restant: 1 });
   });
 
   it('le joueur peut refuser', () => {

@@ -336,21 +336,23 @@ function achatsPossibles(etat: Etat, joueur: Joueur): Action[] {
  * la carte va dans la main, la Rivière est complétée aussitôt.
  */
 /**
- * Ce qui suit un achat : le trash à 1 Or (règles), ou le choix de la carte remplacée (essai).
- * Puis, avec le Privilège 9, un achat en plus (décision XX), sauf si cet achat était déjà l'achat en plus.
+ * Ce qui suit un achat, ajouté en tête de la file : le trash à 1 Or (règles), ou le choix de la carte
+ * remplacée (essai). Puis, avec le Privilège 9, jouer 1 carte de sa main (décision XX) : tout de suite
+ * après l'action Acheter ou le Privilège 10, et, si l'achat vient d'une carte, une fois cette carte
+ * entièrement résolue (juste avant sa « finCarte »), comme « Rejouer 1 carte ».
  */
-function apresAchat(joueur: Joueur, id: string, privilege9 = true): Tache[] {
-  const taches: Tache[] = [
+function apresAchat(etat: Etat, joueur: Joueur, id: string): void {
+  for (const _ of effetsPrivilege(joueur, 'joueApresAchat')) {
+    const enPlus: Tache = { type: 'jouerEnPlus', joueur: joueur.id, restant: 1 };
+    const fin = etat.file.findIndex((suivante) => suivante.type === 'finCarte');
+    if (fin === -1) etat.file.unshift(enPlus);
+    else etat.file.splice(fin, 0, enPlus);
+  }
+  etat.file.unshift(
     PARAMETRES.carteAcheteeVa === 'remplacement'
       ? { type: 'remplacementAchat', joueur: joueur.id, carte: id }
       : { type: 'trashAchat', joueur: joueur.id },
-  ];
-  if (privilege9) {
-    for (const _ of effetsPrivilege(joueur, 'achatSupplementaire')) {
-      taches.push({ type: 'achatEnPlus', joueur: joueur.id, privilege9: false });
-    }
-  }
-  return taches;
+  );
 }
 
 /**
@@ -664,7 +666,8 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
       return;
     case 'acheter':
       acheter(etat, joueur, action.carte, action.paiement);
-      etat.file = [...apresAchat(joueur, action.carte), { type: 'apresAction', joueur: j }, { type: 'finDeTour' }];
+      etat.file = [{ type: 'apresAction', joueur: j }, { type: 'finDeTour' }];
+      apresAchat(etat, joueur, action.carte);
       return;
     case 'finLignee':
       noter(etat, joueur, `${joueur.nom} met fin à sa lignée.`);
@@ -741,7 +744,7 @@ function executerGain(
   noterUsage(etat, joueur, attente, true);
   if (encore > 0) etat.file.unshift({ type: 'gain', ...ref(attente), restant: encore });
   // Comme pour l'action Acheter : trash à 1 Or ou remplacement, avant la suite de l'effet.
-  if (action.type === 'acheter') etat.file.unshift(...apresAchat(joueur, action.carte));
+  if (action.type === 'acheter') apresAchat(etat, joueur, action.carte);
 }
 
 function executer(etat: Etat, attente: Attente, action: Action): void {
@@ -825,7 +828,7 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
     case 'achatEnPlus':
       if (action.type !== 'acheter') return;
       acheter(etat, joueur, action.carte, action.paiement);
-      etat.file.unshift(...apresAchat(joueur, action.carte, attente.privilege9));
+      apresAchat(etat, joueur, action.carte);
       return;
   }
 }
@@ -940,7 +943,7 @@ function reformerDeck(etat: Etat, joueur: Joueur): void {
   if (recherches > 0) suite.push({ type: 'debutRecherche', joueur: joueur.id, restant: recherches });
   // Privilège 10 : une fois toute la mise en place faite, un achat comme au premier tour (décision YY).
   for (const _ of effetsPrivilege(joueur, 'achatDebutLignee')) {
-    suite.push({ type: 'achatEnPlus', joueur: joueur.id, privilege9: true });
+    suite.push({ type: 'achatEnPlus', joueur: joueur.id });
   }
   etat.file.unshift(...suite);
 }

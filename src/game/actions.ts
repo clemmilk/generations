@@ -60,11 +60,8 @@ export type Attente =
   | { type: 'debutDefausse'; joueur: number; restant: number }
   /** « Rejouer 1 carte » : jouer encore « restant » carte(s) de sa main, ou s'arrêter. */
   | { type: 'jouerEnPlus'; joueur: number; restant: number }
-  /**
-   * Un achat en plus, ou y renoncer : Privilège 9 (après un achat) ou Privilège 10 (début de lignée).
-   * « privilege9 » : un achat fait ici donne droit à l'achat en plus du Privilège 9 (faux pour l'achat du 9 lui-même).
-   */
-  | { type: 'achatEnPlus'; joueur: number; privilege9: boolean };
+  /** Privilège 10 : au début de la lignée, acheter 1 carte ou y renoncer. */
+  | { type: 'achatEnPlus'; joueur: number };
 
 /** Ce que le moteur doit encore résoudre, dans l'ordre, avant la fin du tour. */
 export type Tache =
@@ -85,7 +82,7 @@ export type Tache =
   | { type: 'debutPioche'; joueur: number; cartes: number }
   | { type: 'debutDefausse'; joueur: number; restant: number }
   | { type: 'jouerEnPlus'; joueur: number; restant: number }
-  | { type: 'achatEnPlus'; joueur: number; privilege9: boolean }
+  | { type: 'achatEnPlus'; joueur: number }
   /** Fin de la résolution d'une carte jouée (effet puis Effet Rouge) : « Rejouer 1 carte » se place juste avant. */
   | { type: 'finCarte' }
   | { type: 'finDeTour' };

@@ -32,8 +32,11 @@ export type EffetPrivilege =
   | { type: 'reveleDebutLignee'; cartes: number }
   /** Début de lignée, une fois toute la mise en place faite : le joueur peut acheter 1 carte. */
   | { type: 'achatDebutLignee' }
-  /** Après chaque achat, quelle qu'en soit l'origine, le joueur peut acheter 1 carte de plus (sans enchaîner). */
-  | { type: 'achatSupplementaire' }
+  /**
+   * Après chaque achat, quelle qu'en soit l'origine, le joueur peut jouer 1 carte de sa main (décision XX).
+   * Si l'achat vient d'une carte, la carte en plus se joue une fois cette carte entièrement résolue.
+   */
+  | { type: 'joueApresAchat' }
   /** Monter d'un niveau en Population coûte moins d'Or (fin de lignée et cartes), jamais moins de 0. */
   | { type: 'reductionPopulation'; or: number }
   /** En plus de l'action de son tour, 1 fois par tour : payer pour piocher. */
@@ -58,7 +61,7 @@ export const EFFETS_PRIVILEGES: Record<number, EffetPrivilege> = {
   6: { type: 'orParStockDebutLignee', or: 2, tranche: 5 },
   7: { type: 'reductionPopulation', or: 5 },
   8: { type: 'rechercheDebutLignee', cartes: 1 },
-  9: { type: 'achatSupplementaire' },
+  9: { type: 'joueApresAchat' },
   10: { type: 'achatDebutLignee' },
   11: { type: 'actionTrash', cout: { or: 8, pierre: 0, metal: 0 }, cartes: 1 },
   12: { type: 'reveleDebutLignee', cartes: 1 },

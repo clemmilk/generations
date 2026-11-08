@@ -77,9 +77,7 @@ export function question(vue: Vue): string {
     case 'jouerEnPlus':
       return `${nom}, tu peux jouer 1 carte de plus de ta main.`;
     case 'achatEnPlus':
-      return attente.privilege9
-        ? `${nom}, début de lignée : tu peux acheter 1 carte (Privilège 10).`
-        : `${nom}, tu peux acheter 1 carte de plus (Privilège 9).`;
+      return `${nom}, début de lignée : tu peux acheter 1 carte (Privilège 10).`;
   }
 }
 

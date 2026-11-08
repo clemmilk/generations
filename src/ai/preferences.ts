@@ -500,7 +500,7 @@ function choisir(vue: Vue, actions: Action[], p: Poids, hasard: () => number): A
     }
 
     case 'achatEnPlus': {
-      // Privilège 9 ou 10 : un achat en plus, s'il en vaut la peine.
+      // Privilège 10 : un achat en début de lignée, s'il en vaut la peine.
       const choix: Choix[] = actions.flatMap((action) =>
         action.type === 'acheter' ? [{ action, note: noteAchat(moi, action.carte, action.paiement, p) }] : [],
       );

@@ -31,6 +31,10 @@ export interface Poids {
   privilege: number;
   /** Valeur d'un tour supplémentaire. */
   rejouer: number;
+  /** Valeur de jouer 1 carte de plus pendant son tour (« Rejouer 1 carte », V3). */
+  joue: number;
+  /** Valeur d'1 carte révélée : posée dans l'aire de jeu sans son effet, elle compte comme piochée (V3). */
+  revele: number;
   /** Valeur d'1 Pierre, d'1 Métal, d'1 Érudit posés dans son aire de jeu (et coût quand on les défausse). */
   pierre: number;
   metal: number;
@@ -73,6 +77,8 @@ export const POIDS_MANUELS: Poids = {
   lvlupPopulation: 10,
   privilege: 8,
   rejouer: 2,
+  joue: 4,
+  revele: 3,
   pierre: 1.5,
   metal: 1.5,
   erudit: 1.5,

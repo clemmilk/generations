@@ -21,6 +21,8 @@ const POIDS_REGLABLES = [
   'lvlupPopulation',
   'privilege',
   'rejouer',
+  'joue',
+  'revele',
   'pierre',
   'metal',
   'erudit',

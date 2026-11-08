@@ -5,6 +5,7 @@ import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
 import type { Vue, VueJoueur } from '../game/index.ts';
 import { gainsDeLignee } from '../game/lignee.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
+import { coutEnOrDuNiveau } from '../game/moteur.ts';
 import { blasons, detailDesRessources } from '../game/ressources.ts';
 import type { OrigineRessource } from '../game/ressources.ts';
 import { libelleAction, question, urlImage } from './libelles.ts';
@@ -56,7 +57,7 @@ function Tuile(props: { numero: number; action?: Action; onAction?: (a: Action) 
 }
 
 function Icone(props: { nom: string; titre: string }) {
-  return <img className="icone" src={`/plateau/icone_${props.nom}.png`} alt={props.titre} title={props.titre} />;
+  return <img className="icone" src={urlImage(`${MATERIEL.plateau.icones}/icone_${props.nom}.png`)} alt={props.titre} title={props.titre} />;
 }
 
 /** Une piste du plateau : des cases remplies jusqu'au niveau atteint, ce qu'elle rapporte, le coût suivant, les blasons. */
@@ -66,7 +67,7 @@ function Piste(props: {
   niveau: number;
   niveauMax: number;
   /** Ce que la piste donne à chaque début de lignée : une icône et un nombre. null si elle ne donne rien. */
-  rapporte: { icone: string; valeur: number; titre: string } | null;
+  rapporte: { icone: string; valeur: number | string; titre: string } | null;
   /** Ce qu'il faut pour passer au niveau suivant, ou null au niveau maximum. */
   prochain: string | null;
   blasons: number;
@@ -99,9 +100,19 @@ function Piste(props: {
   );
 }
 
-/** Le coût du prochain niveau d'une jauge, avec son unité lue dans le plateau (Or ou Ressources). */
-function texteCoutJauge(niveau: { cout: number; paiement: 'or' | 'ressources' }): string {
-  return niveau.paiement === 'or' ? `${niveau.cout} Or` : `${niveau.cout} Ressource(s)`;
+/** Le coût du prochain niveau d'une jauge, avec son unité lue dans le plateau (Or ou Ressources). Privilège 7 compris. */
+function texteCoutJauge(
+  joueur: VueJoueur,
+  piste: 'economie' | 'population',
+  niveau: { cout: number; paiement: 'or' | 'ressources' },
+): string {
+  return niveau.paiement === 'or' ? `${coutEnOrDuNiveau(joueur, piste, niveau.cout)} Or` : `${niveau.cout} Ressource(s)`;
+}
+
+/** Ce que la jauge de Population fait prendre à chaque début de lignée : « 3 », ou « 3 + 1 » avec une carte révélée. */
+function cartesDeLaJauge(niveau: { cartes: number; revele: number } | undefined): string {
+  if (!niveau) return '0';
+  return niveau.revele > 0 ? `${niveau.cartes} + ${niveau.revele}` : String(niveau.cartes);
 }
 
 function Jauges(props: { joueur: VueJoueur }) {
@@ -135,7 +146,7 @@ function Jauges(props: { joueur: VueJoueur }) {
           valeur: economie[j.niveauEconomie]?.or ?? 0,
           titre: 'Or pris à chaque début de lignée',
         }}
-        prochain={prochaineEconomie === undefined ? null : texteCoutJauge(prochaineEconomie)}
+        prochain={prochaineEconomie === undefined ? null : texteCoutJauge(j, 'economie', prochaineEconomie)}
         blasons={b.economie}
       />
       <Piste
@@ -145,10 +156,10 @@ function Jauges(props: { joueur: VueJoueur }) {
         niveauMax={population.length - 1}
         rapporte={{
           icone: 'pioche',
-          valeur: population[j.niveauPopulation]?.cartes ?? 0,
-          titre: 'Cartes piochées à chaque début de lignée',
+          valeur: cartesDeLaJauge(population[j.niveauPopulation]),
+          titre: 'Cartes piochées (+ cartes révélées) à chaque début de lignée',
         }}
-        prochain={prochainePopulation === undefined ? null : texteCoutJauge(prochainePopulation)}
+        prochain={prochainePopulation === undefined ? null : texteCoutJauge(j, 'population', prochainePopulation)}
         blasons={b.population}
       />
       <Piste
@@ -195,7 +206,7 @@ function RessourcesEnJeu(props: { joueur: VueJoueur }) {
               <img
                 key={i}
                 className={ressource.privilege === null ? 'ressource' : 'ressource bonus'}
-                src={`/plateau/icone_${type}.png`}
+                src={urlImage(`${MATERIEL.plateau.icones}/icone_${type}.png`)}
                 alt={nom}
                 title={`${nom} : ${origine(ressource)}`}
               />
@@ -292,6 +303,7 @@ function cartesParLignee(joueur: VueJoueur): string {
   if (gains.cartesPiocheesPuisDefaussees > 0) {
     details.push(`${gains.cartesPiocheesPuisDefaussees} piochée puis défaussée`);
   }
+  if (gains.cartesRevelees > 0) details.push(`${gains.cartesRevelees} révélée(s)`);
   if (details.length === 0) return String(gains.cartesPiochees);
   return `${gains.cartesPiochees} piochées + ${details.join(' + ')}`;
 }

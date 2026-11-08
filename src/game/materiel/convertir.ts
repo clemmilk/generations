@@ -114,8 +114,9 @@ function premierNombre(texte: string, motif: RegExp): number | null {
 }
 
 function convertirPlateau(csv: string, erreurs: string[]): Plateau {
-  const plateau: Plateau = { noblesse: [], economie: [], population: [] };
+  const plateau: Plateau = { icones: '', noblesse: [], economie: [], population: [] };
   for (const ligne of lireCsv(csv)) {
+    if (plateau.icones === '') plateau.icones = (ligne['Dossier'] ?? '').replace(/\\/g, '/');
     const piste = ligne['Piste'] ?? '';
     const statut = ligne['Statut'] ?? '';
     const texteCout = ligne['Coût'] ?? '';
@@ -138,7 +139,9 @@ function convertirPlateau(csv: string, erreurs: string[]): Plateau {
         erreurs.push(`Plateau, Population : « Pioche N cartes » attendu dans « ${statut} »`);
         continue;
       }
-      plateau.population.push({ cout, paiement, cartes, blasons });
+      // « Pioche 3 cartes + révèle 1 carte » : les cartes révélées s'ajoutent à la pioche.
+      const revele = premierNombre(statut, /révèle (\d+)/i) ?? 0;
+      plateau.population.push({ cout, paiement, cartes, revele, blasons });
     } else {
       erreurs.push(`Plateau : piste inconnue « ${piste} »`);
     }

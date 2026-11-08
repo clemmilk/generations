@@ -26,6 +26,16 @@ export type EffetPrivilege =
   | { type: 'rechercheDebutLignee'; cartes: number }
   /** Début de lignée : pioche des cartes en plus, puis en défausse autant de sa main. */
   | { type: 'piocheEtDefausseDebutLignee'; cartes: number }
+  /** Début de lignée, une fois tout l'Or reçu : « or » Or de plus par tranche de « tranche » Or en réserve. */
+  | { type: 'orParStockDebutLignee'; or: number; tranche: number }
+  /** Début de lignée, après la pioche : révèle des cartes en plus. */
+  | { type: 'reveleDebutLignee'; cartes: number }
+  /** Début de lignée, une fois toute la mise en place faite : le joueur peut acheter 1 carte. */
+  | { type: 'achatDebutLignee' }
+  /** Après chaque achat, quelle qu'en soit l'origine, le joueur peut acheter 1 carte de plus (sans enchaîner). */
+  | { type: 'achatSupplementaire' }
+  /** Monter d'un niveau en Population coûte moins d'Or (fin de lignée et cartes), jamais moins de 0. */
+  | { type: 'reductionPopulation'; or: number }
   /** En plus de l'action de son tour, 1 fois par tour : payer pour piocher. */
   | { type: 'actionPioche'; cout: CoutEffet; cartes: number }
   /** En plus de l'action de son tour, 1 fois par tour : payer pour trasher. */
@@ -43,14 +53,15 @@ export const EFFETS_PRIVILEGES: Record<number, EffetPrivilege> = {
   2: { type: 'bonusRessource', si: 'avancee', donne: 'erudit' },
   3: { type: 'bonusRessource', si: 'avancee', donne: 'pierre' },
   4: { type: 'bonusRessource', si: 'avancee', donne: 'metal' },
-  5: { type: 'blason', piste: 'population' },
-  6: { type: 'blason', piste: 'economie' },
-  7: { type: 'blason', piste: 'noblesse' },
+  // V3 : la tuile 5 se compte elle-même (décision VV).
+  5: { type: 'orDebutLignee', or: 2, par: 'tuile_privilege' },
+  6: { type: 'orParStockDebutLignee', or: 2, tranche: 5 },
+  7: { type: 'reductionPopulation', or: 5 },
   8: { type: 'rechercheDebutLignee', cartes: 1 },
-  9: { type: 'orDebutLignee', or: 2, par: 'blason_population' },
-  10: { type: 'orDebutLignee', or: 2, par: 'blason_noblesse' },
-  11: { type: 'orDebutLignee', or: 2, par: 'blason_economie' },
-  12: { type: 'piocheEtDefausseDebutLignee', cartes: 1 },
+  9: { type: 'achatSupplementaire' },
+  10: { type: 'achatDebutLignee' },
+  11: { type: 'actionTrash', cout: { or: 8, pierre: 0, metal: 0 }, cartes: 1 },
+  12: { type: 'reveleDebutLignee', cartes: 1 },
   13: { type: 'actionTrash', cout: { or: 0, pierre: 3, metal: 0 }, cartes: 1 },
   14: { type: 'actionPioche', cout: { or: 0, pierre: 0, metal: 2 }, cartes: 1 },
   15: { type: 'actionPioche', cout: { or: 6, pierre: 0, metal: 0 }, cartes: 1 },

@@ -4,14 +4,20 @@ export type Couleur = 'bleu' | 'jaune' | 'rouge' | 'vert';
 export type Origine = 'depart' | 'asymetrie' | 'avancee';
 export type Piste = 'economie' | 'population';
 
-/** Ce qu'un effet peut compter : des ressources dans l'aire de jeu ou des blasons. */
+/**
+ * Ce qu'un effet peut compter : des ressources dans l'aire de jeu, des blasons,
+ * l'Or de sa réserve (« or:5 » = par stock d'or), les cartes de son aire de jeu, ses tuiles Privilège.
+ */
 export type Compteur =
   | 'pierre'
   | 'metal'
   | 'erudit'
   | 'blason_noblesse'
   | 'blason_economie'
-  | 'blason_population';
+  | 'blason_population'
+  | 'or'
+  | 'carte'
+  | 'tuile_privilege';
 
 /** Coût d'achat d'une carte. « ressource » = Pierre ou Métal, au choix. */
 export interface Cout {
@@ -45,6 +51,10 @@ export type Gain =
   | { type: 'vendre'; orParPierre: number; orParMetal: number }
   /** Acheter une carte de la Rivière, comme l'action Acheter (coût normal, trash possible pour 1 Or). */
   | { type: 'achat'; nombre: number }
+  /** Jouer une carte de sa main en plus, une fois la carte en cours entièrement résolue (décision QQ). */
+  | { type: 'joue'; nombre: number }
+  /** Poser la première carte de sa pioche dans son aire de jeu, sans effet (décision RR). */
+  | { type: 'revele'; nombre: number }
   | { type: 'rejouer' };
 
 /**
@@ -90,11 +100,14 @@ export interface Privilege {
 export type Paiement = 'or' | 'ressources';
 
 export interface Plateau {
+  /** Le dossier des icônes du plateau (colonne Dossier du csv), par exemple « visuels/V3/plateau ». */
+  icones: string;
   /** Les 4 emplacements de Privilège, dans l'ordre. */
   noblesse: { erudits: number; blasons: number }[];
   /** Un élément par niveau, le premier étant le niveau de départ. */
   economie: { cout: number; paiement: Paiement; or: number; blasons: number }[];
-  population: { cout: number; paiement: Paiement; cartes: number; blasons: number }[];
+  /** « revele » : cartes révélées en début de lignée, après la pioche. */
+  population: { cout: number; paiement: Paiement; cartes: number; revele: number; blasons: number }[];
 }
 
 export interface Materiel {

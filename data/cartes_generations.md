@@ -34,8 +34,10 @@ Un code est une suite d'étapes séparées par ` ; `. Les étapes sont indépend
   - `vendre(pierre:2 metal:3)` : paye de la Pierre et du Métal pour gagner 2 Or par Pierre et 3 Or par Métal
   - `rejouer` : Rejouer
   - `achete(1)` : achète 1 carte de la Rivière, en plus de l'action du tour, comme l'action Acheter
+  - `joue(1)` : joue 1 carte de sa main en plus, une fois la première carte entièrement résolue (effet puis Effet Rouge). C'est une carte jouée normale : effet, Effet Rouge, Privilège 20
+  - `revele(1)` : révèle la première carte de sa pioche et la pose dans son aire de jeu, sans effet ni Effet Rouge (sans ressource, elle va dans la défausse). Compte comme 1 carte piochée : révéler la dernière carte de son deck fait gagner
   - les majuscules sont ignorées (`Or+3` se lit `or+3`)
-- `/ compteur:tranche` (facultatif) : le gain est obtenu 1 fois par tranche de ce que possède le joueur. On peut compter `pierre`, `metal`, `erudit`, `blason_noblesse`, `blason_economie`, `blason_population`. Sans `:tranche`, c'est 1 fois par élément. Exemples : `pioche(1) / pierre:2`, `or+2 / blason_noblesse`. Avec un `payer`, on paye 1 seule fois pour tous les gains.
+- `/ compteur:tranche` (facultatif) : le gain est obtenu 1 fois par tranche de ce que possède le joueur. On peut compter `pierre`, `metal`, `erudit`, `blason_noblesse`, `blason_economie`, `blason_population`, `or` (l'Or de sa réserve ; `or:5` = par stock d'or), `carte` (les cartes de son aire de jeu, la carte jouée comprise ; `carte:2` = par paire), `tuile_privilege` (ses tuiles Privilège). Sans `:tranche`, c'est 1 fois par élément. Exemples : `pioche(1) / pierre:2`, `or+2 / blason_noblesse`. Avec un `payer`, on paye 1 seule fois pour tous les gains, et on compte APRÈS avoir payé : l'Or dépensé et les cartes défaussées pour payer ne comptent plus.
 - `repetable:` devant une étape : elle peut être refaite autant de fois que le joueur le veut. Exemple : `or+2 ; repetable: payer(or:8) > pioche(1)`.
 
 Le bandeau en haut des cartes Avancée est purement visuel : blanc pour les personnages (effet uniquement pour le joueur actif), noir pour les bâtiments (qui proposent tous un Effet Rouge). Il n'a aucun effet en jeu.

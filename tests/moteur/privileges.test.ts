@@ -155,27 +155,42 @@ describe('détail des ressources de l\'aire de jeu', () => {
   });
 });
 
-describe('Privilèges 5, 6 et 7 : 1 blason supplémentaire', () => {
-  it('ajoute 1 blason de la bonne piste', () => {
-    const joueur = scene().joueurs[0]!;
-    joueur.privileges = [5];
-    expect(blasons(joueur)).toEqual({ noblesse: 0, economie: 0, population: 1 });
-    joueur.privileges = [6];
-    expect(blasons(joueur)).toEqual({ noblesse: 0, economie: 1, population: 0 });
-    joueur.privileges = [7];
-    expect(blasons(joueur)).toEqual({ noblesse: 1, economie: 0, population: 0 });
+describe('Privilège 7 : monter en Population coûte 5 Or de moins (décision WW)', () => {
+  it('s\'applique aux cartes : Science (5 Or) devient gratuite, son Effet Rouge (6 Or) coûte 1 Or', () => {
+    const etat = avec([7], { main: [c('Science')] });
+    let apres = faire(etat, { type: 'jouer', carte: c('Science') });
+    expect(apres.attente).toMatchObject({ type: 'payer', joueur: 0 });
+    apres = faire(apres, { type: 'payer', paiement: [] });
+    expect(apres.joueurs[0]!.niveauPopulation).toBe(1);
+    expect(apres.joueurs[0]!.or).toBe(0);
   });
 
-  it('s\'ajoute aux blasons du niveau actuel', () => {
-    const joueur = scene().joueurs[0]!;
-    joueur.niveauEconomie = 4;
-    joueur.privileges = [6, 7]; // 2 Privilèges : 1 blason Noblesse par l'emplacement, +1 par le Privilège 7
-    expect(blasons(joueur)).toEqual({ noblesse: 2, economie: 4, population: 0 });
-  });
-
-  it('compte dans les effets des cartes (Justice : 2 Or par blason Noblesse)', () => {
-    const apres = faire(avec([7], { main: [c('Justice')] }), { type: 'jouer', carte: c('Justice') });
+  it('ne fait jamais descendre le coût sous 0, et ne change rien au coût en Pierre ou en Métal', () => {
+    const etat = avec([7], { main: [c('Science')], or: 2 });
+    const apres = faire(etat, { type: 'jouer', carte: c('Science') }, { type: 'payer', paiement: [] });
     expect(apres.joueurs[0]!.or).toBe(2);
+  });
+
+  it('ne réduit pas le coût de l\'Économie', () => {
+    const etat = avec([7], { main: [c('Économie')], aire: [c('Cachot')] });
+    expect(permises(faire(etat, { type: 'jouer', carte: c('Économie') }))).toEqual([
+      { type: 'payer', paiement: [c('Cachot')] },
+      { type: 'passer' },
+    ]);
+  });
+
+  it('s\'applique en fin de lignée quand le niveau de Population se paye en Or', () => {
+    const niveau = MATERIEL.plateau.population[1]!;
+    const avant = { ...niveau };
+    Object.assign(niveau, { cout: 3, paiement: 'or' });
+    try {
+      expect(typesPermis(faire(avec([], { or: 0 }), { type: 'finLignee' }))).not.toContain('monter');
+      const etat = faire(avec([7], { or: 0 }), { type: 'finLignee' });
+      expect(permises(etat)).toContainEqual({ type: 'monter', piste: 'population' });
+      expect(faire(etat, { type: 'monter', piste: 'population' }).joueurs[0]!.niveauPopulation).toBe(1);
+    } finally {
+      Object.assign(niveau, avant);
+    }
   });
 });
 
@@ -207,7 +222,7 @@ describe('Privilège 16 : 1 Érudit permanent', () => {
   });
 });
 
-describe('Privilèges 9, 10, 11 et 19 : Or en début de lignée', () => {
+describe('Privilèges 5, 6 et 19 : Or en début de lignée', () => {
   const orApresNouvelleLignee = (privileges: number[], prepare?: (etat: Etat) => void) => {
     const etat = avec(privileges);
     prepare?.(etat);
@@ -219,23 +234,18 @@ describe('Privilèges 9, 10, 11 et 19 : Or en début de lignée', () => {
     expect(orApresNouvelleLignee([19])).toBe(6);
   });
 
-  it('Privilège 9 : 2 Or par blason Population', () => {
-    expect(orApresNouvelleLignee([9])).toBe(3);
-    expect(orApresNouvelleLignee([9], (e) => (e.joueurs[0]!.niveauPopulation = 4))).toBe(9);
+  it('Privilège 5 : 2 Or par tuile Privilège, la tuile 5 comprise (décision VV)', () => {
+    expect(orApresNouvelleLignee([5])).toBe(3 + 2);
+    expect(orApresNouvelleLignee([5, 19, 16])).toBe(3 + 3 + 2 * 3);
   });
 
-  it('Privilège 10 : 2 Or par blason Noblesse', () => {
-    // 3 Privilèges : 2 blasons Noblesse.
-    expect(orApresNouvelleLignee([10, 1, 16])).toBe(7);
-  });
-
-  it('Privilège 11 : 2 Or par blason Économie, en plus de l\'Or du niveau', () => {
-    // Niveau 3 : 8 Or et 2 blasons Économie.
-    expect(orApresNouvelleLignee([11], (e) => (e.joueurs[0]!.niveauEconomie = 3))).toBe(12);
-  });
-
-  it('compte les blasons donnés par les Privilèges 5, 6 et 7', () => {
-    expect(orApresNouvelleLignee([9, 5])).toBe(5);
+  it('Privilège 6 : 2 Or par stock de 5 Or, une fois tout l\'Or reçu (décision UU)', () => {
+    // 3 Or du niveau : aucun stock complet.
+    expect(orApresNouvelleLignee([6])).toBe(3);
+    // 3 Or du niveau + 3 Or du Privilège 19 = 6 Or : 1 stock.
+    expect(orApresNouvelleLignee([6, 19])).toBe(6 + 2);
+    // Avec le Privilège 18, l'Or gardé compte aussi : 7 + 3 = 10 Or, 2 stocks.
+    expect(orApresNouvelleLignee([6, 18], (e) => (e.joueurs[0]!.or = 7))).toBe(10 + 4);
   });
 });
 
@@ -270,43 +280,153 @@ describe('Privilège 8 : 1 carte de moins, puis 1 carte au choix', () => {
   });
 });
 
-describe('Privilège 12 : 1 carte de plus, puis défausser 1 carte', () => {
+describe('Privilège 12 : révéler 1 carte en début de lignée', () => {
   const pioche = [c('Épicerie'), c('Cachot'), c('Marché'), c('Forgeron'), c('Imprimeur')];
 
-  it('fait piocher 4 cartes, puis oblige à en défausser 1 de sa main', () => {
+  it('révèle 1 carte après la pioche : elle va dans l\'aire de jeu', () => {
     const apres = finirLignee(avec([12], { pioche: [...pioche] }));
     const alice = apres.joueurs[0]!;
-    expect(alice.main).toHaveLength(4);
-    expect(apres.attente).toEqual({ type: 'debutDefausse', joueur: 0, restant: 1 });
-    expect(permises(apres)).toEqual(alice.main.map((carte) => ({ type: 'defausser', carte })));
-  });
-
-  it('place la carte dans la défausse (elle n\'est pas trashée)', () => {
-    const etat = finirLignee(avec([12], { pioche: [...pioche] }));
-    const jetee = etat.joueurs[0]!.main[0]!;
-    const apres = faire(etat, { type: 'defausser', carte: jetee });
-    expect(apres.joueurs[0]!.main).toHaveLength(3);
-    expect(apres.joueurs[0]!.defausse).toEqual([jetee]);
-    expect(apres.trash).toEqual([]);
+    expect(alice.main).toHaveLength(3);
+    expect(alice.aireDeJeu).toHaveLength(1);
+    expect(alice.pioche).toHaveLength(1);
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
   });
 
-  it('fait gagner si la carte supplémentaire est la dernière du deck', () => {
+  it('fait gagner si la carte révélée est la dernière du deck', () => {
     const apres = finirLignee(avec([12], { pioche: pioche.slice(0, 4) }));
     expect(apres.vainqueur).toBe(0);
   });
 
-  it('s\'applique avant le Privilège 8 quand le joueur possède les deux (décision II)', () => {
-    // 3 cartes - 1 (Privilège 8) = 2 cartes, puis 1 de plus (Privilège 12).
+  it('s\'applique avant le Privilège 8 quand le joueur possède les deux (décision UU)', () => {
+    // 3 cartes - 1 (Privilège 8) = 2 cartes, puis 1 carte révélée, puis 1 carte au choix.
     let apres = finirLignee(avec([12, 8], { pioche: [...pioche, c('Ferrailleur'), c('Colporteur')] }));
-    expect(apres.joueurs[0]!.main).toHaveLength(3);
-    expect(apres.attente?.type).toBe('debutDefausse');
-    apres = faire(apres, { type: 'defausser', carte: apres.joueurs[0]!.main[0]! });
     expect(apres.joueurs[0]!.main).toHaveLength(2);
+    expect(apres.joueurs[0]!.aireDeJeu).toHaveLength(1);
     expect(apres.attente?.type).toBe('debutRecherche');
     apres = faire(apres, { type: 'rechercher', carte: apres.joueurs[0]!.pioche[0]! });
     expect(apres.joueurs[0]!.main).toHaveLength(3);
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  it('s\'ajoute aux cartes révélées par la jauge de Population', () => {
+    const niveau = MATERIEL.plateau.population[0]!;
+    niveau.revele = 1;
+    try {
+      const apres = finirLignee(avec([12], { pioche: [...pioche, c('Ferrailleur')] }));
+      expect(apres.joueurs[0]!.main).toHaveLength(3);
+      expect(apres.joueurs[0]!.aireDeJeu).toHaveLength(2);
+    } finally {
+      niveau.revele = 0;
+    }
+  });
+});
+
+describe('Privilège 9 : après chaque achat, un 2e achat (décision XX)', () => {
+  const riviere = (etat: Etat) => {
+    etat.riviere = [c('Remouleur ambulant'), c('Halle des négociants')];
+    return etat;
+  };
+
+  it('propose un achat en plus après l\'action Acheter, une fois la carte remplacée', () => {
+    const etat = riviere(avec([9], { or: 10 }));
+    const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
+    expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0, privilege9: false });
+    expect(permises(apres)).toContainEqual({ type: 'acheter', carte: c('Halle des négociants'), paiement: [] });
+    expect(permises(apres)).toContainEqual({ type: 'passer' });
+  });
+
+  it('l\'achat en plus ne donne droit à aucun autre', () => {
+    const etat = riviere(avec([9], { or: 10 }));
+    etat.piocheCommune = [c('Banque'), ...etat.piocheCommune];
+    const apres = faire(
+      etat,
+      { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] },
+      { type: 'remplacerPioche' },
+      { type: 'acheter', carte: c('Halle des négociants'), paiement: [] },
+      { type: 'remplacerPioche' },
+    );
+    expect(apres.joueurs[0]!.statistiques.cartesAchetees).toBe(2);
+    expect(apres.joueurs[0]!.or).toBe(6);
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  it('s\'applique aussi à un achat fait par une carte', () => {
+    const epicerie = c('Épicerie');
+    const effet = MATERIEL.cartes.find((carte) => carte.id === epicerie)!;
+    const avant = effet.effet;
+    effet.effet = [{ cout: null, gain: { type: 'achat', nombre: 1 }, par: null, repetable: false }];
+    try {
+      const etat = riviere(avec([9], { main: [epicerie], or: 10 }));
+      let apres = faire(etat, { type: 'jouer', carte: epicerie });
+      apres = faire(apres, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
+      expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0, privilege9: false });
+    } finally {
+      effet.effet = avant;
+    }
+  });
+
+  it('ne propose rien si plus aucun achat n\'est possible', () => {
+    const etat = riviere(avec([9], { or: 2 }));
+    const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+});
+
+describe('Privilège 10 : acheter 1 carte une fois la nouvelle lignée en place (décision YY)', () => {
+  const pioche = [c('Épicerie'), c('Cachot'), c('Marché'), c('Forgeron'), c('Imprimeur')];
+  const prete = (privileges: number[], or = 0) => {
+    const etat = avec(privileges, { pioche: [...pioche], or });
+    etat.riviere = [c('Remouleur ambulant'), c('Halle des négociants')];
+    return etat;
+  };
+
+  it('propose un achat après la pioche, avec l\'Or de la nouvelle lignée', () => {
+    const apres = faire(prete([10]), { type: 'finLignee' });
+    expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0, privilege9: true });
+    expect(apres.joueurs[0]!.main).toHaveLength(3);
+    expect(apres.joueurs[0]!.or).toBe(3);
+  });
+
+  it('la carte achetée peut remplacer une carte qu\'on vient de piocher', () => {
+    let apres = faire(prete([10]), { type: 'finLignee' });
+    const remplacee = apres.joueurs[0]!.main[0]!;
+    apres = faire(apres, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] });
+    expect(permises(apres)).toContainEqual({ type: 'remplacer', carte: remplacee });
+    apres = faire(apres, { type: 'remplacer', carte: remplacee });
+    expect(apres.joueurs[0]!.main).toContain(c('Remouleur ambulant'));
+    expect(apres.joueurs[0]!.or).toBe(1);
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  it('vient après le Privilège 8', () => {
+    let apres = faire(prete([10, 8]), { type: 'finLignee' });
+    expect(apres.attente?.type).toBe('debutRecherche');
+    apres = faire(apres, { type: 'rechercher', carte: apres.joueurs[0]!.pioche[0]! });
+    expect(apres.attente?.type).toBe('achatEnPlus');
+  });
+
+  it('le Privilège 9 s\'y applique : un 2e achat', () => {
+    let apres = faire(prete([10, 9, 19]), { type: 'finLignee' });
+    apres = faire(apres, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
+    expect(apres.attente).toEqual({ type: 'achatEnPlus', joueur: 0, privilege9: false });
+  });
+
+  it('le joueur peut refuser', () => {
+    const apres = faire(prete([10]), { type: 'finLignee' }, { type: 'passer' });
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+});
+
+describe('Privilège 11 : 8 Or pour trasher 1 carte, en plus de son action', () => {
+  it('suit les mêmes règles que les Privilèges 13 à 15', () => {
+    const etat = avec([11], { main: [c('Épicerie'), c('Marché')], or: 8 });
+    expect(permises(avec([11], { main: [c('Épicerie')], or: 7 })).filter((a) => a.type === 'utiliserPrivilege')).toEqual([]);
+    let apres = faire(etat, { type: 'utiliserPrivilege', numero: 11, paiement: [] });
+    expect(apres.joueurs[0]!.or).toBe(0);
+    expect(apres.attente).toMatchObject({ type: 'trashPrivilege', avantAction: true });
+    apres = faire(apres, { type: 'trasher', carte: c('Marché') });
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 0 });
+    expect(permises(apres)).not.toContainEqual({ type: 'finLignee' });
   });
 });
 

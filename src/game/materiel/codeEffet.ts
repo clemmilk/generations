@@ -10,6 +10,9 @@ const COMPTEURS: readonly Compteur[] = [
   'blason_noblesse',
   'blason_economie',
   'blason_population',
+  'or',
+  'carte',
+  'tuile_privilege',
 ];
 
 function entier(texte: string, code: string): number {
@@ -60,6 +63,9 @@ function lireGain(texte: string, code: string): Gain {
         return { type: nom, nombre: entier(argument, code) };
       case 'achete':
         return { type: 'achat', nombre: entier(argument, code) };
+      case 'joue':
+      case 'revele':
+        return { type: nom, nombre: entier(argument, code) };
       case 'lvlup':
         if (argument !== 'economie' && argument !== 'population') {
           throw new Error(`Piste inconnue « ${argument} » dans « ${code} »`);

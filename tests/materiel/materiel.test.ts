@@ -93,7 +93,7 @@ describe('matériel importé', () => {
       expect(existsSync(new URL(copie, racine)), copie).toBe(true);
     }
     for (const icone of ['or', 'pioche', 'economie', 'population', 'noblesse', 'pierre', 'metal', 'erudit']) {
-      const copie = `visuels-web/plateau/icone_${icone}.png`;
+      const copie = `${plateau.icones.replace(/^visuels\//, 'visuels-web/')}/icone_${icone}.png`;
       expect(existsSync(new URL(copie, racine)), copie).toBe(true);
     }
   });
@@ -172,7 +172,19 @@ describe('convertirMateriel', () => {
       { cout: 4, paiement: 'or', or: 8, blasons: 2 },
       { cout: 5, paiement: 'or', or: 10, blasons: 3 },
     ]);
-    expect(materielDeTest.plateau.population[1]).toEqual({ cout: 1, paiement: 'ressources', cartes: 3, blasons: 1 });
+    expect(materielDeTest.plateau.population[1]).toEqual({ cout: 1, paiement: 'ressources', cartes: 3, revele: 0, blasons: 1 });
+  });
+
+  it('lit les cartes révélées par la jauge de Population (« Pioche 3 cartes + révèle 1 carte »)', () => {
+    const plateau = [
+      'Dossier,Identifiant,Piste,Coût,Statut',
+      'x,y,Population,,Pioche 3 cartes + révèle 1 carte en début de lignée',
+      'x,y,Population,5 Or,Pioche 4 cartes en début de lignée',
+    ].join('\n');
+    expect(convertirMateriel(csvCartes, csvPrivileges, plateau).plateau.population).toEqual([
+      { cout: 0, paiement: 'or', cartes: 3, revele: 1, blasons: 0 },
+      { cout: 5, paiement: 'or', cartes: 4, revele: 0, blasons: 0 },
+    ]);
   });
 
   it('signale une ligne de plateau illisible', () => {

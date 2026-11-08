@@ -3,7 +3,7 @@ import { carte, privilege } from './cartes.ts';
 import { ordreDuTour } from './creation.ts';
 import type { Etat, Joueur } from './etat.ts';
 import { melanger } from './hasard.ts';
-import { debuterLignee, noter, piocher } from './lignee.ts';
+import { debuterLignee, noter, piocher, revelerCartes } from './lignee.ts';
 import { MATERIEL } from './materiel/index.ts';
 import type { Cout, CoutEffet, Etape, Piste } from './materiel/index.ts';
 import { effetsPrivilege, totalPrivilege } from './privileges.ts';
@@ -108,9 +108,26 @@ export function peutMonterEnFinDeLignee(
   const actuel = piste === 'economie' ? joueur.niveauEconomie : joueur.niveauPopulation;
   const suivant = MATERIEL.plateau[piste][actuel + 1];
   if (!suivant) return false;
-  if (suivant.paiement === 'or') return joueur.or >= suivant.cout;
+  if (suivant.paiement === 'or') return joueur.or >= coutEnOrDuNiveau(joueur, piste, suivant.cout);
   const r = ressourcesEnJeu(joueur);
   return r.pierre + r.metal - ressourcesUtilisees >= suivant.cout;
+}
+
+/** Privilège 7 : monter en Population coûte moins d'Or, jamais moins de 0 (décision WW). */
+function reductionPopulation(joueur: Pick<Joueur, 'privileges'>): number {
+  return totalPrivilege(joueur, 'reductionPopulation', (effet) => effet.or);
+}
+
+/** Le coût en Or d'un niveau de jauge, réduction du Privilège 7 déduite pour la Population. */
+export function coutEnOrDuNiveau(joueur: Pick<Joueur, 'privileges'>, piste: Piste, cout: number): number {
+  return piste === 'population' ? Math.max(0, cout - reductionPopulation(joueur)) : cout;
+}
+
+/** Ce que coûte une étape d'effet à ce joueur : le Privilège 7 réduit l'Or à payer pour monter en Population. */
+export function coutDeLEtape(joueur: Pick<Joueur, 'privileges'>, etape: Etape): CoutEffet | null {
+  const cout = etape.cout;
+  if (!cout || etape.gain.type !== 'lvlup' || etape.gain.piste !== 'population') return cout;
+  return { ...cout, or: Math.max(0, cout.or - reductionPopulation(joueur)) };
 }
 
 /** Les jauges que le joueur peut encore monter pendant cette fin de lignée (1 niveau au plus par jauge). */
@@ -238,7 +255,13 @@ function prendrePrivilegeVisible(etat: Etat, joueur: Joueur, numero: number): vo
 function nombreDeGains(joueur: Joueur, etape: Etape): number {
   const fois = etape.par ? Math.floor(compter(joueur, etape.par.compteur) / etape.par.tranche) : 1;
   const gain = etape.gain;
-  if (gain.type === 'pioche' || gain.type === 'trash' || gain.type === 'recherche') {
+  if (
+    gain.type === 'pioche' ||
+    gain.type === 'trash' ||
+    gain.type === 'recherche' ||
+    gain.type === 'joue' ||
+    gain.type === 'revele'
+  ) {
     return fois * gain.nombre;
   }
   return fois;
@@ -254,7 +277,10 @@ function gainPossible(etat: Etat, joueur: Joueur, etape: Etape): boolean {
       return true;
     case 'pioche':
     case 'recherche':
+    case 'revele':
       return joueur.pioche.length > 0;
+    case 'joue':
+      return joueur.main.length > 0;
     case 'trash':
       return peutTrasher(joueur);
     case 'vendre':
@@ -271,11 +297,22 @@ function gainPossible(etat: Etat, joueur: Joueur, etape: Etape): boolean {
   }
 }
 
+/**
+ * Les façons de payer une étape. On paye d'abord, puis on compte (décision SS) : on ne propose pas
+ * un paiement après lequel il ne resterait rien à gagner (par exemple, payer en défaussant les cartes comptées).
+ */
 function paiementsDeLEtape(joueur: Joueur, etape: Etape): string[][] {
-  const cout = etape.cout;
+  const cout = coutDeLEtape(joueur, etape);
   if (!cout) return [[]];
   if (joueur.or < cout.or) return [];
-  return optionsDePaiement(joueur, { pierre: cout.pierre, metal: cout.metal, ressource: 0 });
+  const options = optionsDePaiement(joueur, { pierre: cout.pierre, metal: cout.metal, ressource: 0 });
+  if (!etape.par) return options;
+  return options.filter((paiement) => {
+    const copie = copieDesCartes(joueur);
+    copie.or -= cout.or;
+    defausserDeLAire(copie, paiement);
+    return nombreDeGains(copie, etape) > 0;
+  });
 }
 
 function paiementsDeLAchat(joueur: Joueur, id: string): string[][] {
@@ -298,11 +335,22 @@ function achatsPossibles(etat: Etat, joueur: Joueur): Action[] {
  * Achète une carte de la Rivière (action Acheter, ou gain « achete » d'une carte) :
  * la carte va dans la main, la Rivière est complétée aussitôt.
  */
-/** Ce qui suit un achat : le trash à 1 Or (règles), ou le choix de la carte remplacée (essai). */
-function apresAchat(joueur: Joueur, id: string): Tache {
-  return PARAMETRES.carteAcheteeVa === 'remplacement'
-    ? { type: 'remplacementAchat', joueur: joueur.id, carte: id }
-    : { type: 'trashAchat', joueur: joueur.id };
+/**
+ * Ce qui suit un achat : le trash à 1 Or (règles), ou le choix de la carte remplacée (essai).
+ * Puis, avec le Privilège 9, un achat en plus (décision XX), sauf si cet achat était déjà l'achat en plus.
+ */
+function apresAchat(joueur: Joueur, id: string, privilege9 = true): Tache[] {
+  const taches: Tache[] = [
+    PARAMETRES.carteAcheteeVa === 'remplacement'
+      ? { type: 'remplacementAchat', joueur: joueur.id, carte: id }
+      : { type: 'trashAchat', joueur: joueur.id },
+  ];
+  if (privilege9) {
+    for (const _ of effetsPrivilege(joueur, 'achatSupplementaire')) {
+      taches.push({ type: 'achatEnPlus', joueur: joueur.id, privilege9: false });
+    }
+  }
+  return taches;
 }
 
 /**
@@ -457,6 +505,8 @@ function actionsDuGain(etat: Etat, joueur: Joueur, attente: RefEtape): Action[] 
     case 'or':
     case 'pioche':
     case 'lvlup':
+    case 'joue':
+    case 'revele':
       return [];
   }
 }
@@ -513,6 +563,10 @@ export function getLegalActions(etat: Etat, joueurId: number): Action[] {
         .map((id): Action => ({ type: 'rechercher', joueur: j, carte: id }));
     case 'debutDefausse':
       return joueur.main.map((id): Action => ({ type: 'defausser', joueur: j, carte: id }));
+    case 'jouerEnPlus':
+      return [...joueur.main.map((id): Action => ({ type: 'jouer', joueur: j, carte: id })), passer];
+    case 'achatEnPlus':
+      return [...achatsPossibles(etat, joueur), passer];
   }
 }
 
@@ -554,6 +608,48 @@ function utiliserPrivilege(
   }
 }
 
+/**
+ * Pose une carte de la main en jeu et renvoie ce qu'il faut résoudre : son effet, puis l'Effet Rouge
+ * du ou des adversaires concernés, puis « finCarte ». Sert à l'action Jouer et à « Rejouer 1 carte ».
+ */
+function jouerCarte(etat: Etat, joueur: Joueur, id: string): Tache[] {
+  const j = joueur.id;
+  const c = carte(id);
+  retirer(joueur.main, c.id);
+  const r = c.ressources;
+  // Une carte sans ressource va directement dans la défausse.
+  if (r.pierre + r.metal + r.erudit > 0) joueur.aireDeJeu.push(c.id);
+  else joueur.defausse.push(c.id);
+  reveler(etat, c.id);
+  joueur.statistiques.cartesJouees++;
+  noter(etat, joueur, `${joueur.nom} joue ${c.nom}.`);
+  if (c.origine === 'avancee') {
+    const or = totalPrivilege(joueur, 'orParCarteAvanceeJouee', (effet) => effet.or);
+    if (or > 0) {
+      joueur.or += or;
+      noter(etat, joueur, `${joueur.nom} gagne ${or} Or grâce à son Privilège.`);
+    }
+  }
+  etat.effetRougeUtilisePar = [];
+  // D'abord l'effet du joueur actif, puis l'Effet Rouge de chaque adversaire dans l'ordre du tour.
+  const tousLesAdversaires = ordreDuTour(etat, j).slice(1);
+  const adversaires =
+    PARAMETRES.effetRougePour === 'suivant'
+      ? tousLesAdversaires.slice(0, 1)
+      : PARAMETRES.effetRougePour === 'precedent'
+        ? tousLesAdversaires.slice(-1)
+        : tousLesAdversaires;
+  return [
+    ...c.effet.map((_, index): Tache => ({ type: 'etape', joueur: j, carte: c.id, index, rouge: false })),
+    ...adversaires.flatMap((adversaire) =>
+      c.effetRouge.map(
+        (_, index): Tache => ({ type: 'etape', joueur: adversaire.id, carte: c.id, index, rouge: true }),
+      ),
+    ),
+    { type: 'finCarte' },
+  ];
+}
+
 function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
   const j = joueur.id;
   // Un Privilège d'action s'ajoute à l'action du tour : le joueur doit encore la faire.
@@ -563,47 +659,12 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
   }
   joueur.statistiques.tours++;
   switch (action.type) {
-    case 'jouer': {
-      const c = carte(action.carte);
-      retirer(joueur.main, c.id);
-      const r = c.ressources;
-      // Une carte sans ressource va directement dans la défausse.
-      if (r.pierre + r.metal + r.erudit > 0) joueur.aireDeJeu.push(c.id);
-      else joueur.defausse.push(c.id);
-      reveler(etat, c.id);
-      joueur.statistiques.cartesJouees++;
-      noter(etat, joueur, `${joueur.nom} joue ${c.nom}.`);
-      if (c.origine === 'avancee') {
-        const or = totalPrivilege(joueur, 'orParCarteAvanceeJouee', (effet) => effet.or);
-        if (or > 0) {
-          joueur.or += or;
-          noter(etat, joueur, `${joueur.nom} gagne ${or} Or grâce à son Privilège.`);
-        }
-      }
-      etat.effetRougeUtilisePar = [];
-      // D'abord l'effet du joueur actif, puis l'Effet Rouge de chaque adversaire dans l'ordre du tour.
-      const tousLesAdversaires = ordreDuTour(etat, j).slice(1);
-      const adversaires =
-        PARAMETRES.effetRougePour === 'suivant'
-          ? tousLesAdversaires.slice(0, 1)
-          : PARAMETRES.effetRougePour === 'precedent'
-            ? tousLesAdversaires.slice(-1)
-            : tousLesAdversaires;
-      etat.file = [
-        ...c.effet.map((_, index): Tache => ({ type: 'etape', joueur: j, carte: c.id, index, rouge: false })),
-        ...adversaires.flatMap((adversaire) =>
-          c.effetRouge.map(
-            (_, index): Tache => ({ type: 'etape', joueur: adversaire.id, carte: c.id, index, rouge: true }),
-          ),
-        ),
-        { type: 'apresAction', joueur: j },
-        { type: 'finDeTour' },
-      ];
+    case 'jouer':
+      etat.file = [...jouerCarte(etat, joueur, action.carte), { type: 'apresAction', joueur: j }, { type: 'finDeTour' }];
       return;
-    }
     case 'acheter':
       acheter(etat, joueur, action.carte, action.paiement);
-      etat.file = [apresAchat(joueur, action.carte), { type: 'apresAction', joueur: j }, { type: 'finDeTour' }];
+      etat.file = [...apresAchat(joueur, action.carte), { type: 'apresAction', joueur: j }, { type: 'finDeTour' }];
       return;
     case 'finLignee':
       noter(etat, joueur, `${joueur.nom} met fin à sa lignée.`);
@@ -626,11 +687,11 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
 function executerPaiement(etat: Etat, joueur: Joueur, attente: RefEtape, action: Action): void {
   if (action.type !== 'payer') return; // « passer » : le joueur renonce à cette étape.
   const etape = etapeDe(attente);
-  // Le nombre de gains est compté avant de payer : les ressources défaussées pour payer comptent encore
-  // pour cet effet (« Paye 1 Métal pour trasher 1 carte par 2 Métal »), et ne compteront plus pour les suivants.
-  const gains = nombreDeGains(joueur, etape);
-  joueur.or -= etape.cout?.or ?? 0;
+  // On paye d'abord, puis on compte ce qui reste (décision SS) : les cartes défaussées pour payer
+  // et l'Or dépensé ne comptent plus (« Paye 5 Or pour révéler 1 carte par stock d'or »).
+  joueur.or -= coutDeLEtape(joueur, etape)?.or ?? 0;
   defausserDeLAire(joueur, action.paiement);
+  const gains = nombreDeGains(joueur, etape);
   noterUsage(etat, joueur, attente, true);
   const suite: Tache[] = [{ type: 'gain', ...ref(attente), restant: gains }];
   // Une étape répétable est reproposée une fois le gain obtenu.
@@ -680,7 +741,7 @@ function executerGain(
   noterUsage(etat, joueur, attente, true);
   if (encore > 0) etat.file.unshift({ type: 'gain', ...ref(attente), restant: encore });
   // Comme pour l'action Acheter : trash à 1 Or ou remplacement, avant la suite de l'effet.
-  if (action.type === 'acheter') etat.file.unshift(apresAchat(joueur, action.carte));
+  if (action.type === 'acheter') etat.file.unshift(...apresAchat(joueur, action.carte));
 }
 
 function executer(etat: Etat, attente: Attente, action: Action): void {
@@ -727,7 +788,7 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
       if (action.type !== 'monter') return; // « passer » : le joueur ne monte plus de jauge.
       const suivant = MATERIEL.plateau[action.piste][niveau(joueur, action.piste) + 1];
       let ressourcesUtilisees = attente.ressourcesUtilisees;
-      if (suivant?.paiement === 'or') joueur.or -= suivant.cout;
+      if (suivant?.paiement === 'or') joueur.or -= coutEnOrDuNiveau(joueur, action.piste, suivant.cout);
       else ressourcesUtilisees += suivant?.cout ?? 0;
       monter(etat, joueur, action.piste);
       const montees = [...attente.montees, action.piste];
@@ -752,6 +813,19 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
       reveler(etat, action.carte);
       noter(etat, joueur, `${joueur.nom} défausse 1 carte de sa main.`, `Carte défaussée : ${carte(action.carte).nom}.`);
       etat.file.unshift({ type: 'debutDefausse', joueur: joueur.id, restant: attente.restant - 1 });
+      return;
+    case 'jouerEnPlus': {
+      if (action.type !== 'jouer') return; // « passer » : le joueur ne joue pas de carte en plus.
+      // La carte en plus est entièrement résolue (effet, Effet Rouge) avant une éventuelle suivante.
+      const suite: Tache[] = jouerCarte(etat, joueur, action.carte);
+      if (attente.restant > 1) suite.push({ type: 'jouerEnPlus', joueur: joueur.id, restant: attente.restant - 1 });
+      etat.file.unshift(...suite);
+      return;
+    }
+    case 'achatEnPlus':
+      if (action.type !== 'acheter') return;
+      acheter(etat, joueur, action.carte, action.paiement);
+      etat.file.unshift(...apresAchat(joueur, action.carte, attente.privilege9));
       return;
   }
 }
@@ -811,6 +885,22 @@ function traiterGain(etat: Etat, tache: RefEtape & { restant: number }): void {
       joueur.statistiques.piochesSupplementaires += piochees;
       if (piochees > 0) noterUsage(etat, joueur, tache, false);
       return;
+    case 'revele': {
+      const revelees = revelerCartes(etat, joueur, tache.restant).length;
+      joueur.statistiques.piochesSupplementaires += revelees;
+      if (revelees > 0) noterUsage(etat, joueur, tache, false);
+      return;
+    }
+    case 'joue': {
+      // La carte en plus se joue une fois la carte en cours entièrement résolue (décision QQ) :
+      // juste avant la fin de sa résolution.
+      const fin = etat.file.findIndex((suivante) => suivante.type === 'finCarte');
+      const enPlus: Tache = { type: 'jouerEnPlus', joueur: joueur.id, restant: tache.restant };
+      if (fin === -1) etat.file.unshift(enPlus);
+      else etat.file.splice(fin, 0, enPlus);
+      noterUsage(etat, joueur, tache, false);
+      return;
+    }
     case 'recherche':
       if (joueur.pioche.length === 0) return;
       break;
@@ -848,6 +938,10 @@ function reformerDeck(etat: Etat, joueur: Joueur): void {
     );
   }
   if (recherches > 0) suite.push({ type: 'debutRecherche', joueur: joueur.id, restant: recherches });
+  // Privilège 10 : une fois toute la mise en place faite, un achat comme au premier tour (décision YY).
+  for (const _ of effetsPrivilege(joueur, 'achatDebutLignee')) {
+    suite.push({ type: 'achatEnPlus', joueur: joueur.id, privilege9: true });
+  }
   etat.file.unshift(...suite);
 }
 
@@ -932,6 +1026,14 @@ function traiter(etat: Etat, tache: Tache): void {
       if (tache.restant > 0 && etat.joueurs[tache.joueur]!.main.length > 0) {
         etat.attente = { type: 'debutDefausse', joueur: tache.joueur, restant: tache.restant };
       }
+      return;
+    case 'jouerEnPlus':
+      if (tache.restant > 0 && etat.joueurs[tache.joueur]!.main.length > 0) etat.attente = { ...tache };
+      return;
+    case 'achatEnPlus':
+      if (achatsPossibles(etat, etat.joueurs[tache.joueur]!).length > 0) etat.attente = { ...tache };
+      return;
+    case 'finCarte':
       return;
     case 'finDeTour': {
       etat.privilegesUtilises = [];

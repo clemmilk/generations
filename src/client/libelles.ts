@@ -1,5 +1,6 @@
 import type { Action, Attente } from '../game/actions.ts';
 import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
+import { coutDeLEtape, coutEnOrDuNiveau } from '../game/moteur.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
 import { EFFETS_PRIVILEGES } from '../game/privileges.ts';
 import type { CoutEffet, Etape } from '../game/materiel/index.ts';
@@ -37,7 +38,8 @@ export function question(vue: Vue): string {
       const c = carte(attente.carte);
       const etape = etapeDe(attente);
       const texte = attente.rouge ? c.texteEffetRouge : c.texteEffet;
-      return `${nom} — ${c.nom}${attente.rouge ? ' (Effet Rouge)' : ''} : « ${texte} ». Payer ${etape?.cout ? texteCout(etape.cout) : ''} ?`;
+      const cout = etape ? coutDeLEtape(vue.joueurs[attente.joueur]!, etape) : null;
+      return `${nom} — ${c.nom}${attente.rouge ? ' (Effet Rouge)' : ''} : « ${texte} ». Payer ${cout ? texteCout(cout) || 'rien' : ''} ?`;
     }
     case 'gain': {
       const c = carte(attente.carte);
@@ -63,7 +65,8 @@ export function question(vue: Vue): string {
       const niveau = attente.seule === 'economie' ? (moi?.niveauEconomie ?? 0) : (moi?.niveauPopulation ?? 0);
       const suivant = MATERIEL.plateau[attente.seule][niveau + 1];
       const nomJauge = attente.seule === 'economie' ? 'Économie' : 'Population';
-      const cout = suivant ? (suivant.paiement === 'or' ? `${suivant.cout} Or` : `${suivant.cout} Ressource(s) de ton aire de jeu, sans les dépenser`) : '';
+      const coutEnOr = suivant && moi ? coutEnOrDuNiveau(moi, attente.seule, suivant.cout) : 0;
+      const cout = suivant ? (suivant.paiement === 'or' ? `${coutEnOr} Or` : `${suivant.cout} Ressource(s) de ton aire de jeu, sans les dépenser`) : '';
       const suite = attente.seule === 'economie' ? ' (Le reste de ton Or sera ensuite défaussé.)' : '';
       return `${nom}, veux-tu monter en ${nomJauge} ? Coût : ${cout}.${suite}`;
     }
@@ -71,6 +74,12 @@ export function question(vue: Vue): string {
       return `${nom}, début de lignée : choisis 1 carte de ton deck à prendre en main (Privilège).`;
     case 'debutDefausse':
       return `${nom}, début de lignée : défausse 1 carte de ta main (Privilège).`;
+    case 'jouerEnPlus':
+      return `${nom}, tu peux jouer 1 carte de plus de ta main.`;
+    case 'achatEnPlus':
+      return attente.privilege9
+        ? `${nom}, début de lignée : tu peux acheter 1 carte (Privilège 10).`
+        : `${nom}, tu peux acheter 1 carte de plus (Privilège 9).`;
   }
 }
 
@@ -117,6 +126,8 @@ export function libelleAction(action: Action, attente: Attente | null): string {
       return action.piste === 'economie' ? 'Monter en Économie' : 'Monter en Population';
     case 'passer':
       if (attente?.type === 'apresAction') return 'Terminer mon tour';
+      if (attente?.type === 'jouerEnPlus') return 'Ne pas jouer de carte de plus';
+      if (attente?.type === 'achatEnPlus') return 'Ne rien acheter';
       return attente?.type === 'gain' ? 'Arrêter là' : 'Non merci';
   }
 }

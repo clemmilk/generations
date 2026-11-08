@@ -36,10 +36,15 @@ export function cartesDuDeck(joueur: Joueur): string[] {
   return [...(joueur.contenuPioche ?? []), ...(joueur.main ?? []), ...joueur.aireDeJeu, ...joueur.defausse];
 }
 
-/** Les cartes piochées au début d'une lignée, au niveau de Population actuel (Privilège 12 compris). */
+/** Les cartes prises dans la pioche au début d'une lignée, au niveau de Population actuel (cartes révélées comprises). */
 function piocheDeDebut(joueur: Joueur): number {
   const niveau = MATERIEL.plateau.population[joueur.niveauPopulation];
-  return (niveau?.cartes ?? 3) + totalPrivilege(joueur, 'piocheEtDefausseDebutLignee', (effet) => effet.cartes);
+  return (
+    (niveau?.cartes ?? 3) +
+    (niveau?.revele ?? 0) +
+    totalPrivilege(joueur, 'piocheEtDefausseDebutLignee', (effet) => effet.cartes) +
+    totalPrivilege(joueur, 'reveleDebutLignee', (effet) => effet.cartes)
+  );
 }
 
 export function profilDuDeck(joueur: Joueur, cartes: string[] = cartesDuDeck(joueur)): ProfilDuDeck {
@@ -73,6 +78,16 @@ function foisProbables(
       return Math.floor(profil.blasons.economie / par.tranche);
     case 'blason_population':
       return Math.floor(profil.blasons.population / par.tranche);
+    case 'or': {
+      // On suppose qu'il a en réserve à peu près l'Or de son niveau d'Économie.
+      const or = MATERIEL.plateau.economie[joueur.niveauEconomie]?.or ?? 0;
+      return or / par.tranche;
+    }
+    case 'carte':
+      // La carte elle-même, et la moitié des autres cartes jouées pendant la lignée.
+      return (1 + Math.max(0, profil.jouees - 1) / 2) / par.tranche;
+    case 'tuile_privilege':
+      return Math.floor(joueur.privileges.length / par.tranche);
   }
   const type = par.compteur as Ressource;
   const propre = ressourcesDe(joueur, id)[type];
@@ -109,6 +124,10 @@ export function valeurGain(gain: Gain, p: Poids): number {
       return 0;
     case 'achat':
       return gain.nombre * p.achatEffet;
+    case 'joue':
+      return gain.nombre * p.joue;
+    case 'revele':
+      return gain.nombre * p.revele;
   }
 }
 

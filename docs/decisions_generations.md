@@ -136,5 +136,20 @@ Fichiers `data/*_essai-17-10.csv` installés comme version active ; la version �
   - un Privilège qui laisserait le joueur sans aucune action possible est interdit. Appliqué aussi au choix de la carte trashée, et levé si ce Privilège fait gagner la partie.
 - MM. Livret anglais : visuels tirés de `visuels/generations_v2_a4_en.pdf` (cartes en anglais, plateau en page 12).
 
+## V3 : nouveaux effets (réponses du 08/11)
+- NN. Compteur « stock d'or » : 1 stock = 5 Or dans la réserve du joueur. On compte avant de payer, et l'Or gagné par une étape précédente du même effet compte.
+- OO. Compteur « carte posée en jeu » (ou par paire) : on compte les cartes de l'aire de jeu du joueur, y compris la carte qu'il vient de jouer. Une carte sans ressource part en défausse et n'est donc jamais comptée.
+- PP. Compteur « tuile Privilège » : toutes les tuiles possédées par le joueur, quel que soit leur type.
+- QQ. « Rejouer 1 carte » : le joueur joue 1 carte de sa main en plus, après avoir entièrement résolu la première (son effet puis son Effet Rouge). La 2e carte est une carte jouée à part entière : son Effet Rouge se déclenche pour le voisin de droite, le Privilège 20 s'applique, et si elle permet elle-même de rejouer 1 carte, on peut enchaîner.
+- RR. « Révéler 1 carte » : la première carte de la pioche du joueur est posée face visible dans son aire de jeu, sans effet, sans Effet Rouge et sans Privilège 20. Ses ressources sont disponibles ; sans ressource, elle va en défausse. Elle compte comme 1 carte piochée : si c'était la dernière carte du deck, le joueur gagne.
+- SS. Payer puis compter (V3, pour toutes les cartes) : quand un effet fait payer puis compte, on paye d'abord (les cartes défaussées pour payer quittent l'aire de jeu), puis on compte ce qui reste et on applique l'effet. Exemples : Meunière (on compte l'Or restant), Négociant et Cardinal (les cartes défaussées pour payer ne sont plus comptées). Remplace la règle « on compte avant de payer ».
+- TT. Les blasons disparaissent en V3 (plateau, Privilèges et cartes n'y font plus référence).
+- UU. Début de lignée, dans cet ordre : prendre l'Or (Économie, Privilèges 5 et 19) ; Privilège 6 en dernier, une fois tout l'Or reçu ; piocher ; révéler (Population, puis Privilège 12) ; Privilège 8 ; achat du Privilège 10.
+- VV. Privilège 5 (2 Or par Privilège) : la tuile 5 se compte elle-même.
+- WW. Privilège 7 (monter en Population coûte 5 Or de moins) : s'applique partout, en fin de lignée comme avec les cartes. Le coût ne descend jamais sous 0, et le 1er niveau (3 Or) devient gratuit.
+- XX. Privilège 9 : après chaque achat, quelle qu'en soit l'origine (action Acheter, carte, Privilège 10), le joueur peut acheter une 2e carte. Cet achat en plus ne donne droit à aucun autre : au plus 2 achats par achat.
+- YY. Privilège 10 : une fois toute la mise en place de la nouvelle lignée terminée (Or, pioche, révélations, Privilège 8), le joueur peut tout de suite acheter 1 carte, comme si c'était son premier tour. C'est un achat normal (la carte remplace une carte de sa main, de son aire de jeu, de sa défausse ou le dessus de sa pioche), en plus de son prochain tour ; le Privilège 9 s'y applique.
+- ZZ. Visuels V3 dans `visuels/V3/` : la colonne Dossier des 3 csv pointe désormais vers ce dossier ; `carte_.jpg` renommé `carte_1.jpg` (Rémouleur ambulant).
+
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ? → Réglé le 18/10 : nouveau visuel sans bandeau.

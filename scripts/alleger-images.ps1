@@ -18,7 +18,10 @@ $largeurs = @{ 'cartes' = 480; 'tuiles' = 320; 'plateau' = 96 }
 $qualiteJpeg = 82
 
 # Le plateau complet n'est pas affiché par l'application.
-$ignores = @('plateau_perso.jpg')
+$ignores = @('plateau_perso.jpg', 'plateau_perso_v2.jpg')
+# Les visuels sont rangés par version (visuels\V3\cartes\...). Seule la version en cours est allégée :
+# les versions archivées (visuels\V2, etc.) ne sont plus affichées par le site.
+$versionEnCours = 'V3'
 
 $codecJpeg = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
 $reglages = New-Object System.Drawing.Imaging.EncoderParameters 1
@@ -30,7 +33,12 @@ $avant = 0; $apres = 0; $nombre = 0
 foreach ($fichier in Get-ChildItem -LiteralPath $source -Recurse -File) {
   if ($ignores -contains $fichier.Name) { continue }
   $relatif = $fichier.FullName.Substring($source.Length + 1)
-  $largeur = $largeurs[$relatif.Split('\')[0]]
+  $morceaux = $relatif.Split('\')
+  if ($morceaux[0] -match '^V\d+$') {
+    if ($morceaux[0] -ne $versionEnCours) { continue }
+    $morceaux = $morceaux[1..($morceaux.Length - 1)]
+  }
+  $largeur = $largeurs[$morceaux[0]]
   if (-not $largeur) { Write-Warning "Dossier inconnu, fichier ignoré : $relatif"; continue }
 
   $sortie = Join-Path $cible $relatif

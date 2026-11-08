@@ -61,6 +61,21 @@ describe('lireCodeEffet', () => {
     ]);
   });
 
+  it('lit les codes de la V3 : joue, revele et les nouveaux compteurs', () => {
+    expect(lireCodeEffet('Joue(1)')[0]?.gain).toEqual({ type: 'joue', nombre: 1 });
+    expect(lireCodeEffet('revele(2)')[0]?.gain).toEqual({ type: 'revele', nombre: 2 });
+    expect(lireCodeEffet('or+2 / or:5')[0]?.par).toEqual({ compteur: 'or', tranche: 5 });
+    expect(lireCodeEffet('or+2 / carte:1')[0]?.par).toEqual({ compteur: 'carte', tranche: 1 });
+    expect(lireCodeEffet('pioche(1) / carte:2')[0]?.par).toEqual({ compteur: 'carte', tranche: 2 });
+    expect(lireCodeEffet('or+3 / tuile_privilege')[0]?.par).toEqual({ compteur: 'tuile_privilege', tranche: 1 });
+    expect(lireCodeEffet('payer(or:5) > revele(1) / or:5')[0]).toEqual({
+      cout: { or: 5, pierre: 0, metal: 0 },
+      gain: { type: 'revele', nombre: 1 },
+      par: { compteur: 'or', tranche: 5 },
+      repetable: false,
+    });
+  });
+
   it('lit une étape répétable', () => {
     const etapes = lireCodeEffet('or+2 ; repetable: payer(or:8) > pioche(1)');
     expect(etapes.map((e) => e.repetable)).toEqual([false, true]);
@@ -89,7 +104,7 @@ describe('lireCodeEffet', () => {
     expect(() => lireCodeEffet('pioche(x)')).toThrow(/nombre entier/);
     expect(() => lireCodeEffet('payer(erudit:1) > pioche(1)')).toThrow(/payer en/);
     expect(() => lireCodeEffet('lvlup(noblesse)')).toThrow(/Piste inconnue/);
-    expect(() => lireCodeEffet('or+1 / carte')).toThrow(/compter/);
+    expect(() => lireCodeEffet('or+1 / cheval')).toThrow(/compter/);
     expect(() => lireCodeEffet('or+1 / pierre:0')).toThrow(/tranche/);
     expect(() => lireCodeEffet('or+1 ;')).toThrow(/illisible/);
   });

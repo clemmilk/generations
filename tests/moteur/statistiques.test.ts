@@ -109,12 +109,12 @@ describe('statistiques des joueurs', () => {
       expect(apres.joueurs[0]!.statistiques).toEqual({ ...VIDES, tours: 0, piochesSupplementaires: 1 });
     });
 
-    it('ne comptent ni la pioche de début de lignée, ni celles des Privilèges 8 et 12', () => {
+    it('ne comptent ni la pioche de début de lignée, ni la carte révélée (Privilège 12), ni le Privilège 8', () => {
       const etat = scene({ defausse: [c('Forgeron')] });
       etat.joueurs[0]!.privileges = [8, 12];
       let apres = faire(etat, { type: 'finLignee' });
-      // Privilège 12 (défausser) avant le Privilège 8 (rechercher) : décision II.
-      apres = faire(apres, { type: 'defausser', carte: apres.joueurs[0]!.main[0]! });
+      // Privilège 12 (révéler) avant le Privilège 8 (rechercher) : décision UU.
+      expect(apres.joueurs[0]!.aireDeJeu).toHaveLength(1);
       apres = faire(apres, { type: 'rechercher', carte: apres.joueurs[0]!.pioche[0]! });
       expect(apres.joueurs[0]!.statistiques.piochesSupplementaires).toBe(0);
     });

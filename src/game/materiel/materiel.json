@@ -3,7 +3,7 @@
     {
       "id": "carte_71",
       "nom": "Salle du trésor",
-      "image": "visuels/cartes/jbleu/carte_71.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_71.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -45,7 +45,7 @@
     {
       "id": "carte_72",
       "nom": "Cachot",
-      "image": "visuels/cartes/jbleu/carte_72.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_72.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -95,7 +95,7 @@
     {
       "id": "carte_73",
       "nom": "Tour de guet",
-      "image": "visuels/cartes/jbleu/carte_73.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_73.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -145,7 +145,7 @@
     {
       "id": "carte_74",
       "nom": "Forgeron",
-      "image": "visuels/cartes/jbleu/carte_74.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_74.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -180,7 +180,7 @@
     {
       "id": "carte_75",
       "nom": "Épicerie",
-      "image": "visuels/cartes/jbleu/carte_75.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_75.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -222,7 +222,7 @@
     {
       "id": "carte_76",
       "nom": "Ferrailleur",
-      "image": "visuels/cartes/jbleu/carte_76.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_76.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -269,7 +269,7 @@
     {
       "id": "carte_77",
       "nom": "Imprimeur",
-      "image": "visuels/cartes/jbleu/carte_77.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_77.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -304,7 +304,7 @@
     {
       "id": "carte_78",
       "nom": "Marché",
-      "image": "visuels/cartes/jbleu/carte_78.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_78.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -323,7 +323,16 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
+          },
+          "par": null,
+          "repetable": false
+        },
+        {
+          "cout": null,
+          "gain": {
+            "type": "joue",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
@@ -340,13 +349,13 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or",
+      "texteEffet": "Gagne 1 Or et Rejoue une carte",
       "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_79",
       "nom": "Colporteur",
-      "image": "visuels/cartes/jbleu/carte_79.jpg",
+      "image": "visuels/V3/cartes/jbleu/carte_79.jpg",
       "origine": "depart",
       "couleur": "bleu",
       "cout": {
@@ -378,7 +387,7 @@
     {
       "id": "carte_44",
       "nom": "Salle du trésor",
-      "image": "visuels/cartes/jjaune/carte_44.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_44.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -420,7 +429,7 @@
     {
       "id": "carte_45",
       "nom": "Cachot",
-      "image": "visuels/cartes/jjaune/carte_45.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_45.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -470,7 +479,7 @@
     {
       "id": "carte_46",
       "nom": "Tour de guet",
-      "image": "visuels/cartes/jjaune/carte_46.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_46.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -520,7 +529,7 @@
     {
       "id": "carte_47",
       "nom": "Forgeron",
-      "image": "visuels/cartes/jjaune/carte_47.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_47.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -555,7 +564,7 @@
     {
       "id": "carte_48",
       "nom": "Épicerie",
-      "image": "visuels/cartes/jjaune/carte_48.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_48.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -597,7 +606,7 @@
     {
       "id": "carte_49",
       "nom": "Ferrailleur",
-      "image": "visuels/cartes/jjaune/carte_49.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_49.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -644,7 +653,7 @@
     {
       "id": "carte_50",
       "nom": "Imprimeur",
-      "image": "visuels/cartes/jjaune/carte_50.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_50.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -679,7 +688,7 @@
     {
       "id": "carte_51",
       "nom": "Marché",
-      "image": "visuels/cartes/jjaune/carte_51.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_51.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -698,7 +707,16 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
+          },
+          "par": null,
+          "repetable": false
+        },
+        {
+          "cout": null,
+          "gain": {
+            "type": "joue",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
@@ -715,13 +733,13 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or",
+      "texteEffet": "Gagne 1 Or et Rejoue une carte",
       "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_52",
       "nom": "Colporteur",
-      "image": "visuels/cartes/jjaune/carte_52.jpg",
+      "image": "visuels/V3/cartes/jjaune/carte_52.jpg",
       "origine": "depart",
       "couleur": "jaune",
       "cout": {
@@ -753,7 +771,7 @@
     {
       "id": "carte_53",
       "nom": "Salle du trésor",
-      "image": "visuels/cartes/jrouge/carte_53.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_53.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -795,7 +813,7 @@
     {
       "id": "carte_54",
       "nom": "Cachot",
-      "image": "visuels/cartes/jrouge/carte_54.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_54.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -845,7 +863,7 @@
     {
       "id": "carte_55",
       "nom": "Tour de guet",
-      "image": "visuels/cartes/jrouge/carte_55.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_55.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -895,7 +913,7 @@
     {
       "id": "carte_56",
       "nom": "Forgeron",
-      "image": "visuels/cartes/jrouge/carte_56.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_56.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -930,7 +948,7 @@
     {
       "id": "carte_57",
       "nom": "Épicerie",
-      "image": "visuels/cartes/jrouge/carte_57.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_57.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -972,7 +990,7 @@
     {
       "id": "carte_58",
       "nom": "Ferrailleur",
-      "image": "visuels/cartes/jrouge/carte_58.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_58.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -1019,7 +1037,7 @@
     {
       "id": "carte_59",
       "nom": "Imprimeur",
-      "image": "visuels/cartes/jrouge/carte_59.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_59.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -1054,7 +1072,7 @@
     {
       "id": "carte_60",
       "nom": "Marché",
-      "image": "visuels/cartes/jrouge/carte_60.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_60.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -1073,7 +1091,16 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
+          },
+          "par": null,
+          "repetable": false
+        },
+        {
+          "cout": null,
+          "gain": {
+            "type": "joue",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
@@ -1090,13 +1117,13 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or",
+      "texteEffet": "Gagne 1 Or et Rejoue une carte",
       "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_61",
       "nom": "Colporteur",
-      "image": "visuels/cartes/jrouge/carte_61.jpg",
+      "image": "visuels/V3/cartes/jrouge/carte_61.jpg",
       "origine": "depart",
       "couleur": "rouge",
       "cout": {
@@ -1128,7 +1155,7 @@
     {
       "id": "carte_62",
       "nom": "Salle du trésor",
-      "image": "visuels/cartes/jvert/carte_62.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_62.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1170,7 +1197,7 @@
     {
       "id": "carte_63",
       "nom": "Cachot",
-      "image": "visuels/cartes/jvert/carte_63.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_63.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1220,7 +1247,7 @@
     {
       "id": "carte_64",
       "nom": "Tour de guet",
-      "image": "visuels/cartes/jvert/carte_64.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_64.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1270,7 +1297,7 @@
     {
       "id": "carte_65",
       "nom": "Forgeron",
-      "image": "visuels/cartes/jvert/carte_65.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_65.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1305,7 +1332,7 @@
     {
       "id": "carte_66",
       "nom": "Épicerie",
-      "image": "visuels/cartes/jvert/carte_66.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_66.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1347,7 +1374,7 @@
     {
       "id": "carte_67",
       "nom": "Ferrailleur",
-      "image": "visuels/cartes/jvert/carte_67.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_67.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1394,7 +1421,7 @@
     {
       "id": "carte_68",
       "nom": "Imprimeur",
-      "image": "visuels/cartes/jvert/carte_68.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_68.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1429,7 +1456,7 @@
     {
       "id": "carte_69",
       "nom": "Marché",
-      "image": "visuels/cartes/jvert/carte_69.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_69.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1448,7 +1475,16 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 2
+            "montant": 1
+          },
+          "par": null,
+          "repetable": false
+        },
+        {
+          "cout": null,
+          "gain": {
+            "type": "joue",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
@@ -1465,13 +1501,13 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or",
+      "texteEffet": "Gagne 1 Or et Rejoue une carte",
       "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_70",
       "nom": "Colporteur",
-      "image": "visuels/cartes/jvert/carte_70.jpg",
+      "image": "visuels/V3/cartes/jvert/carte_70.jpg",
       "origine": "depart",
       "couleur": "vert",
       "cout": {
@@ -1503,7 +1539,7 @@
     {
       "id": "carte_35",
       "nom": "Justice",
-      "image": "visuels/cartes/domaines/carte_35.jpg",
+      "image": "visuels/V3/cartes/domaines/carte_35.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1525,7 +1561,7 @@
             "montant": 2
           },
           "par": {
-            "compteur": "blason_noblesse",
+            "compteur": "tuile_privilege",
             "tranche": 1
           },
           "repetable": false
@@ -1539,19 +1575,19 @@
             "montant": 1
           },
           "par": {
-            "compteur": "blason_noblesse",
+            "compteur": "tuile_privilege",
             "tranche": 1
           },
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or par Blason Noblesse",
-      "texteEffetRouge": "Gagne 1 Or par Blason Noblesse"
+      "texteEffet": "Gagne 2 Or par Privilège",
+      "texteEffetRouge": "Gagne 1 Or par Privilège"
     },
     {
       "id": "carte_36",
       "nom": "Diplomatie",
-      "image": "visuels/cartes/domaines/carte_36.jpg",
+      "image": "visuels/V3/cartes/domaines/carte_36.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1573,7 +1609,7 @@
             "montant": 2
           },
           "par": {
-            "compteur": "blason_population",
+            "compteur": "carte",
             "tranche": 1
           },
           "repetable": false
@@ -1587,19 +1623,19 @@
             "montant": 1
           },
           "par": {
-            "compteur": "blason_population",
+            "compteur": "carte",
             "tranche": 1
           },
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or par Blason Population",
-      "texteEffetRouge": "Gagne 1 Or par Blason Population"
+      "texteEffet": "Gagne 2 Or par carte en jeu",
+      "texteEffetRouge": "Gagne 1 Or par carte en jeu"
     },
     {
       "id": "carte_37",
       "nom": "Économie",
-      "image": "visuels/cartes/domaines/carte_37.jpg",
+      "image": "visuels/V3/cartes/domaines/carte_37.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1649,7 +1685,7 @@
     {
       "id": "carte_38",
       "nom": "Histoire",
-      "image": "visuels/cartes/domaines/carte_38.jpg",
+      "image": "visuels/V3/cartes/domaines/carte_38.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1697,7 +1733,7 @@
     {
       "id": "carte_40",
       "nom": "Religion",
-      "image": "visuels/cartes/domaines/carte_40.jpg",
+      "image": "visuels/V3/cartes/domaines/carte_40.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1714,8 +1750,8 @@
       "effet": [
         {
           "cout": {
-            "or": 0,
-            "pierre": 2,
+            "or": 4,
+            "pierre": 0,
             "metal": 0
           },
           "gain": {
@@ -1741,13 +1777,13 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 2 Pierres pour prendre 1 Privilège au choix parmi les 4 visibles",
+      "texteEffet": "Paye 4 OR pour prendre 1 Privilège au choix parmi les 4 visibles",
       "texteEffetRouge": "Paye 4 Or pour prendre 1 privilège au hasard dans la pioche"
     },
     {
       "id": "carte_41",
       "nom": "Production",
-      "image": "visuels/cartes/domaines/carte_41.jpg",
+      "image": "visuels/V3/cartes/domaines/carte_41.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1769,8 +1805,8 @@
             "montant": 2
           },
           "par": {
-            "compteur": "blason_economie",
-            "tranche": 1
+            "compteur": "or",
+            "tranche": 5
           },
           "repetable": false
         }
@@ -1783,19 +1819,19 @@
             "montant": 1
           },
           "par": {
-            "compteur": "blason_economie",
-            "tranche": 1
+            "compteur": "or",
+            "tranche": 5
           },
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 2 Or par Blason Économie",
-      "texteEffetRouge": "Gagne 1 Or par Blason Économie"
+      "texteEffet": "Gagne 2 Or par Pile d’or",
+      "texteEffetRouge": "Gagne 1 Or par Pile d’or"
     },
     {
       "id": "carte_42",
       "nom": "Science",
-      "image": "visuels/cartes/domaines/carte_42.jpg",
+      "image": "visuels/V3/cartes/domaines/carte_42.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1812,9 +1848,9 @@
       "effet": [
         {
           "cout": {
-            "or": 0,
+            "or": 3,
             "pierre": 0,
-            "metal": 2
+            "metal": 0
           },
           "gain": {
             "type": "lvlup",
@@ -1839,13 +1875,13 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 2 Metal pour Lvl up Population",
+      "texteEffet": "Paye 3 Or pour Lvl up Population",
       "texteEffetRouge": "Paye 5 Or pour Lvl up Population"
     },
     {
       "id": "carte_43",
       "nom": "Progrès",
-      "image": "visuels/cartes/domaines/carte_43.jpg",
+      "image": "visuels/V3/cartes/domaines/carte_43.jpg",
       "origine": "asymetrie",
       "couleur": null,
       "cout": {
@@ -1887,7 +1923,7 @@
     {
       "id": "carte_1",
       "nom": "Remouleur ambulant",
-      "image": "visuels/cartes/avancées/carte_1.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_1.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -1919,7 +1955,7 @@
     {
       "id": "carte_2",
       "nom": "Banque",
-      "image": "visuels/cartes/avancées/carte_2.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_2.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -1968,7 +2004,7 @@
     {
       "id": "carte_3",
       "nom": "Négociant",
-      "image": "visuels/cartes/avancées/carte_3.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_3.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -1994,20 +2030,20 @@
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_population",
+            "compteur": "carte",
             "tranche": 1
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Métal pour piocher 1 carte par blason Population",
+      "texteEffet": "Paye 3 Métal pour piocher 1 carte par carte en jeu",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_4",
       "nom": "Prison",
-      "image": "visuels/cartes/avancées/carte_4.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_4.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2055,8 +2091,8 @@
     },
     {
       "id": "carte_5",
-      "nom": "Cabinet d'architecte",
-      "image": "visuels/cartes/avancées/carte_5.jpg",
+      "nom": "Intendante",
+      "image": "visuels/V3/cartes/avancées/carte_5.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2072,41 +2108,23 @@
       },
       "effet": [
         {
-          "cout": {
-            "or": 0,
-            "pierre": 0,
-            "metal": 2
-          },
+          "cout": null,
           "gain": {
-            "type": "lvlup",
-            "piste": "population"
+            "type": "joue",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [
-        {
-          "cout": {
-            "or": 5,
-            "pierre": 0,
-            "metal": 0
-          },
-          "gain": {
-            "type": "lvlup",
-            "piste": "population"
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Paye 2 Métal pour Lvl up Population",
-      "texteEffetRouge": "Paye 5 Or pour Lvl up Population"
+      "effetRouge": [],
+      "texteEffet": "Joue 1 carte",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_6",
       "nom": "Contremaître",
-      "image": "visuels/cartes/avancées/carte_6.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_6.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2138,7 +2156,7 @@
     {
       "id": "carte_7",
       "nom": "Assassin",
-      "image": "visuels/cartes/avancées/carte_7.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_7.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2164,20 +2182,20 @@
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_economie",
-            "tranche": 1
+            "compteur": "or",
+            "tranche": 5
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Pierre pour trasher 1 carte par blason Économie",
+      "texteEffet": "Paye 3 Pierre pour trasher 1 carte par Pile d’or",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_8",
       "nom": "Carrière",
-      "image": "visuels/cartes/avancées/carte_8.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_8.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2219,7 +2237,7 @@
     {
       "id": "carte_9",
       "nom": "Forge",
-      "image": "visuels/cartes/avancées/carte_9.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_9.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2261,11 +2279,11 @@
     {
       "id": "carte_10",
       "nom": "Ferme",
-      "image": "visuels/cartes/avancées/carte_10.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_10.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 5,
+        "or": 7,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -2310,7 +2328,7 @@
     {
       "id": "carte_11",
       "nom": "Chancellerie",
-      "image": "visuels/cartes/avancées/carte_11.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_11.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2326,14 +2344,19 @@
       },
       "effet": [
         {
-          "cout": {
-            "or": 0,
-            "pierre": 2,
-            "metal": 0
-          },
+          "cout": null,
           "gain": {
-            "type": "privilege",
-            "mode": "choix"
+            "type": "or",
+            "montant": 3
+          },
+          "par": null,
+          "repetable": false
+        },
+        {
+          "cout": null,
+          "gain": {
+            "type": "achat",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
@@ -2341,26 +2364,22 @@
       ],
       "effetRouge": [
         {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
+          "cout": null,
           "gain": {
-            "type": "privilege",
-            "mode": "hasard"
+            "type": "or",
+            "montant": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 2 Pierre pour prendre 1 Privilège au choix parmi les 4 visibles",
-      "texteEffetRouge": "Paye 4 Or pour prendre 1 privilège au hasard dans la pioche"
+      "texteEffet": "Gagne 3 Or et Achète 1 carte",
+      "texteEffetRouge": "Gagne 1 Or"
     },
     {
       "id": "carte_12",
       "nom": "Tribunal",
-      "image": "visuels/cartes/avancées/carte_12.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_12.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2386,7 +2405,7 @@
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_noblesse",
+            "compteur": "tuile_privilege",
             "tranche": 1
           },
           "repetable": false
@@ -2407,13 +2426,13 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 3 Pierre pour trasher 1 carte par blason Noblesse",
+      "texteEffet": "Paye 3 Pierre pour trasher 1 carte par Privilège",
       "texteEffetRouge": "Paye 6 Or pour trasher 1 carte"
     },
     {
       "id": "carte_13",
       "nom": "Meunière",
-      "image": "visuels/cartes/avancées/carte_13.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_13.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2430,29 +2449,29 @@
       "effet": [
         {
           "cout": {
-            "or": 10,
+            "or": 5,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "pioche",
+            "type": "revele",
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_economie",
-            "tranche": 1
+            "compteur": "or",
+            "tranche": 5
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 10 Or pour piocher 1 carte par blason Économie",
+      "texteEffet": "Paye 5 Or pour révéler 1 carte par Pile d’or",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_14",
       "nom": "Apothicaire",
-      "image": "visuels/cartes/avancées/carte_14.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_14.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2469,29 +2488,29 @@
       "effet": [
         {
           "cout": {
-            "or": 8,
+            "or": 5,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "pioche",
+            "type": "revele",
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_noblesse",
+            "compteur": "tuile_privilege",
             "tranche": 1
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 8 Or pour piocher 1 carte par blason Noblesse",
+      "texteEffet": "Paye 5 Or pour révéler 1 carte par Privilège",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_15",
       "nom": "Mine",
-      "image": "visuels/cartes/avancées/carte_15.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_15.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2521,12 +2540,12 @@
         },
         {
           "cout": {
-            "or": 5,
+            "or": 2,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "trash",
+            "type": "revele",
             "nombre": 1
           },
           "par": null,
@@ -2548,13 +2567,13 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 5 Or pour trasher 1 carte puis 5 Or pour trasher 1 carte",
+      "texteEffet": "Paye 5 Or pour trasher 1 carte puis 2 Or pour révéler 1 carte",
       "texteEffetRouge": "Paye 6 Or pour trasher 1 carte"
     },
     {
       "id": "carte_16",
       "nom": "Maître fondeur",
-      "image": "visuels/cartes/avancées/carte_16.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_16.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2589,11 +2608,11 @@
     {
       "id": "carte_17",
       "nom": "Sapeur",
-      "image": "visuels/cartes/avancées/carte_17.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_17.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 5,
+        "or": 4,
         "pierre": 0,
         "metal": 0,
         "ressource": 1
@@ -2607,7 +2626,7 @@
         {
           "cout": null,
           "gain": {
-            "type": "recherche",
+            "type": "revele",
             "nombre": 1
           },
           "par": {
@@ -2618,13 +2637,13 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Recherche 1 carte pour chaque 2 Érudits dans son aire de jeu",
+      "texteEffet": "Révèle 1 carte pour chaque 2 Érudits dans son aire de jeu",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_18",
-      "nom": "Comptoir maritime",
-      "image": "visuels/cartes/avancées/carte_18.jpg",
+      "nom": "Capitaine",
+      "image": "visuels/V3/cartes/avancées/carte_18.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2640,41 +2659,32 @@
       },
       "effet": [
         {
-          "cout": {
-            "or": 2,
-            "pierre": 0,
-            "metal": 0
-          },
+          "cout": null,
           "gain": {
-            "type": "lvlup",
-            "piste": "economie"
+            "type": "achat",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
-        }
-      ],
-      "effetRouge": [
+        },
         {
-          "cout": {
-            "or": 4,
-            "pierre": 0,
-            "metal": 0
-          },
+          "cout": null,
           "gain": {
-            "type": "lvlup",
-            "piste": "economie"
+            "type": "joue",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 2Or pour Lvl up Économie",
-      "texteEffetRouge": "Paye 4 Or pour Lvl up Économie"
+      "effetRouge": [],
+      "texteEffet": "Achète 1 carte puis rejoue 1 carte",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_19",
       "nom": "Hôtel des impôts",
-      "image": "visuels/cartes/avancées/carte_19.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_19.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2696,8 +2706,8 @@
             "montant": 3
           },
           "par": {
-            "compteur": "blason_economie",
-            "tranche": 1
+            "compteur": "or",
+            "tranche": 5
           },
           "repetable": false
         }
@@ -2710,19 +2720,19 @@
             "montant": 1
           },
           "par": {
-            "compteur": "blason_economie",
-            "tranche": 1
+            "compteur": "or",
+            "tranche": 5
           },
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 3 Or par Blason Économie",
-      "texteEffetRouge": "Gagne 1 Or par Blason Économie"
+      "texteEffet": "Gagne 3 Or par Pile d’or",
+      "texteEffetRouge": "Gagne 1 Or par Pile d’or"
     },
     {
       "id": "carte_20",
       "nom": "Loge des bâtisseurs",
-      "image": "visuels/cartes/avancées/carte_20.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_20.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2772,7 +2782,7 @@
     {
       "id": "carte_21",
       "nom": "Aqueduc",
-      "image": "visuels/cartes/avancées/carte_21.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_21.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2802,12 +2812,12 @@
         },
         {
           "cout": {
-            "or": 3,
+            "or": 2,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "pioche",
+            "type": "revele",
             "nombre": 1
           },
           "par": null,
@@ -2829,17 +2839,17 @@
           "repetable": false
         }
       ],
-      "texteEffet": "Paye 3 Or pour piocher 1 puis Paye 3 Or pour piocher 1 carte",
+      "texteEffet": "Paye 3 Or pour piocher 1 puis Paye 2 Or pour révéler 1 carte",
       "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
     },
     {
       "id": "carte_22",
       "nom": "Bibliothécaire",
-      "image": "visuels/cartes/avancées/carte_22.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_22.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 2,
+        "or": 5,
         "pierre": 0,
         "metal": 0,
         "ressource": 1
@@ -2853,7 +2863,7 @@
         {
           "cout": null,
           "gain": {
-            "type": "recherche",
+            "type": "pioche",
             "nombre": 1
           },
           "par": {
@@ -2864,13 +2874,13 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Recherche 1 carte pour chaque 3 Érudits dans son aire de jeu",
+      "texteEffet": "Piocher 1 carte pour chaque 3 Érudits dans son aire de jeu",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_23",
       "nom": "Roi",
-      "image": "visuels/cartes/avancées/carte_23.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_23.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2896,20 +2906,20 @@
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_noblesse",
+            "compteur": "tuile_privilege",
             "tranche": 1
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Métal pour piocher 1 carte par blason Noblesse",
+      "texteEffet": "Paye 3 Métal pour piocher 1 carte par Privilège",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_24",
       "nom": "Hôpital",
-      "image": "visuels/cartes/avancées/carte_24.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_24.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2957,7 +2967,7 @@
     {
       "id": "carte_25",
       "nom": "Cardinal",
-      "image": "visuels/cartes/avancées/carte_25.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_25.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -2983,20 +2993,20 @@
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_population",
-            "tranche": 1
+            "compteur": "carte",
+            "tranche": 2
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Pierre pour Trasher 1 carte par blason Population",
+      "texteEffet": "Paye 3 Pierre pour Trasher 1 carte par paire de carte dans son jeu",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_26",
       "nom": "Mairie",
-      "image": "visuels/cartes/avancées/carte_26.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_26.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -3018,7 +3028,7 @@
             "montant": 3
           },
           "par": {
-            "compteur": "blason_noblesse",
+            "compteur": "tuile_privilege",
             "tranche": 1
           },
           "repetable": false
@@ -3032,19 +3042,19 @@
             "montant": 1
           },
           "par": {
-            "compteur": "blason_noblesse",
+            "compteur": "tuile_privilege",
             "tranche": 1
           },
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 3 Or par Blason Noblesse",
-      "texteEffetRouge": "Gagne 1 Or par Blason Noblesse"
+      "texteEffet": "Gagne 3 Or par Privilège",
+      "texteEffetRouge": "Gagne 1 Or par Privilège"
     },
     {
       "id": "carte_27",
       "nom": "Alchimiste royale",
-      "image": "visuels/cartes/avancées/carte_27.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_27.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -3079,7 +3089,7 @@
     {
       "id": "carte_28",
       "nom": "Démolisseur",
-      "image": "visuels/cartes/avancées/carte_28.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_28.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -3114,7 +3124,7 @@
     {
       "id": "carte_29",
       "nom": "Maison du commerce",
-      "image": "visuels/cartes/avancées/carte_29.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_29.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -3160,14 +3170,14 @@
     {
       "id": "carte_30",
       "nom": "Archiviste royale",
-      "image": "visuels/cartes/avancées/carte_30.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_30.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 4,
+        "or": 8,
         "pierre": 0,
         "metal": 0,
-        "ressource": 1
+        "ressource": 0
       },
       "ressources": {
         "pierre": 1,
@@ -3195,7 +3205,7 @@
     {
       "id": "carte_31",
       "nom": "Cour du roi",
-      "image": "visuels/cartes/avancées/carte_31.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_31.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -3241,11 +3251,11 @@
     {
       "id": "carte_32",
       "nom": "Ambassade",
-      "image": "visuels/cartes/avancées/carte_32.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_32.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 6,
+        "or": 5,
         "pierre": 0,
         "metal": 0,
         "ressource": 1
@@ -3263,7 +3273,7 @@
             "montant": 3
           },
           "par": {
-            "compteur": "blason_population",
+            "compteur": "carte",
             "tranche": 1
           },
           "repetable": false
@@ -3277,19 +3287,19 @@
             "montant": 1
           },
           "par": {
-            "compteur": "blason_population",
+            "compteur": "carte",
             "tranche": 1
           },
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 3 Or par Blason Population",
-      "texteEffetRouge": "Gagne 1 Or par Blason Population"
+      "texteEffet": "Gagne 3 Or par carte dans son jeu",
+      "texteEffetRouge": "Gagne 1 Or par carte dans son jeu"
     },
     {
       "id": "carte_33",
       "nom": "Grand argentier",
-      "image": "visuels/cartes/avancées/carte_33.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_33.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -3315,20 +3325,20 @@
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_economie",
-            "tranche": 1
+            "compteur": "or",
+            "tranche": 5
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Métal pour piocher 1 carte par blason Économie",
+      "texteEffet": "Paye 3 Métal pour piocher 1 carte par Pile d’or",
       "texteEffetRouge": ""
     },
     {
       "id": "carte_34",
       "nom": "Chambellan",
-      "image": "visuels/cartes/avancées/carte_34.jpg",
+      "image": "visuels/V3/cartes/avancées/carte_34.jpg",
       "origine": "avancee",
       "couleur": null,
       "cout": {
@@ -3345,23 +3355,23 @@
       "effet": [
         {
           "cout": {
-            "or": 9,
+            "or": 5,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "pioche",
+            "type": "revele",
             "nombre": 1
           },
           "par": {
-            "compteur": "blason_population",
-            "tranche": 1
+            "compteur": "carte",
+            "tranche": 2
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 9 Or pour piocher 1 carte par  symbole Population",
+      "texteEffet": "Paye 5 Or pour révéler 1 carte par paire de carte",
       "texteEffetRouge": ""
     }
   ],
@@ -3369,125 +3379,126 @@
     {
       "id": "privilege_1",
       "numero": 1,
-      "image": "visuels/tuiles/privilege_1.jpg",
+      "image": "visuels/V3/tuiles/privilege_1.jpg",
       "texte": "Toutes les cartes de la pioche commune coûtent 3 Or de moins"
     },
     {
       "id": "privilege_2",
       "numero": 2,
-      "image": "visuels/tuiles/privilege_2.jpg",
+      "image": "visuels/V3/tuiles/privilege_2.jpg",
       "texte": "Chaque carte avancée rapporte également 1 Érudit"
     },
     {
       "id": "privilege_3",
       "numero": 3,
-      "image": "visuels/tuiles/privilege_3.jpg",
+      "image": "visuels/V3/tuiles/privilege_3.jpg",
       "texte": "Chaque carte avancée rapporte également 1 Pierre"
     },
     {
       "id": "privilege_4",
       "numero": 4,
-      "image": "visuels/tuiles/privilege_4.jpg",
+      "image": "visuels/V3/tuiles/privilege_4.jpg",
       "texte": "Chaque carte avancée rapporte également 1 Metal"
     },
     {
       "id": "privilege_5",
       "numero": 5,
-      "image": "visuels/tuiles/privilege_5.jpg",
-      "texte": "1 blason Population supplémentaire"
+      "image": "visuels/V3/tuiles/privilege_5.jpg",
+      "texte": "Au début de chaque nouvelle lignée, gagnez 2 Or par Privilège"
     },
     {
       "id": "privilege_6",
       "numero": 6,
-      "image": "visuels/tuiles/privilege_6.jpg",
-      "texte": "1 blason Économie supplémentaire"
+      "image": "visuels/V3/tuiles/privilege_6.jpg",
+      "texte": "Au début de chaque nouvelle lignée, gagnez 2 Or pour chaque 5 or en stock"
     },
     {
       "id": "privilege_7",
       "numero": 7,
-      "image": "visuels/tuiles/privilege_7.jpg",
-      "texte": "1 blason Noblesse supplémentaire"
+      "image": "visuels/V3/tuiles/privilege_7.jpg",
+      "texte": "Progresser d’un niveau de population coûte 5 or de moins"
     },
     {
       "id": "privilege_8",
       "numero": 8,
-      "image": "visuels/tuiles/privilege_8.jpg",
+      "image": "visuels/V3/tuiles/privilege_8.jpg",
       "texte": "Au début de chaque nouvelle lignée, le joueur pioche 1 carte de moins que prévu, puis prend 1 carte de son choix dans son deck, avant de le remélanger"
     },
     {
       "id": "privilege_9",
       "numero": 9,
-      "image": "visuels/tuiles/privilege_9.jpg",
-      "texte": "Au début de chaque nouvelle lignée, le joueur gagne 2 or supplémentaire pour chaque blason Population qu'il possède"
+      "image": "visuels/V3/tuiles/privilege_9.jpg",
+      "texte": "Après avoir acheté 1 carte, vous pouvez acheter une deuxième carte"
     },
     {
       "id": "privilege_10",
       "numero": 10,
-      "image": "visuels/tuiles/privilege_10.jpg",
-      "texte": "Au début de chaque nouvelle lignée, le joueur gagne 2 or supplémentaire pour chaque blason Noblesse qu'il possède"
+      "image": "visuels/V3/tuiles/privilege_10.jpg",
+      "texte": "Quand vous mettez fin à votre lignée, vous pouvez acheter 1 carte"
     },
     {
       "id": "privilege_11",
       "numero": 11,
-      "image": "visuels/tuiles/privilege_11.jpg",
-      "texte": "Au début de chaque nouvelle lignée, le joueur gagne 2 or supplémentaire pour chaque blason Économie qu'il possède"
+      "image": "visuels/V3/tuiles/privilege_11.jpg",
+      "texte": "À son tour, en plus de son action, le joueur peut payer 8 Or pour trasher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_12",
       "numero": 12,
-      "image": "visuels/tuiles/privilege_12.jpg",
-      "texte": "Au début de chaque nouvelle lignée, le joueur pioche 1 carte supplémentaire puis en défausse 1 de sa main (défaussée, pas trashée)"
+      "image": "visuels/V3/tuiles/privilege_12.jpg",
+      "texte": "Au début de chaque nouvelle lignée, révélez 1 carte"
     },
     {
       "id": "privilege_13",
       "numero": 13,
-      "image": "visuels/tuiles/privilege_13.jpg",
+      "image": "visuels/V3/tuiles/privilege_13.jpg",
       "texte": "À son tour, en plus de son action, le joueur peut payer 3 Pierres pour trasher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_14",
       "numero": 14,
-      "image": "visuels/tuiles/privilege_14.jpg",
+      "image": "visuels/V3/tuiles/privilege_14.jpg",
       "texte": "À son tour, en plus de son action, le joueur peut payer 2 Métal pour piocher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_15",
       "numero": 15,
-      "image": "visuels/tuiles/privilege_15.jpg",
+      "image": "visuels/V3/tuiles/privilege_15.jpg",
       "texte": "À son tour, en plus de son action, le joueur peut payer 6 Or pour piocher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_16",
       "numero": 16,
-      "image": "visuels/tuiles/privilege_16.jpg",
+      "image": "visuels/V3/tuiles/privilege_16.jpg",
       "texte": "1 symbole Érudit, valable pour toutes les effets demandant des Érudit, comme si elle était sur une carte de sa zone de jeu"
     },
     {
       "id": "privilege_17",
       "numero": 17,
-      "image": "visuels/tuiles/privilege_17.jpg",
+      "image": "visuels/V3/tuiles/privilege_17.jpg",
       "texte": "Chaque fois que le joueur trash 1 carte, il gagne 1 Or"
     },
     {
       "id": "privilege_18",
       "numero": 18,
-      "image": "visuels/tuiles/privilege_18.jpg",
+      "image": "visuels/V3/tuiles/privilege_18.jpg",
       "texte": "Chaque fois que le joueur met fin à sa lignée, après avoir augmenté sa jauge d'Économie, il conserve son Or restant"
     },
     {
       "id": "privilege_19",
       "numero": 19,
-      "image": "visuels/tuiles/privilege_19.jpg",
+      "image": "visuels/V3/tuiles/privilege_19.jpg",
       "texte": "Au début de chaque nouvelle lignée, le joueur gagne 3 Or supplémentaires"
     },
     {
       "id": "privilege_20",
       "numero": 20,
-      "image": "visuels/tuiles/privilege_20.jpg",
+      "image": "visuels/V3/tuiles/privilege_20.jpg",
       "texte": "Chaque fois que le joueur joue 1 carte avancée, il gagne 2 Or"
     }
   ],
   "plateau": {
+    "icones": "visuels/V3/plateau",
     "noblesse": [
       {
         "erudits": 1,
@@ -3495,47 +3506,47 @@
       },
       {
         "erudits": 2,
-        "blasons": 1
+        "blasons": 0
       },
       {
         "erudits": 3,
-        "blasons": 2
+        "blasons": 0
       },
       {
         "erudits": 4,
-        "blasons": 3
+        "blasons": 0
       }
     ],
     "economie": [
       {
         "cout": 0,
         "paiement": "or",
-        "or": 4,
+        "or": 3,
         "blasons": 0
       },
       {
         "cout": 1,
         "paiement": "ressources",
         "or": 4,
-        "blasons": 1
+        "blasons": 0
       },
       {
         "cout": 2,
         "paiement": "ressources",
-        "or": 7,
-        "blasons": 1
+        "or": 6,
+        "blasons": 0
       },
       {
         "cout": 2,
         "paiement": "ressources",
         "or": 8,
-        "blasons": 2
+        "blasons": 0
       },
       {
         "cout": 3,
         "paiement": "ressources",
-        "or": 10,
-        "blasons": 3
+        "or": 12,
+        "blasons": 0
       }
     ],
     "population": [
@@ -3543,31 +3554,36 @@
         "cout": 0,
         "paiement": "or",
         "cartes": 3,
+        "revele": 0,
         "blasons": 0
       },
       {
         "cout": 3,
         "paiement": "or",
         "cartes": 3,
-        "blasons": 1
+        "revele": 1,
+        "blasons": 0
       },
       {
-        "cout": 6,
+        "cout": 5,
         "paiement": "or",
         "cartes": 4,
-        "blasons": 1
+        "revele": 0,
+        "blasons": 0
       },
       {
-        "cout": 9,
+        "cout": 8,
         "paiement": "or",
         "cartes": 4,
-        "blasons": 2
+        "revele": 1,
+        "blasons": 0
       },
       {
-        "cout": 12,
+        "cout": 10,
         "paiement": "or",
         "cartes": 5,
-        "blasons": 3
+        "revele": 0,
+        "blasons": 0
       }
     ]
   }

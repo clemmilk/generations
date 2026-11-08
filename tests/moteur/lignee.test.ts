@@ -73,17 +73,17 @@ describe('gainsDeLignee', () => {
       cartesPiochees: 3,
       cartesChoisies: 0,
       cartesPiocheesPuisDefaussees: 0,
+      cartesRevelees: 0,
     });
     joueur.niveauEconomie = 4;
     joueur.niveauPopulation = 4;
     expect(gainsDeLignee(joueur)).toMatchObject({ orDeLaJauge: 10, cartesPiochees: 5 });
   });
 
-  it('ajoute l\'Or des Privilèges 19 et 9', () => {
+  it('ajoute l\'Or des Privilèges 19 et 5', () => {
     const { joueur } = partieRemiseAZero();
-    joueur.niveauPopulation = 4; // 3 blasons Population
-    joueur.privileges = [19, 9];
-    expect(gainsDeLignee(joueur)).toMatchObject({ orDeLaJauge: 3, orDesPrivileges: 3 + 2 * 3 });
+    joueur.privileges = [19, 5]; // Privilège 5 : 2 Or par tuile Privilège
+    expect(gainsDeLignee(joueur)).toMatchObject({ orDeLaJauge: 3, orDesPrivileges: 3 + 2 * 2 });
   });
 
   it('détaille les cartes des Privilèges 8 et 12', () => {
@@ -92,7 +92,8 @@ describe('gainsDeLignee', () => {
     expect(gainsDeLignee(joueur)).toMatchObject({
       cartesPiochees: 2,
       cartesChoisies: 1,
-      cartesPiocheesPuisDefaussees: 1,
+      cartesPiocheesPuisDefaussees: 0,
+      cartesRevelees: 1,
     });
   });
 
@@ -105,6 +106,15 @@ describe('gainsDeLignee', () => {
     debuterLignee(etat, joueur);
     expect(joueur.or).toBe(gains.orDeLaJauge + gains.orDesPrivileges);
     expect(joueur.main).toHaveLength(gains.cartesPiochees);
+  });
+
+  it('annonce aussi les cartes révélées (Privilège 12)', () => {
+    const { etat, joueur } = partieRemiseAZero();
+    joueur.privileges = [12];
+    const gains = gainsDeLignee(joueur);
+    debuterLignee(etat, joueur);
+    expect(gains.cartesRevelees).toBe(1);
+    expect(joueur.aireDeJeu).toHaveLength(gains.cartesRevelees);
   });
 });
 

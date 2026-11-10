@@ -42,7 +42,7 @@ visuels\V3\cartes\domaines,carte_38,Histoire,,E,Gagne 2 Or par Érudit,Gagne 1 O
 visuels\V3\cartes\domaines,carte_40,Religion,,P,Paye 4 OR pour prendre 1 Privilège au choix parmi les 4 visibles,Paye 4 Or pour prendre 1 privilège au hasard dans la pioche,Deck Assymétrie,payer(or:4) > privilege(choix),payer(or:4) > privilege(hasard)
 visuels\V3\cartes\domaines,carte_41,Production,,E,Gagne 2 Or par Pile d’or,Gagne 1 Or par Pile d’or,Deck Assymétrie,or+2 / or:5,or+1 / or:5
 visuels\V3\cartes\domaines,carte_42,Science,,M,Paye 3 Or pour Lvl up Population,Paye 5 Or pour Lvl up Population,Deck Assymétrie,payer(or:3) > lvlup(population),payer(or:5) > lvlup(population)
-visuels\V3\cartes\domaines,carte_43,Progrès,,M,Gagne 4 Or,Gagne 2 Or,Deck Assymétrie,Or+4,or+2
+visuels\V3\cartes\domaines,carte_43,Progrès,,M,Révèle 1 carte,,Deck Assymétrie,revele(1),
 visuels\V3\cartes\avancées,carte_1,Remouleur ambulant,3,PP,Gagne 3 Or,,Pioche commune,Or+3,
 visuels\V3\cartes\avancées,carte_2,Banque,3,P,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Pioche commune,pioche(1) / pierre:2,payer(or:4) > pioche(1)
 visuels\V3\cartes\avancées,carte_3,Négociant,5,ME,Paye 3 Métal pour piocher 1 carte par carte en jeu,,Pioche commune,payer(metal:3) > pioche(1) / carte:1,

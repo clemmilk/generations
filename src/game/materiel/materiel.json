@@ -1899,26 +1899,16 @@
         {
           "cout": null,
           "gain": {
-            "type": "or",
-            "montant": 4
+            "type": "revele",
+            "nombre": 1
           },
           "par": null,
           "repetable": false
         }
       ],
-      "effetRouge": [
-        {
-          "cout": null,
-          "gain": {
-            "type": "or",
-            "montant": 2
-          },
-          "par": null,
-          "repetable": false
-        }
-      ],
-      "texteEffet": "Gagne 4 Or",
-      "texteEffetRouge": "Gagne 2 Or"
+      "effetRouge": [],
+      "texteEffet": "Révèle 1 carte",
+      "texteEffetRouge": ""
     },
     {
       "id": "carte_1",

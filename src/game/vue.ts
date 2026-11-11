@@ -60,7 +60,8 @@ export interface Vue {
    * la partie terminée. null tant que la partie n'est pas finie : pendant la partie, rien n'est révélé.
    */
   deckDuVainqueur: string[] | null;
-  journal: { joueur: number | null; texte: string }[];
+  /** « cartes » : les cartes citées dans « texte », dans l'ordre (le détail privé n'y est que pour son joueur). */
+  journal: { joueur: number | null; texte: string; cartes: string[] }[];
 }
 
 function deckDuVainqueur(etat: Etat): string[] | null {
@@ -110,12 +111,14 @@ export function getPlayerView(etat: Etat, moi: number): Vue {
     effetRougeUtilisePar: [...etat.effetRougeUtilisePar],
     vainqueur: etat.vainqueur,
     deckDuVainqueur: deckDuVainqueur(etat),
-    journal: etat.journal.map((entree) => ({
-      joueur: entree.joueur,
-      texte:
-        entree.detail !== null && entree.joueur === moi
-          ? `${entree.texte} ${entree.detail}`
-          : entree.texte,
-    })),
+    journal: etat.journal.map((entree) => {
+      // Le détail privé, et les cartes qu'il cite, ne vont qu'au joueur concerné.
+      const prive = entree.detail !== null && entree.joueur === moi;
+      return {
+        joueur: entree.joueur,
+        texte: prive ? `${entree.texte} ${entree.detail}` : entree.texte,
+        cartes: prive ? [...(entree.cartes ?? []), ...(entree.cartesDetail ?? [])] : [...(entree.cartes ?? [])],
+      };
+    }),
   };
 }

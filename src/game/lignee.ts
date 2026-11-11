@@ -6,13 +6,19 @@ import { compter } from './ressources.ts';
 
 // Ces fonctions modifient l'état qu'on leur donne : le moteur travaille toujours sur une copie.
 
+/**
+ * Ajoute une ligne au journal. « cartes » : les cartes citées dans le texte, dans l'ordre où elles y
+ * apparaissent ; « cartesDetail » : celles citées dans le détail privé.
+ */
 export function noter(
   etat: Etat,
   joueur: Joueur | null,
   texte: string,
   detail: string | null = null,
+  cartes: string[] = [],
+  cartesDetail: string[] = [],
 ): void {
-  etat.journal.push({ joueur: joueur?.id ?? null, texte, detail });
+  etat.journal.push({ joueur: joueur?.id ?? null, texte, detail, cartes, cartesDetail });
 }
 
 /**
@@ -40,6 +46,8 @@ export function piocher(etat: Etat, joueur: Joueur, nombre: number): string[] {
       joueur,
       `${joueur.nom} pioche ${piochees.length} carte(s).`,
       `Cartes piochées : ${nomsDesCartes(piochees)}.`,
+      [],
+      piochees,
     );
   }
   if (victoire) {
@@ -66,7 +74,7 @@ export function revelerCartes(etat: Etat, joueur: Joueur, nombre: number): strin
     // Une carte Assymétrie révélée est désormais connue de tous.
     if (c.origine === 'asymetrie' && !etat.cartesRevelees.includes(id)) etat.cartesRevelees.push(id);
     revelees.push(id);
-    noter(etat, joueur, `${joueur.nom} révèle ${c.nom}.`);
+    noter(etat, joueur, `${joueur.nom} révèle ${c.nom}.`, null, [id]);
     if (joueur.pioche.length === 0 && etat.vainqueur === null) {
       etat.vainqueur = joueur.id;
       victoire = true;

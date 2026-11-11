@@ -181,7 +181,7 @@ function envoyerAuTrash(etat: Etat, joueur: Joueur, id: string): void {
   etat.trash.push(id);
   reveler(etat, id);
   joueur.statistiques.cartesTrashees++;
-  noter(etat, joueur, `${joueur.nom} trashe ${carte(id).nom}.`);
+  noter(etat, joueur, `${joueur.nom} trashe ${carte(id).nom}.`, null, [id]);
   const or = totalPrivilege(joueur, 'orParTrash', (effet) => effet.or);
   if (or > 0) {
     joueur.or += or;
@@ -205,6 +205,8 @@ function rechercher(etat: Etat, joueur: Joueur, id: string, supplementaire: bool
     joueur,
     `${joueur.nom} recherche 1 carte dans son deck.`,
     `Carte choisie : ${carte(id).nom}.`,
+    [],
+    [id],
   );
   if (joueur.pioche.length === 0 && etat.vainqueur === null) {
     etat.vainqueur = joueur.id;
@@ -364,7 +366,7 @@ function remplacer(etat: Etat, joueur: Joueur, achetee: string, remplacee: strin
     const dessus = joueur.pioche[0];
     if (dessus === undefined) throw new Error(`${joueur.nom} n'a pas de pioche à remplacer`);
     joueur.pioche[0] = achetee;
-    noter(etat, joueur, `${joueur.nom} pose ${carte(achetee).nom} sur sa pioche, à la place de la première carte.`);
+    noter(etat, joueur, `${joueur.nom} pose ${carte(achetee).nom} sur sa pioche, à la place de la première carte.`, null, [achetee]);
     envoyerAuTrash(etat, joueur, dessus);
     return;
   }
@@ -372,7 +374,7 @@ function remplacer(etat: Etat, joueur: Joueur, achetee: string, remplacee: strin
   if (!zone) throw new Error(`${joueur.nom} ne peut pas remplacer ${remplacee}`);
   // La carte achetée arrive d'abord : le deck ne paraît jamais vide pendant le remplacement.
   zone.push(achetee);
-  noter(etat, joueur, `${joueur.nom} remplace ${carte(remplacee).nom} par ${carte(achetee).nom}.`);
+  noter(etat, joueur, `${joueur.nom} remplace ${carte(remplacee).nom} par ${carte(achetee).nom}.`, null, [remplacee, achetee]);
   trasher(etat, joueur, remplacee);
 }
 
@@ -385,7 +387,7 @@ function acheter(etat: Etat, joueur: Joueur, id: string, paiement: string[]): vo
   if (PARAMETRES.carteAcheteeVa === 'defausse') joueur.defausse.push(c.id);
   else if (PARAMETRES.carteAcheteeVa === 'main') joueur.main.push(c.id);
   joueur.statistiques.cartesAchetees++;
-  noter(etat, joueur, `${joueur.nom} achète ${c.nom}.`);
+  noter(etat, joueur, `${joueur.nom} achète ${c.nom}.`, null, [c.id]);
   const suivante = etat.piocheCommune.shift();
   if (suivante !== undefined) etat.riviere.push(suivante);
 }
@@ -624,7 +626,7 @@ function jouerCarte(etat: Etat, joueur: Joueur, id: string): Tache[] {
   else joueur.defausse.push(c.id);
   reveler(etat, c.id);
   joueur.statistiques.cartesJouees++;
-  noter(etat, joueur, `${joueur.nom} joue ${c.nom}.`);
+  noter(etat, joueur, `${joueur.nom} joue ${c.nom}.`, null, [c.id]);
   if (c.origine === 'avancee') {
     const or = totalPrivilege(joueur, 'orParCarteAvanceeJouee', (effet) => effet.or);
     if (or > 0) {
@@ -724,7 +726,7 @@ function executerGain(
       const or = r.pierre * gain.orParPierre + r.metal * gain.orParMetal;
       defausserDeLAire(joueur, [action.carte]);
       joueur.or += or;
-      noter(etat, joueur, `${joueur.nom} vend ${carte(action.carte).nom} pour ${or} Or.`);
+      noter(etat, joueur, `${joueur.nom} vend ${carte(action.carte).nom} pour ${or} Or.`, null, [action.carte]);
       encore = 1; // On peut vendre tant qu'il reste des cartes à vendre.
       break;
     }
@@ -814,7 +816,14 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
       if (action.type !== 'defausser') return;
       if (retirer(joueur.main, action.carte)) joueur.defausse.push(action.carte);
       reveler(etat, action.carte);
-      noter(etat, joueur, `${joueur.nom} défausse 1 carte de sa main.`, `Carte défaussée : ${carte(action.carte).nom}.`);
+      noter(
+        etat,
+        joueur,
+        `${joueur.nom} défausse 1 carte de sa main.`,
+        `Carte défaussée : ${carte(action.carte).nom}.`,
+        [],
+        [action.carte],
+      );
       etat.file.unshift({ type: 'debutDefausse', joueur: joueur.id, restant: attente.restant - 1 });
       return;
     case 'jouerEnPlus': {

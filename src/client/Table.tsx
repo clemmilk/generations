@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Action } from '../game/actions.ts';
 import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
@@ -37,6 +37,102 @@ function ImageCarte(props: {
       <span className="nom-carte">{c.nom}</span>
       <img src={urlImage(c.image)} alt={c.nom} onError={(e) => (e.currentTarget.style.display = 'none')} />
     </button>
+  );
+}
+
+/** Ce que dit une carte : son nom, son effet et son Effet Rouge. */
+function TexteCarte(props: { id: string }) {
+  const c = carte(props.id);
+  return (
+    <p>
+      <strong>{c.nom}</strong>
+      <br />
+      {c.texteEffet}
+      {c.texteEffetRouge && (
+        <>
+          <br />
+          <em>Effet Rouge : {c.texteEffetRouge}</em>
+        </>
+      )}
+    </p>
+  );
+}
+
+/** Une carte montrée depuis le journal, et l'endroit de l'écran où on l'a pointée. */
+interface CarteDuJournal {
+  id: string;
+  x: number;
+  y: number;
+  /** Ouverte d'un toucher (tablette) : elle reste affichée jusqu'au toucher suivant. */
+  touchee: boolean;
+}
+
+/**
+ * Une ligne du journal, où les noms des cartes citées sont soulignés en pointillé.
+ * On cherche chaque carte citée dans l'ordre, après le nom du joueur (qui pourrait ressembler à un nom de carte).
+ */
+function LigneDuJournal(props: {
+  texte: string;
+  cartes: string[];
+  nomDuJoueur: string | null;
+  onMontrer: (carte: CarteDuJournal | null) => void;
+}) {
+  const morceaux: ReactNode[] = [];
+  let position = props.nomDuJoueur && props.texte.startsWith(props.nomDuJoueur) ? props.nomDuJoueur.length : 0;
+  let debut = 0;
+  props.cartes.forEach((id, i) => {
+    const nom = carte(id).nom;
+    const trouve = props.texte.indexOf(nom, position);
+    if (trouve === -1) return;
+    morceaux.push(props.texte.slice(debut, trouve));
+    morceaux.push(
+      <span
+        key={i}
+        className="carte-du-journal"
+        onPointerEnter={(e) => {
+          if (e.pointerType === 'mouse') props.onMontrer({ id, x: e.clientX, y: e.clientY, touchee: false });
+        }}
+        onPointerLeave={(e) => {
+          if (e.pointerType === 'mouse') props.onMontrer(null);
+        }}
+        onClick={(e) => {
+          // Sur tablette, pas de survol : on touche le nom pour voir la carte.
+          e.stopPropagation();
+          props.onMontrer({ id, x: e.clientX, y: e.clientY, touchee: true });
+        }}
+      >
+        {nom}
+      </span>,
+    );
+    position = trouve + nom.length;
+    debut = position;
+  });
+  morceaux.push(props.texte.slice(debut));
+  return <>{morceaux}</>;
+}
+
+/** La carte pointée dans le journal, dans une bulle à côté du pointeur, qui ne déplace rien à l'écran. */
+function BulleCarte(props: { carte: CarteDuJournal; onFermer: () => void }) {
+  const { id, x, y, touchee } = props.carte;
+  // Après un toucher, le toucher suivant n'importe où ferme la bulle.
+  useEffect(() => {
+    if (!touchee) return;
+    const fermer = () => props.onFermer();
+    document.addEventListener('pointerdown', fermer);
+    return () => document.removeEventListener('pointerdown', fermer);
+  }, [touchee, props.onFermer]);
+  const largeur = 220;
+  const hauteur = 420;
+  const marge = 12;
+  // À gauche du pointeur s'il est dans la moitié droite de l'écran (le journal), sinon à droite.
+  const gauche =
+    x > window.innerWidth / 2 ? Math.max(marge, x - largeur - marge) : Math.min(x + marge, window.innerWidth - largeur - marge);
+  const haut = Math.max(marge, Math.min(y - hauteur / 3, window.innerHeight - hauteur - marge));
+  return (
+    <div className="apercu bulle-carte" style={{ left: gauche, top: haut, width: largeur }}>
+      <img src={urlImage(carte(id).image)} alt="" />
+      <TexteCarte id={id} />
+    </div>
   );
 }
 
@@ -421,6 +517,9 @@ export function Table(props: {
 }) {
   const { vue, actions } = props;
   const [survol, setSurvol] = useState<string | null>(null);
+  /** La carte montrée depuis le journal (survol ou toucher de son nom). */
+  const [carteDuJournal, setCarteDuJournal] = useState<CarteDuJournal | null>(null);
+  const fermerCarteDuJournal = useCallback(() => setCarteDuJournal(null), []);
   /** La carte de la Rivière que le joueur est en train d'acheter, en attendant qu'il choisisse comment payer. */
   const [achat, setAchat] = useState<string | null>(null);
 
@@ -551,25 +650,23 @@ export function Table(props: {
         {survol && (
           <div className="apercu">
             <img src={urlImage(carte(survol).image)} alt="" />
-            <p>
-              <strong>{carte(survol).nom}</strong>
-              <br />
-              {carte(survol).texteEffet}
-              {carte(survol).texteEffetRouge && (
-                <>
-                  <br />
-                  <em>Effet Rouge : {carte(survol).texteEffetRouge}</em>
-                </>
-              )}
-            </p>
+            <TexteCarte id={survol} />
           </div>
         )}
         <h4>Journal</h4>
         <ol className="journal">
           {[...vue.journal].reverse().map((entree, i) => (
-            <li key={vue.journal.length - i}>{entree.texte}</li>
+            <li key={vue.journal.length - i}>
+              <LigneDuJournal
+                texte={entree.texte}
+                cartes={entree.cartes ?? []}
+                nomDuJoueur={entree.joueur === null ? null : (vue.joueurs[entree.joueur]?.nom ?? null)}
+                onMontrer={setCarteDuJournal}
+              />
+            </li>
           ))}
         </ol>
+        {carteDuJournal && <BulleCarte carte={carteDuJournal} onFermer={fermerCarteDuJournal} />}
       </aside>
     </div>
   );

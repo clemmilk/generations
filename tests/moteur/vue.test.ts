@@ -111,6 +111,47 @@ describe('getPlayerView', () => {
     expect(textes(1)[0]).toBe('Alice pioche 3 carte(s).');
   });
 
+  describe('cartes citées dans le journal (montrées au survol de leur nom)', () => {
+    it('donne la carte jouée à tous les joueurs', () => {
+      const apres = faire(scene({ main: [c('Épicerie')] }), { type: 'jouer', carte: c('Épicerie') });
+      for (const moi of [0, 1]) {
+        const ligne = getPlayerView(apres, moi).journal.find((e) => e.texte === 'Alice joue Épicerie.');
+        expect(ligne?.cartes).toEqual([c('Épicerie')]);
+      }
+    });
+
+    it('donne les 2 cartes d\'un remplacement, dans l\'ordre du texte', () => {
+      const etat = scene({ main: [c('Cachot')], or: 10 });
+      etat.riviere = [c('Remouleur ambulant')];
+      const apres = faire(
+        etat,
+        { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] },
+        { type: 'remplacer', carte: c('Cachot') },
+      );
+      const vue = getPlayerView(apres, 1);
+      expect(vue.journal.find((e) => e.texte === 'Alice achète Remouleur ambulant.')?.cartes).toEqual([c('Remouleur ambulant')]);
+      const ligne = vue.journal.find((e) => e.texte.includes('remplace'));
+      expect(ligne?.texte).toBe('Alice remplace Cachot par Remouleur ambulant.');
+      expect(ligne?.cartes).toEqual([c('Cachot'), c('Remouleur ambulant')]);
+    });
+
+    it('ne donne les cartes piochées qu\'au joueur qui les a piochées', () => {
+      const etat = createGame(inscriptions(2), 42);
+      const ligne = (moi: number) =>
+        getPlayerView(etat, moi).journal.find((e) => e.joueur === 0 && e.texte.includes('pioche'))!;
+      const piochees = etat.journal.find((e) => e.joueur === 0 && e.texte.includes('pioche'))!.cartesDetail;
+      expect(piochees).toHaveLength(3);
+      expect(ligne(0).cartes).toEqual(piochees);
+      expect(ligne(1).cartes).toEqual([]);
+    });
+
+    it('ne cite aucune carte dans une ligne qui n\'en nomme pas', () => {
+      const etat = createGame(inscriptions(2), 42);
+      const debut = getPlayerView(etat, 1).journal.find((e) => e.texte.startsWith('La partie commence'));
+      expect(debut?.cartes).toEqual([]);
+    });
+  });
+
   it('ne modifie pas l\'état quand on modifie la vue', () => {
     const etat = createGame(inscriptions(2), 42);
     const copie = structuredClone(etat);

@@ -64,6 +64,10 @@ export interface EntreeJournal {
   texte: string;
   /** Précision que seul le joueur concerné peut lire (par exemple les cartes piochées). */
   detail: string | null;
+  /** Les cartes citées dans « texte », dans l'ordre : l'interface les montre au survol de leur nom. */
+  cartes: string[];
+  /** Les cartes citées dans « detail » : privées, comme le détail lui-même. */
+  cartesDetail: string[];
 }
 
 export interface Etat {

@@ -452,7 +452,7 @@ section(
 
 const date = new Date().toISOString().slice(0, 10);
 const rapport = [
-  `# Analyse des parties entre IA — ${date}${variante ? ` (essai : Effet Rouge ${effetRouge === 'tous' ? 'pour tous les adversaires' : `pour le joueur ${effetRouge === 'suivant' ? 'suivant' : 'précédent'} seulement`})` : ''}`,
+  `# Analyse des parties entre IA — ${date}${effetRouge !== regleEnVigueur ? ` (essai : Effet Rouge ${effetRouge === 'tous' ? 'pour tous les adversaires' : `pour le joueur ${effetRouge === 'suivant' ? 'suivant' : 'précédent'} seulement`})` : ''}`,
   `Bot : **${bot.nom}** à tous les sièges. ${parties} parties par taille de table (${tables.join(', ')} joueurs), graines ${premiereGraine} à ${premiereGraine + parties - 1}.`,
   `${joueurs.length} joueurs observés, dont ${vainqueurs.length} vainqueurs.`,
   '> Ces chiffres décrivent la façon de jouer de ce bot, pas celle d\'un joueur humain. Une carte peu utilisée peut être faible, ou simplement ignorée par le bot.',

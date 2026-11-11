@@ -65,6 +65,14 @@ describe('Renouveler la Rivière (décision FFF)', () => {
     expect(renouvellements(apres)).toEqual([]);
   });
 
+  it('est compté dans les statistiques du joueur, sans compter comme un tour', () => {
+    const apres = faire(prete(5), { type: 'renouvelerRiviere', cartes: [RIVIERE[0]!, RIVIERE[1]!] });
+    expect(apres.joueurs[0]!.statistiques.renouvellementsRiviere).toBe(1);
+    expect(apres.joueurs[0]!.statistiques.tours).toBe(0);
+    expect(apres.joueurs[1]!.statistiques.renouvellementsRiviere).toBe(0);
+    expect(getPlayerView(apres, 1).joueurs[0]!.statistiques.renouvellementsRiviere).toBe(1);
+  });
+
   it('redevient possible au tour suivant', () => {
     let apres = faire(prete(5), { type: 'renouvelerRiviere', cartes: [RIVIERE[0]!, RIVIERE[1]!] }, { type: 'jouer', carte: c('Épicerie') });
     expect(apres.riviereRenouvelee).toBe(false);

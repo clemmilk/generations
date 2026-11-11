@@ -21,6 +21,8 @@ export interface Statistiques {
   effetsRougesChoisis: number;
   /** Effets Rouges adverses reçus sans rien faire (un gain d'Or, par exemple). 1 au plus par carte adverse. */
   effetsRougesAutomatiques: number;
+  /** Nombre de fois où le joueur a renouvelé la Rivière (décision FFF). */
+  renouvellementsRiviere: number;
 }
 
 export function statistiquesVides(): Statistiques {
@@ -34,6 +36,7 @@ export function statistiquesVides(): Statistiques {
     piochesSupplementaires: 0,
     effetsRougesChoisis: 0,
     effetsRougesAutomatiques: 0,
+    renouvellementsRiviere: 0,
   };
 }
 

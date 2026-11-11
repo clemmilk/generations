@@ -470,6 +470,7 @@ function TableauDesStatistiques(props: { vue: Vue }) {
     ['Pioches supplémentaires', (j) => j.statistiques.piochesSupplementaires],
     ['Effets Rouges choisis', (j) => j.statistiques.effetsRougesChoisis],
     ['Effets Rouges automatiques', (j) => j.statistiques.effetsRougesAutomatiques],
+    ['Rivière renouvelée', (j) => j.statistiques.renouvellementsRiviere ?? 0],
     ['Privilèges', (j) => j.privileges.length],
     ['Niveau d\'Économie', (j) => j.niveauEconomie],
     ['Or à chaque début de lignée', orParLignee],

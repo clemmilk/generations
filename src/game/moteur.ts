@@ -505,6 +505,7 @@ function renouvellementsPossibles(etat: Etat, joueur: Joueur): Action[] {
 function renouvelerRiviere(etat: Etat, joueur: Joueur, cartes: string[]): void {
   joueur.or -= PARAMETRES.renouvellementRiviere.cout;
   etat.riviereRenouvelee = true;
+  joueur.statistiques.renouvellementsRiviere++;
   const nouvelles = etat.piocheCommune.splice(0, cartes.length);
   etat.riviere = etat.riviere.map((id) => {
     const position = cartes.indexOf(id);

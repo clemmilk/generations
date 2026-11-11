@@ -12,6 +12,7 @@ const VIDES = {
   piochesSupplementaires: 0,
   effetsRougesChoisis: 0,
   effetsRougesAutomatiques: 0,
+  renouvellementsRiviere: 0,
 };
 
 describe('statistiques des joueurs', () => {

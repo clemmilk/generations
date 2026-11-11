@@ -97,6 +97,7 @@ export function imaginerEtat(vue: Vue, hasard: () => number): Etat {
     file: vue.file.map((tache) => ({ ...tache })),
     toursSupplementaires: vue.toursSupplementaires,
     privilegesUtilises: [...vue.privilegesUtilises],
+    riviereRenouvelee: vue.riviereRenouvelee,
     effetRougeUtilisePar: [...vue.effetRougeUtilisePar],
     vainqueur: vue.vainqueur,
     journal: [],

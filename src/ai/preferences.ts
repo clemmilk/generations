@@ -301,12 +301,23 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
       let note = valeurRessources(moi, c.id, p);
       // Privilège 20 : jouer une carte Avancée rapporte de l'Or.
       if (c.origine === 'avancee') note += totalPrivilege(moi, 'orParCarteAvanceeJouee', (effet) => effet.or) * p.or;
+      // Privilège 6 : jouer une carte qui a un Effet Rouge rapporte de l'Or.
+      if (c.effetRouge.length > 0) note += totalPrivilege(moi, 'orParCarteRougeJouee', (effet) => effet.or) * p.or;
       for (const etape of c.effet) note += valeurEtape(etape, apres, vue, p);
       if (c.effetRouge.length > 0) note -= p.effetRouge * (vue.joueurs.length - 1);
       return note;
     }
     case 'acheter':
       return noteAchat(moi, action.carte, action.paiement, p);
+    case 'renouvelerRiviere': {
+      // L'espoir de meilleures cartes, moins le prix, moins l'intérêt des cartes qu'il fait disparaître.
+      // Il faut encore pouvoir acheter après avoir payé, sinon le renouvellement ne sert à rien.
+      const cout = PARAMETRES.renouvellementRiviere.cout;
+      if (moi.or - cout <= 0) return -Infinity;
+      let note = p.renouveler - cout * p.or;
+      for (const id of action.cartes) note -= Math.max(0, noteAchat(moi, id, null, p));
+      return note;
+    }
     case 'utiliserPrivilege': {
       const pioche = effetsPrivilege(moi, 'actionPioche').find((e) => e.numero === action.numero);
       const trash = effetsPrivilege(moi, 'actionTrash').find((e) => e.numero === action.numero);
@@ -389,7 +400,7 @@ function choisir(vue: Vue, actions: Action[], p: Poids, hasard: () => number): A
       // Un Privilège d'action ne remplace pas l'action du tour : il ne vaut la peine que s'il rapporte quelque chose.
       const choix = actions
         .map((action) => ({ action, note: noterActionDeTour(action, moi, vue, p) }))
-        .filter(({ action, note }) => action.type !== 'utiliserPrivilege' || note > 0);
+        .filter(({ action, note }) => (action.type !== 'utiliserPrivilege' && action.type !== 'renouvelerRiviere') || note > 0);
       return meilleur(choix, hasard);
     }
 

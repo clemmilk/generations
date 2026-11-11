@@ -70,11 +70,11 @@ describe('createGame', () => {
         }
       });
 
-      it('donne 3 Or à chacun, plus 1, 2 ou 3 Or selon la place dans l\'ordre du tour', () => {
+      it('donne 3 Or à chacun, plus 2, 3 ou 4 Or selon la place dans l\'ordre du tour (décision EEE)', () => {
         for (const graine of GRAINES) {
           const etat = createGame(inscriptions(n), graine);
           const ors = ordreDuTour(etat, etat.premierJoueur).map((j) => j.or);
-          expect(ors).toEqual([3, 4, 5, 6].slice(0, n));
+          expect(ors).toEqual([3, 5, 6, 7].slice(0, n));
         }
       });
 

@@ -33,6 +33,11 @@ export interface Poids {
   rejouer: number;
   /** Valeur de jouer 1 carte de plus pendant son tour (« Rejouer 1 carte », V3). */
   joue: number;
+  /**
+   * Envie de renouveler la Rivière (décision FFF) : ce que vaut l'espoir de 2 nouvelles cartes, avant de
+   * retirer le prix (2 Or) et l'intérêt des 2 cartes qu'il fait disparaître.
+   */
+  renouveler: number;
   /** Valeur d'1 carte révélée : posée dans l'aire de jeu sans son effet, elle compte comme piochée (V3). */
   revele: number;
   /** Valeur d'1 Pierre, d'1 Métal, d'1 Érudit posés dans son aire de jeu (et coût quand on les défausse). */
@@ -78,6 +83,7 @@ export const POIDS_MANUELS: Poids = {
   privilege: 8,
   rejouer: 2,
   joue: 4,
+  renouveler: 3,
   revele: 3,
   pierre: 1.5,
   metal: 1.5,

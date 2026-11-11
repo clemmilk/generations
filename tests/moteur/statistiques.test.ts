@@ -103,7 +103,7 @@ describe('statistiques des joueurs', () => {
     });
 
     it('comptent les pioches payées avec un Privilège 13, 14 ou 15', () => {
-      const etat = scene({ or: 7 });
+      const etat = scene({ or: 9 });
       etat.joueurs[0]!.privileges = [15];
       const apres = faire(etat, { type: 'utiliserPrivilege', numero: 15, paiement: [] });
       expect(apres.joueurs[0]!.statistiques).toEqual({ ...VIDES, tours: 0, piochesSupplementaires: 1 });

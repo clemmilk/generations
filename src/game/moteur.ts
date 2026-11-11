@@ -1,5 +1,5 @@
 import type { Action, Attente, RefEtape, Tache } from './actions.ts';
-import { carte, privilege } from './cartes.ts';
+import { carte, nomsDesCartes, privilege } from './cartes.ts';
 import { ordreDuTour } from './creation.ts';
 import type { Etat, Joueur } from './etat.ts';
 import { melanger } from './hasard.ts';
@@ -344,11 +344,16 @@ function achatsPossibles(etat: Etat, joueur: Joueur): Action[] {
  * entièrement résolue (juste avant sa « finCarte »), comme « Rejouer 1 carte ».
  */
 function apresAchat(etat: Etat, joueur: Joueur, id: string): void {
-  for (const _ of effetsPrivilege(joueur, 'joueApresAchat')) {
-    const enPlus: Tache = { type: 'jouerEnPlus', joueur: joueur.id, restant: 1 };
+  // Privilège 10 (révéler), puis Privilège 9 (jouer 1 carte) : décision BBB.
+  const enPlus: Tache[] = [
+    ...effetsPrivilege(joueur, 'reveleApresAchat').map(
+      (effet): Tache => ({ type: 'reveleEnPlus', joueur: joueur.id, cartes: effet.cartes }),
+    ),
+    ...effetsPrivilege(joueur, 'joueApresAchat').map((): Tache => ({ type: 'jouerEnPlus', joueur: joueur.id, restant: 1 })),
+  ];
+  if (enPlus.length > 0) {
     const fin = etat.file.findIndex((suivante) => suivante.type === 'finCarte');
-    if (fin === -1) etat.file.unshift(enPlus);
-    else etat.file.splice(fin, 0, enPlus);
+    etat.file.splice(fin === -1 ? 0 : fin, 0, ...enPlus);
   }
   etat.file.unshift(
     PARAMETRES.carteAcheteeVa === 'remplacement'
@@ -463,11 +468,64 @@ function actionsDePrivilege(etat: Etat, joueur: Joueur, avantAction: boolean): A
 
 // ───────────────────────── Actions permises ─────────────────────────
 
+/**
+ * Renouveler la Rivière (décision FFF) : avant son action, 1 fois par tour, s'il a l'Or et s'il reste
+ * assez de cartes dans la pioche commune. Une action par groupe de cartes de la Rivière (exactement « cartes »).
+ */
+function renouvellementsPossibles(etat: Etat, joueur: Joueur): Action[] {
+  const { cout, cartes } = PARAMETRES.renouvellementRiviere;
+  if (etat.riviereRenouvelee || joueur.or < cout) return [];
+  if (etat.piocheCommune.length < cartes || etat.riviere.length < cartes) return [];
+  const groupes: string[][] = [];
+  const choisir = (debut: number, choisies: string[]) => {
+    if (choisies.length === cartes) {
+      groupes.push(choisies);
+      return;
+    }
+    for (let i = debut; i < etat.riviere.length; i++) choisir(i + 1, [...choisies, etat.riviere[i]!]);
+  };
+  choisir(0, []);
+  // Comme pour les Privilèges d'action (décision LL) : interdit s'il laisse le joueur sans aucune action.
+  // On ne compte que les actions sûres : jouer, finir sa lignée, ou acheter une carte restée dans la Rivière
+  // (les remplaçantes sont inconnues tant qu'elles ne sont pas piochées).
+  const jouerOuFinir =
+    joueur.main.length > 0 ||
+    (joueur.main.length <= PARAMETRES.mainMaxPourFinDeLignee && etat.privilegesUtilises.length === 0);
+  const apresPaiement = { ...copieDesCartes(joueur), or: joueur.or - cout };
+  return groupes
+    .filter(
+      (groupe) =>
+        jouerOuFinir ||
+        achatsPossibles({ ...etat, riviere: etat.riviere.filter((id) => !groupe.includes(id)) }, apresPaiement).length > 0,
+    )
+    .map((groupe): Action => ({ type: 'renouvelerRiviere', joueur: joueur.id, cartes: groupe }));
+}
+
+/** Remplace les cartes choisies de la Rivière : les remplaçantes sont piochées d'abord, puis les cartes retirées vont sous la pioche commune. */
+function renouvelerRiviere(etat: Etat, joueur: Joueur, cartes: string[]): void {
+  joueur.or -= PARAMETRES.renouvellementRiviere.cout;
+  etat.riviereRenouvelee = true;
+  const nouvelles = etat.piocheCommune.splice(0, cartes.length);
+  etat.riviere = etat.riviere.map((id) => {
+    const position = cartes.indexOf(id);
+    return position === -1 ? id : nouvelles[position]!;
+  });
+  etat.piocheCommune.push(...cartes);
+  noter(
+    etat,
+    joueur,
+    `${joueur.nom} paye ${PARAMETRES.renouvellementRiviere.cout} Or et renouvelle la Rivière : ${nomsDesCartes(cartes)} remplacées par ${nomsDesCartes(nouvelles)}.`,
+    null,
+    [...cartes, ...nouvelles],
+  );
+}
+
 function actionsDuTour(etat: Etat, joueur: Joueur): Action[] {
   const j = joueur.id;
   const actions: Action[] = joueur.main.map((id) => ({ type: 'jouer', joueur: j, carte: id }));
   actions.push(...achatsPossibles(etat, joueur));
   actions.push(...actionsDePrivilege(etat, joueur, true));
+  actions.push(...renouvellementsPossibles(etat, joueur));
   // Un tour avec une fin de lignée ne comporte aucun Privilège d'action.
   if (joueur.main.length <= PARAMETRES.mainMaxPourFinDeLignee && etat.privilegesUtilises.length === 0) {
     actions.push({ type: 'finLignee', joueur: j });
@@ -581,6 +639,7 @@ function cle(action: Action): string {
     action.joueur,
     'carte' in action ? action.carte : null,
     'paiement' in action ? [...action.paiement].sort() : null,
+    'cartes' in action ? [...action.cartes].sort() : null,
     'numero' in action ? action.numero : null,
     'piste' in action ? action.piste : null,
   ]);
@@ -634,6 +693,14 @@ function jouerCarte(etat: Etat, joueur: Joueur, id: string): Tache[] {
       noter(etat, joueur, `${joueur.nom} gagne ${or} Or grâce à son Privilège.`);
     }
   }
+  if (c.effetRouge.length > 0) {
+    // Privilège 6 (décision AAA) : l'Or est gagné en posant la carte, même si personne n'applique l'Effet Rouge.
+    const or = totalPrivilege(joueur, 'orParCarteRougeJouee', (effet) => effet.or);
+    if (or > 0) {
+      joueur.or += or;
+      noter(etat, joueur, `${joueur.nom} gagne ${or} Or grâce à son Privilège.`);
+    }
+  }
   etat.effetRougeUtilisePar = [];
   // D'abord l'effet du joueur actif, puis l'Effet Rouge de chaque adversaire dans l'ordre du tour.
   const tousLesAdversaires = ordreDuTour(etat, j).slice(1);
@@ -659,6 +726,12 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
   // Un Privilège d'action s'ajoute à l'action du tour : le joueur doit encore la faire.
   if (action.type === 'utiliserPrivilege') {
     utiliserPrivilege(etat, joueur, action, true, { type: 'retourAuTour', joueur: j });
+    return;
+  }
+  // Renouveler la Rivière s'ajoute aussi à l'action du tour, qui reste à faire.
+  if (action.type === 'renouvelerRiviere') {
+    renouvelerRiviere(etat, joueur, action.cartes);
+    etat.file.unshift({ type: 'retourAuTour', joueur: j });
     return;
   }
   joueur.statistiques.tours++;
@@ -1047,8 +1120,14 @@ function traiter(etat: Etat, tache: Tache): void {
       return;
     case 'finCarte':
       return;
+    case 'reveleEnPlus': {
+      const joueur = etat.joueurs[tache.joueur]!;
+      joueur.statistiques.piochesSupplementaires += revelerCartes(etat, joueur, tache.cartes).length;
+      return;
+    }
     case 'finDeTour': {
       etat.privilegesUtilises = [];
+      etat.riviereRenouvelee = false;
       if (etat.toursSupplementaires > 0) {
         etat.toursSupplementaires--;
         etat.joueurs[etat.joueurActif]!.statistiques.toursRejoues++;

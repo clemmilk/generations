@@ -26,11 +26,11 @@ export type EffetPrivilege =
   | { type: 'rechercheDebutLignee'; cartes: number }
   /** Début de lignée : pioche des cartes en plus, puis en défausse autant de sa main. */
   | { type: 'piocheEtDefausseDebutLignee'; cartes: number }
-  /** Début de lignée, une fois tout l'Or reçu : « or » Or de plus par tranche de « tranche » Or en réserve. */
+  /** Début de lignée, une fois tout l'Or reçu : « or » Or de plus par tranche de « tranche » Or en réserve. (Ancien Privilège 6.) */
   | { type: 'orParStockDebutLignee'; or: number; tranche: number }
   /** Début de lignée, après la pioche : révèle des cartes en plus. */
   | { type: 'reveleDebutLignee'; cartes: number }
-  /** Début de lignée, une fois toute la mise en place faite : le joueur peut acheter 1 carte. */
+  /** Début de lignée, une fois toute la mise en place faite : le joueur peut acheter 1 carte. (Ancien Privilège 10.) */
   | { type: 'achatDebutLignee' }
   /**
    * Après chaque achat, quelle qu'en soit l'origine, le joueur peut jouer 1 carte de sa main (décision XX).
@@ -46,6 +46,13 @@ export type EffetPrivilege =
   | { type: 'orParTrash'; or: number }
   /** Or gagné chaque fois que le joueur joue une carte Avancée (même sans appliquer son effet). */
   | { type: 'orParCarteAvanceeJouee'; or: number }
+  /** Or gagné chaque fois que le joueur joue une carte qui a un Effet Rouge (même si personne ne l'applique). */
+  | { type: 'orParCarteRougeJouee'; or: number }
+  /**
+   * Après chaque achat, quelle qu'en soit l'origine, le joueur révèle des cartes (obligatoire, décision BBB).
+   * Même moment que le Privilège 9, et avant lui.
+   */
+  | { type: 'reveleApresAchat'; cartes: number }
   /** Fin de lignée : l'Or restant n'est pas défaussé. */
   | { type: 'conserveOr' }
   /** Or gagné chaque fois que le joueur applique l'Effet Rouge d'un adversaire. */
@@ -58,16 +65,18 @@ export const EFFETS_PRIVILEGES: Record<number, EffetPrivilege> = {
   4: { type: 'bonusRessource', si: 'avancee', donne: 'metal' },
   // V3 : la tuile 5 se compte elle-même (décision VV).
   5: { type: 'orDebutLignee', or: 2, par: 'tuile_privilege' },
-  6: { type: 'orParStockDebutLignee', or: 2, tranche: 5 },
+  // 11/11 : nouvelles tuiles 6 et 10 (décisions AAA et BBB). Les anciens effets restent disponibles :
+  // 6 : { type: 'orParStockDebutLignee', or: 2, tranche: 5 } ; 10 : { type: 'achatDebutLignee' }.
+  6: { type: 'orParCarteRougeJouee', or: 1 },
   7: { type: 'reductionPopulation', or: 5 },
   8: { type: 'rechercheDebutLignee', cartes: 1 },
   9: { type: 'joueApresAchat' },
-  10: { type: 'achatDebutLignee' },
+  10: { type: 'reveleApresAchat', cartes: 1 },
   11: { type: 'actionTrash', cout: { or: 8, pierre: 0, metal: 0 }, cartes: 1 },
   12: { type: 'reveleDebutLignee', cartes: 1 },
   13: { type: 'actionTrash', cout: { or: 0, pierre: 3, metal: 0 }, cartes: 1 },
   14: { type: 'actionPioche', cout: { or: 0, pierre: 0, metal: 2 }, cartes: 1 },
-  15: { type: 'actionPioche', cout: { or: 6, pierre: 0, metal: 0 }, cartes: 1 },
+  15: { type: 'actionPioche', cout: { or: 8, pierre: 0, metal: 0 }, cartes: 1 },
   16: { type: 'erudit', nombre: 1 },
   17: { type: 'orParTrash', or: 1 },
   18: { type: 'conserveOr' },

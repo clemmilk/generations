@@ -102,6 +102,8 @@ export function libelleAction(action: Action, attente: Attente | null): string {
         ? `Privilège ${action.numero} : ${verbe} en défaussant ${nomsDesCartes(action.paiement)}`
         : `Privilège ${action.numero} : payer pour ${verbe}`;
     }
+    case 'renouvelerRiviere':
+      return `Renouveler la Rivière : remplacer ${nomsDesCartes(action.cartes)}`;
     case 'defausser':
       return `Défausser ${carte(action.carte).nom}`;
     case 'payer':

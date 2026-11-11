@@ -7,6 +7,7 @@ import type { Vue, VueJoueur } from '../game/index.ts';
 import { gainsDeLignee } from '../game/lignee.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
 import { coutEnOrDuNiveau } from '../game/moteur.ts';
+import { PARAMETRES } from '../game/parametres.ts';
 import { blasons, detailDesRessources } from '../game/ressources.ts';
 import type { OrigineRessource } from '../game/ressources.ts';
 import { libelleAction, question, urlImage } from './libelles.ts';
@@ -22,15 +23,19 @@ function ImageCarte(props: {
   actions?: Action[];
   onChoisir?: ChoisirCarte;
   onSurvol: (id: string | null) => void;
+  /** Carte sélectionnée (par exemple pour renouveler la Rivière). */
+  choisie?: boolean;
+  /** Texte au survol, à la place de la liste des actions possibles. */
+  titre?: string;
 }) {
   const c = carte(props.id);
   const cliquable = (props.actions?.length ?? 0) > 0;
   return (
     <button
       type="button"
-      className={`carte${props.petite ? ' petite' : ''}${cliquable ? ' cliquable' : ''}`}
+      className={`carte${props.petite ? ' petite' : ''}${cliquable ? ' cliquable' : ''}${props.choisie ? ' choisie' : ''}`}
       disabled={!cliquable}
-      title={cliquable ? props.actions!.map((a) => libelleAction(a, null)).join(' / ') : c.nom}
+      title={props.titre ?? (cliquable ? props.actions!.map((a) => libelleAction(a, null)).join(' / ') : c.nom)}
       onClick={() => props.onChoisir?.(props.id)}
       onMouseEnter={() => props.onSurvol(props.id)}
       onMouseLeave={() => props.onSurvol(null)}
@@ -325,6 +330,9 @@ function Zone(props: {
   actionsParCarte: Map<string, Action[]>;
   onChoisir: ChoisirCarte;
   onSurvol: (id: string | null) => void;
+  choisies?: string[];
+  /** Texte au survol de chaque carte, à la place de la liste de ses actions. */
+  titreCarte?: (id: string) => string;
 }) {
   return (
     <div className="zone">
@@ -341,6 +349,8 @@ function Zone(props: {
             actions={props.actionsParCarte.get(id)}
             onChoisir={props.onChoisir}
             onSurvol={props.onSurvol}
+            choisie={props.choisies?.includes(id)}
+            titre={props.titreCarte?.(id)}
           />
         ))}
       </div>
@@ -526,6 +536,8 @@ export function Table(props: {
   const fermerCarteDuJournal = useCallback(() => setCarteDuJournal(null), []);
   /** La carte de la Rivière que le joueur est en train d'acheter, en attendant qu'il choisisse comment payer. */
   const [achat, setAchat] = useState<string | null>(null);
+  /** Renouvellement de la Rivière en cours : les cartes de la Rivière déjà choisies (null hors renouvellement). */
+  const [renouvellement, setRenouvellement] = useState<string[] | null>(null);
 
   const actionsParCarte = new Map<string, Action[]>();
   for (const action of actions) {
@@ -536,6 +548,7 @@ export function Table(props: {
 
   const appliquer = (action: Action) => {
     setAchat(null);
+    setRenouvellement(null);
     props.onAction(action);
   };
 
@@ -558,6 +571,30 @@ export function Table(props: {
     else if (possibles.length === 1) appliquer(possibles[0]!);
   };
 
+  // Renouveler la Rivière : le joueur choisit les cartes une à une, puis valide quand il en a assez.
+  const renouvellements = actions.filter((a) => a.type === 'renouvelerRiviere');
+  const nombreARenouveler = renouvellements[0]?.cartes.length ?? 0;
+  const renouvellementChoisi =
+    renouvellement && renouvellement.length === nombreARenouveler
+      ? renouvellements.find((a) => a.cartes.every((id) => renouvellement.includes(id)))
+      : undefined;
+  const zoneRiviere = renouvellement
+    ? {
+        actionsParCarte: new Map(vue.riviere.map((id) => [id, renouvellements] as [string, Action[]])),
+        onChoisir: (id: string) =>
+          setRenouvellement((choisies) =>
+            choisies?.includes(id)
+              ? choisies.filter((x) => x !== id)
+              : (choisies ?? []).length < nombreARenouveler
+                ? [...(choisies ?? []), id]
+                : choisies,
+          ),
+        onSurvol: setSurvol,
+        choisies: renouvellement,
+        titreCarte: (id: string) => `${renouvellement.includes(id) ? 'Retirer' : 'Choisir'} ${carte(id).nom}`,
+      }
+    : null;
+
   const privilegeAPrendre = (numero: number) =>
     actions.find((a) => a.type === 'prendrePrivilege' && a.numero === numero);
   const recherche = actions.filter((a) => a.type === 'rechercher');
@@ -574,7 +611,11 @@ export function Table(props: {
 
       <main>
         <section className="commun">
-          <Zone titre={`Rivière — ${vue.nbCartesPiocheCommune} carte(s) dans la pioche commune`} ids={vue.riviere} {...zone} />
+          <Zone
+            titre={`Rivière — ${vue.nbCartesPiocheCommune} carte(s) dans la pioche commune`}
+            ids={vue.riviere}
+            {...(zoneRiviere ?? zone)}
+          />
           <div className="zone">
             <h4>Privilèges disponibles — {vue.nbPrivilegesPioche} dans la pioche</h4>
             <div className="rangee">
@@ -601,6 +642,11 @@ export function Table(props: {
               <p className="question victoire">{vue.joueurs[vue.vainqueur]?.nom} remporte la partie !</p>
               <DeckDuVainqueur vue={vue} onSurvol={setSurvol} />
             </>
+          ) : renouvellement ? (
+            <p className="question">
+              Renouveler la Rivière ({PARAMETRES.renouvellementRiviere.cout} Or) : clique sur les {nombreARenouveler} cartes
+              à remplacer ({renouvellement.length}/{nombreARenouveler} choisie(s)). Elles iront sous la pioche commune.
+            </p>
           ) : paiementsPossibles.length > 0 ? (
             <p className="question">
               Achat de {carte(achat!).nom} : quelles cartes de ton aire de jeu veux-tu défausser pour payer ?
@@ -611,7 +657,16 @@ export function Table(props: {
             <p className="question">{question(vue)}</p>
           )}
           {props.erreur && <p className="erreur">{props.erreur}</p>}
-          {paiementsPossibles.length > 0 ? (
+          {renouvellement ? (
+            <div className="boutons">
+              <button type="button" disabled={!renouvellementChoisi} onClick={() => renouvellementChoisi && appliquer(renouvellementChoisi)}>
+                Remplacer {renouvellement.length > 0 ? nomsDesCartes(renouvellement) : 'ces cartes'}
+              </button>
+              <button type="button" className="secondaire" onClick={() => setRenouvellement(null)}>
+                Annuler
+              </button>
+            </div>
+          ) : paiementsPossibles.length > 0 ? (
             <div className="boutons">
               {paiementsPossibles.map((action, i) => (
                 <button type="button" key={i} onClick={() => appliquer(action)}>
@@ -624,8 +679,13 @@ export function Table(props: {
             </div>
           ) : (
             <div className="boutons">
+              {renouvellements.length > 0 && (
+                <button type="button" onClick={() => setRenouvellement([])}>
+                  Renouveler la Rivière ({PARAMETRES.renouvellementRiviere.cout} Or)
+                </button>
+              )}
               {actions
-                .filter((action) => action.type !== 'acheter')
+                .filter((action) => action.type !== 'acheter' && action.type !== 'renouvelerRiviere')
                 .map((action, i) => (
                   <button type="button" key={i} onClick={() => appliquer(action)}>
                     {libelleAction(action, vue.attente)}

@@ -81,7 +81,7 @@ describe('bot à préférences', () => {
         main: [c('Épicerie'), c('Marché')],
         aire: [c('Forgeron'), c('Imprimeur'), c('Ferrailleur'), c('Colporteur')],
         pioche: [c('Cachot')],
-        or: 7,
+        or: 9,
       });
       etat.joueurs[0]!.privileges = [15];
       expect(choix(etat)).toEqual({ type: 'utiliserPrivilege', numero: 15, paiement: [] });

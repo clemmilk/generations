@@ -22,6 +22,7 @@ const POIDS_REGLABLES = [
   'privilege',
   'rejouer',
   'joue',
+  'renouveler',
   'revele',
   'pierre',
   'metal',

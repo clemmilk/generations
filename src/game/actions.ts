@@ -8,6 +8,8 @@ export type Action =
   | { type: 'finLignee'; joueur: number }
   /** Privilèges d'action (13, 14, 15) : payer pour piocher ou trasher, en plus de l'action du tour, 1 fois par tuile et par tour. */
   | { type: 'utiliserPrivilege'; joueur: number; numero: number; paiement: string[] }
+  /** Renouveler la Rivière (décision FFF) : payer pour remplacer ces cartes de la Rivière, avant son action. */
+  | { type: 'renouvelerRiviere'; joueur: number; cartes: string[] }
   // Les réponses aux choix proposés pendant un effet ou une fin de lignée
   | { type: 'payer'; joueur: number; paiement: string[] }
   | { type: 'trasher'; joueur: number; carte: string }
@@ -85,4 +87,6 @@ export type Tache =
   | { type: 'achatEnPlus'; joueur: number }
   /** Fin de la résolution d'une carte jouée (effet puis Effet Rouge) : « Rejouer 1 carte » se place juste avant. */
   | { type: 'finCarte' }
+  /** Privilège 10 : révéler des cartes après un achat. */
+  | { type: 'reveleEnPlus'; joueur: number; cartes: number }
   | { type: 'finDeTour' };

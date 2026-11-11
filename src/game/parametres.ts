@@ -11,8 +11,13 @@ export const PARAMETRES = {
   tailleRiviere: 4,
   /** Nombre de tuiles Privilège visibles. */
   privilegesVisibles: 4,
-  /** Or donné à la mise en place, selon la place dans l'ordre du tour (1er, 2e, 3e, 4e). */
-  orDeCompensation: [0, 1, 2, 3],
+  /** Or donné à la mise en place, selon la place dans l'ordre du tour (1er, 2e, 3e, 4e). Décision EEE. */
+  orDeCompensation: [0, 2, 3, 4],
+  /**
+   * Renouveler la Rivière (décision FFF) : à son tour, avant son action et au plus 1 fois par tour,
+   * le joueur paye « cout » Or pour remplacer exactement « cartes » cartes de la Rivière de son choix.
+   */
+  renouvellementRiviere: { cout: 2, cartes: 2 },
   /** Nombre maximum de cartes en main pour pouvoir mettre fin à sa lignée. */
   mainMaxPourFinDeLignee: 1,
   /** Or à payer en plus du coût d'une carte pour trasher 1 carte lors d'un achat. */

@@ -1906,9 +1906,23 @@
           "repetable": false
         }
       ],
-      "effetRouge": [],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 3,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "revele",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
       "texteEffet": "Révèle 1 carte",
-      "texteEffetRouge": ""
+      "texteEffetRouge": "Paye 3 Or pour révéler 1 carte"
     },
     {
       "id": "carte_1",
@@ -1932,14 +1946,29 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 3
+            "montant": 1
           },
-          "par": null,
+          "par": {
+            "compteur": "pierre",
+            "tranche": 1
+          },
+          "repetable": false
+        },
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
+            "montant": 1
+          },
+          "par": {
+            "compteur": "metal",
+            "tranche": 1
+          },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Gagne 3 Or",
+      "texteEffet": "Gagne 1 Or par ressource",
       "texteEffetRouge": ""
     },
     {
@@ -2011,9 +2040,9 @@
       "effet": [
         {
           "cout": {
-            "or": 0,
+            "or": 7,
             "pierre": 0,
-            "metal": 3
+            "metal": 0
           },
           "gain": {
             "type": "pioche",
@@ -2021,13 +2050,13 @@
           },
           "par": {
             "compteur": "carte",
-            "tranche": 1
+            "tranche": 2
           },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Métal pour piocher 1 carte par carte en jeu",
+      "texteEffet": "Paye 7 Or pour piocher 1 carte par paire de cartes en jeu",
       "texteEffetRouge": ""
     },
     {
@@ -2133,14 +2162,29 @@
           "cout": null,
           "gain": {
             "type": "or",
-            "montant": 3
+            "montant": 1
           },
-          "par": null,
+          "par": {
+            "compteur": "pierre",
+            "tranche": 1
+          },
+          "repetable": false
+        },
+        {
+          "cout": null,
+          "gain": {
+            "type": "or",
+            "montant": 1
+          },
+          "par": {
+            "compteur": "metal",
+            "tranche": 1
+          },
           "repetable": false
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Gagne 3 Or",
+      "texteEffet": "Gagne 1 Or par ressource",
       "texteEffetRouge": ""
     },
     {
@@ -2164,8 +2208,8 @@
         {
           "cout": {
             "or": 0,
-            "pierre": 3,
-            "metal": 0
+            "pierre": 0,
+            "metal": 2
           },
           "gain": {
             "type": "trash",
@@ -2179,7 +2223,7 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Pierre pour trasher 1 carte par Pile d’or",
+      "texteEffet": "Paye 2 Métal pour trasher 1 carte par Pile d’or",
       "texteEffetRouge": ""
     },
     {
@@ -2330,7 +2374,7 @@
       "ressources": {
         "pierre": 1,
         "metal": 0,
-        "erudit": 1
+        "erudit": 0
       },
       "effet": [
         {
@@ -2381,7 +2425,7 @@
       "ressources": {
         "pierre": 1,
         "metal": 0,
-        "erudit": 0
+        "erudit": 1
       },
       "effet": [
         {
@@ -2439,9 +2483,9 @@
       "effet": [
         {
           "cout": {
-            "or": 5,
+            "or": 0,
             "pierre": 0,
-            "metal": 0
+            "metal": 2
           },
           "gain": {
             "type": "revele",
@@ -2455,7 +2499,7 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 5 Or pour révéler 1 carte par Pile d’or",
+      "texteEffet": "Paye 2 Métal pour révéler 1 carte par Pile d’or",
       "texteEffetRouge": ""
     },
     {
@@ -2545,12 +2589,12 @@
       "effetRouge": [
         {
           "cout": {
-            "or": 6,
+            "or": 3,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "trash",
+            "type": "revele",
             "nombre": 1
           },
           "par": null,
@@ -2558,7 +2602,7 @@
         }
       ],
       "texteEffet": "Paye 5 Or pour trasher 1 carte puis 2 Or pour révéler 1 carte",
-      "texteEffetRouge": "Paye 6 Or pour trasher 1 carte"
+      "texteEffetRouge": "Paye 3 Or pour révéler 1 carte"
     },
     {
       "id": "carte_16",
@@ -2597,7 +2641,7 @@
     },
     {
       "id": "carte_17",
-      "nom": "Sapeur",
+      "nom": "Cabinet d’architecte",
       "image": "visuels/V3/cartes/avancées/carte_17.jpg",
       "origine": "avancee",
       "couleur": null,
@@ -2626,9 +2670,23 @@
           "repetable": false
         }
       ],
-      "effetRouge": [],
+      "effetRouge": [
+        {
+          "cout": {
+            "or": 3,
+            "pierre": 0,
+            "metal": 0
+          },
+          "gain": {
+            "type": "revele",
+            "nombre": 1
+          },
+          "par": null,
+          "repetable": false
+        }
+      ],
       "texteEffet": "Révèle 1 carte pour chaque 2 Érudits dans son aire de jeu",
-      "texteEffetRouge": ""
+      "texteEffetRouge": "Paye 3 Or pour révéler 1 carte"
     },
     {
       "id": "carte_18",
@@ -2817,12 +2875,12 @@
       "effetRouge": [
         {
           "cout": {
-            "or": 4,
+            "or": 3,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "pioche",
+            "type": "revele",
             "nombre": 1
           },
           "par": null,
@@ -2830,7 +2888,7 @@
         }
       ],
       "texteEffet": "Paye 3 Or pour piocher 1 puis Paye 2 Or pour révéler 1 carte",
-      "texteEffetRouge": "Paye 4 Or pour piocher 1 carte"
+      "texteEffetRouge": "Paye 3 Or pour révéler 1 carte"
     },
     {
       "id": "carte_22",
@@ -2853,7 +2911,7 @@
         {
           "cout": null,
           "gain": {
-            "type": "pioche",
+            "type": "revele",
             "nombre": 1
           },
           "par": {
@@ -2864,7 +2922,7 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Piocher 1 carte pour chaque 3 Érudits dans son aire de jeu",
+      "texteEffet": "Révéler 1 carte pour chaque 3 Érudits dans son aire de jeu",
       "texteEffetRouge": ""
     },
     {
@@ -2881,15 +2939,15 @@
       },
       "ressources": {
         "pierre": 0,
-        "metal": 2,
-        "erudit": 0
+        "metal": 1,
+        "erudit": 2
       },
       "effet": [
         {
           "cout": {
             "or": 0,
             "pierre": 0,
-            "metal": 3
+            "metal": 2
           },
           "gain": {
             "type": "pioche",
@@ -2903,7 +2961,7 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Métal pour piocher 1 carte par Privilège",
+      "texteEffet": "Paye 2 Métal pour piocher 1 carte par Privilège",
       "texteEffetRouge": ""
     },
     {
@@ -2961,7 +3019,7 @@
       "origine": "avancee",
       "couleur": null,
       "cout": {
-        "or": 5,
+        "or": 4,
         "pierre": 0,
         "metal": 0,
         "ressource": 0
@@ -2974,12 +3032,12 @@
       "effet": [
         {
           "cout": {
-            "or": 0,
-            "pierre": 3,
+            "or": 7,
+            "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "trash",
+            "type": "revele",
             "nombre": 1
           },
           "par": {
@@ -2990,7 +3048,7 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 3 Pierre pour Trasher 1 carte par paire de carte dans son jeu",
+      "texteEffet": "Paye 7 Or pour révéler 1 carte par paire de carte dans son jeu",
       "texteEffetRouge": ""
     },
     {
@@ -3264,7 +3322,7 @@
           },
           "par": {
             "compteur": "carte",
-            "tranche": 1
+            "tranche": 2
           },
           "repetable": false
         }
@@ -3278,13 +3336,13 @@
           },
           "par": {
             "compteur": "carte",
-            "tranche": 1
+            "tranche": 2
           },
           "repetable": false
         }
       ],
-      "texteEffet": "Gagne 3 Or par carte dans son jeu",
-      "texteEffetRouge": "Gagne 1 Or par carte dans son jeu"
+      "texteEffet": "Gagne 3 Or par paire de cartes dans son jeu",
+      "texteEffetRouge": "Gagne 1 Or par paire de cartes dans son jeu"
     },
     {
       "id": "carte_33",
@@ -3301,7 +3359,7 @@
       "ressources": {
         "pierre": 0,
         "metal": 2,
-        "erudit": 1
+        "erudit": 0
       },
       "effet": [
         {
@@ -3345,12 +3403,12 @@
       "effet": [
         {
           "cout": {
-            "or": 5,
+            "or": 7,
             "pierre": 0,
             "metal": 0
           },
           "gain": {
-            "type": "revele",
+            "type": "trash",
             "nombre": 1
           },
           "par": {
@@ -3361,7 +3419,7 @@
         }
       ],
       "effetRouge": [],
-      "texteEffet": "Paye 5 Or pour révéler 1 carte par paire de carte",
+      "texteEffet": "Paye 7 Or pour trasher 1 carte par paire de carte",
       "texteEffetRouge": ""
     }
   ],
@@ -3400,7 +3458,7 @@
       "id": "privilege_6",
       "numero": 6,
       "image": "visuels/V3/tuiles/privilege_6.jpg",
-      "texte": "Au début de chaque nouvelle lignée, gagnez 2 Or pour chaque 5 or en stock"
+      "texte": "Chaque fois que le joueur joue 1 carte avec un effet rouge, il gagne 1 Or"
     },
     {
       "id": "privilege_7",
@@ -3424,7 +3482,7 @@
       "id": "privilege_10",
       "numero": 10,
       "image": "visuels/V3/tuiles/privilege_10.jpg",
-      "texte": "Quand vous mettez fin à votre lignée, vous pouvez acheter 1 carte"
+      "texte": "Après avoir acheté 1 carte, révélez 1 carte"
     },
     {
       "id": "privilege_11",
@@ -3454,7 +3512,7 @@
       "id": "privilege_15",
       "numero": 15,
       "image": "visuels/V3/tuiles/privilege_15.jpg",
-      "texte": "À son tour, en plus de son action, le joueur peut payer 6 Or pour piocher 1 carte (1 fois par tour)"
+      "texte": "À son tour, en plus de son action, le joueur peut payer 8 Or pour piocher 1 carte (1 fois par tour)"
     },
     {
       "id": "privilege_16",

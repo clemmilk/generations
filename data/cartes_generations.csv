@@ -42,38 +42,38 @@ visuels\V3\cartes\domaines,carte_38,Histoire,,E,Gagne 2 Or par Érudit,Gagne 1 O
 visuels\V3\cartes\domaines,carte_40,Religion,,P,Paye 4 OR pour prendre 1 Privilège au choix parmi les 4 visibles,Paye 4 Or pour prendre 1 privilège au hasard dans la pioche,Deck Assymétrie,payer(or:4) > privilege(choix),payer(or:4) > privilege(hasard)
 visuels\V3\cartes\domaines,carte_41,Production,,E,Gagne 2 Or par Pile d’or,Gagne 1 Or par Pile d’or,Deck Assymétrie,or+2 / or:5,or+1 / or:5
 visuels\V3\cartes\domaines,carte_42,Science,,M,Paye 3 Or pour Lvl up Population,Paye 5 Or pour Lvl up Population,Deck Assymétrie,payer(or:3) > lvlup(population),payer(or:5) > lvlup(population)
-visuels\V3\cartes\domaines,carte_43,Progrès,,M,Révèle 1 carte,,Deck Assymétrie,revele(1),
-visuels\V3\cartes\avancées,carte_1,Remouleur ambulant,3,PP,Gagne 3 Or,,Pioche commune,Or+3,
+visuels\V3\cartes\domaines,carte_43,Progrès,,M,Révèle 1 carte,Paye 3 Or pour révéler 1 carte,Deck Assymétrie,revele(1),payer(or:3) > revele(1)
+visuels\V3\cartes\avancées,carte_1,Remouleur ambulant,3,PP,Gagne 1 Or par ressource,,Pioche commune,or+1 / pierre ; or+1 / metal,
 visuels\V3\cartes\avancées,carte_2,Banque,3,P,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Pioche commune,pioche(1) / pierre:2,payer(or:4) > pioche(1)
-visuels\V3\cartes\avancées,carte_3,Négociant,5,ME,Paye 3 Métal pour piocher 1 carte par carte en jeu,,Pioche commune,payer(metal:3) > pioche(1) / carte:1,
+visuels\V3\cartes\avancées,carte_3,Négociant,5,ME,Paye 7 Or pour piocher 1 carte par paire de cartes en jeu,,Pioche commune,payer(or:7) > pioche(1) / carte:2,
 visuels\V3\cartes\avancées,carte_4,Prison,3,M,Trash 1 carte pour 2 Métal dans son aire de jeu,Paye 6 Or pour trasher 1 carte,Pioche commune,trash(1) / metal:2,payer(or:6) > trash(1)
 visuels\V3\cartes\avancées,carte_5,Intendante,4,PME,Joue 1 carte,,Pioche commune,Joue(1),
-visuels\V3\cartes\avancées,carte_6,Contremaître,4,MM,Gagne 3 Or,,Pioche commune,Or+3,
-visuels\V3\cartes\avancées,carte_7,Assassin,6,PE,Paye 3 Pierre pour trasher 1 carte par Pile d’or,,Pioche commune,payer(pierre:3) > trash(1) / or:5,
+visuels\V3\cartes\avancées,carte_6,Contremaître,4,MM,Gagne 1 Or par ressource,,Pioche commune,or+1 / pierre ; or+1 / metal,
+visuels\V3\cartes\avancées,carte_7,Assassin,6,PE,Paye 2 Métal pour trasher 1 carte par Pile d’or,,Pioche commune,payer(metal:2) > trash(1) / or:5,
 visuels\V3\cartes\avancées,carte_8,Carrière,R,P,Gagne 6 Or,Gagne 2 Or,Pioche commune,Or+6,Or+2
 visuels\V3\cartes\avancées,carte_9,Forge,R,M,Gagne 5 Or,Gagne 2 Or,Pioche commune,Or+5,Or+2
 visuels\V3\cartes\avancées,carte_10,Ferme,7,PM,Pioche 2 cartes pour chaque 3 Pierre dans son aire de jeu,Paye 4 Or pour piocher 1 carte,Pioche commune,pioche(2) / pierre:3,payer(or:4) > pioche(1)
-visuels\V3\cartes\avancées,carte_11,Chancellerie,3,PE,Gagne 3 Or et Achète 1 carte,Gagne 1 Or,Pioche commune,Or+3 ; achete(1),or+1
-visuels\V3\cartes\avancées,carte_12,Tribunal,4,P,Paye 3 Pierre pour trasher 1 carte par Privilège,Paye 6 Or pour trasher 1 carte,Pioche commune,payer(pierre:3) > trash(1) / tuile_privilege,payer(or:6) > trash(1)
-visuels\V3\cartes\avancées,carte_13,Meunière,3R,M,Paye 5 Or pour révéler 1 carte par Pile d’or,,Pioche commune,payer(or:5) > revele(1) / or:5,
+visuels\V3\cartes\avancées,carte_11,Chancellerie,3,P,Gagne 3 Or et Achète 1 carte,Gagne 1 Or,Pioche commune,Or+3 ; achete(1),or+1
+visuels\V3\cartes\avancées,carte_12,Tribunal,4,PE,Paye 3 Pierre pour trasher 1 carte par Privilège,Paye 6 Or pour trasher 1 carte,Pioche commune,payer(pierre:3) > trash(1) / tuile_privilege,payer(or:6) > trash(1)
+visuels\V3\cartes\avancées,carte_13,Meunière,3R,M,Paye 2 Métal pour révéler 1 carte par Pile d’or,,Pioche commune,payer(metal:2) > revele(1) / or:5,
 visuels\V3\cartes\avancées,carte_14,Apothicaire,2R,PE,Paye 5 Or pour révéler 1 carte par Privilège,,Pioche commune,payer(or:5) > revele(1) / tuile_privilege,
-visuels\V3\cartes\avancées,carte_15,Mine,R,PP,Paye 5 Or pour trasher 1 carte puis 2 Or pour révéler 1 carte,Paye 6 Or pour trasher 1 carte,Pioche commune,payer(or:5) > trash(1) ; payer(or:2) > revele(1),payer(or:6) > trash(1)
+visuels\V3\cartes\avancées,carte_15,Mine,R,PP,Paye 5 Or pour trasher 1 carte puis 2 Or pour révéler 1 carte,Paye 3 Or pour révéler 1 carte,Pioche commune,payer(or:5) > trash(1) ; payer(or:2) > revele(1),payer(or:3) > revele(1)
 visuels\V3\cartes\avancées,carte_16,Maître fondeur,7,ME,Trash 2 cartes pour 3 Métal dans son aire de jeu,,Pioche commune,trash(2) / metal:3,
-visuels\V3\cartes\avancées,carte_17,Sapeur,4R,ME,Révèle 1 carte pour chaque 2 Érudits dans son aire de jeu,,Pioche commune,revele(1) / erudit:2,
+visuels\V3\cartes\avancées,carte_17,Cabinet d’architecte,4R,ME,Révèle 1 carte pour chaque 2 Érudits dans son aire de jeu,Paye 3 Or pour révéler 1 carte,Pioche commune,revele(1) / erudit:2,payer(or:3) > revele(1)
 visuels\V3\cartes\avancées,carte_18,Capitaine,6,MME,Achète 1 carte puis rejoue 1 carte,,Pioche commune,Achete(1) ; joue(1),
 visuels\V3\cartes\avancées,carte_19,Hôtel des impôts,4,PPE,Gagne 3 Or par Pile d’or,Gagne 1 Or par Pile d’or,Pioche commune,or+3 / or:5,or+1 / or:5
 visuels\V3\cartes\avancées,carte_20,Loge des bâtisseurs,3,PE,Paye 2 Pierre pour Lvl up Population,Paye 5 Or pour Lvl up Population,Pioche commune,payer(pierre:2) > lvlup(population),payer(or:5) > lvlup(population)
-visuels\V3\cartes\avancées,carte_21,Aqueduc,5,PP,Paye 3 Or pour piocher 1 puis Paye 2 Or pour révéler 1 carte,Paye 4 Or pour piocher 1 carte,Pioche commune,payer(or:3) > pioche(1) ; payer(or:2) > revele(1),payer(or:4) > pioche(1)
-visuels\V3\cartes\avancées,carte_22,Bibliothécaire,5R,PEE,Piocher 1 carte pour chaque 3 Érudits dans son aire de jeu,,Pioche commune,pioche(1) / erudit:3,
-visuels\V3\cartes\avancées,carte_23,Roi,6,MM,Paye 3 Métal pour piocher 1 carte par Privilège,,Pioche commune,payer(metal:3) > pioche(1) / tuile_privilege,
+visuels\V3\cartes\avancées,carte_21,Aqueduc,5,PP,Paye 3 Or pour piocher 1 puis Paye 2 Or pour révéler 1 carte,Paye 3 Or pour révéler 1 carte,Pioche commune,payer(or:3) > pioche(1) ; payer(or:2) > revele(1),payer(or:3) > revele(1)
+visuels\V3\cartes\avancées,carte_22,Bibliothécaire,5R,PEE,Révéler 1 carte pour chaque 3 Érudits dans son aire de jeu,,Pioche commune,revele(1) / erudit:3,
+visuels\V3\cartes\avancées,carte_23,Roi,6,MEE,Paye 2 Métal pour piocher 1 carte par Privilège,,Pioche commune,payer(metal:2) > pioche(1) / tuile_privilege,
 visuels\V3\cartes\avancées,carte_24,Hôpital,R,EE,Gagne 2 Or par Érudit,Gagne 1 Or par Érudit,Pioche commune,or+2 / erudit,or+1 / erudit
-visuels\V3\cartes\avancées,carte_25,Cardinal,5,P,Paye 3 Pierre pour Trasher 1 carte par paire de carte dans son jeu,,Pioche commune,payer(pierre:3) > trash(1) / carte:2,
+visuels\V3\cartes\avancées,carte_25,Cardinal,4,P,Paye 7 Or pour révéler 1 carte par paire de carte dans son jeu,,Pioche commune,payer(or:7) > revele(1) / carte:2,
 visuels\V3\cartes\avancées,carte_26,Mairie,1R,ME,Gagne 3 Or par Privilège,Gagne 1 Or par Privilège,Pioche commune,or+3 / tuile_privilege,or+1 / tuile_privilege
 visuels\V3\cartes\avancées,carte_27,Alchimiste royale,6,ME,Trash 1 carte pour 2 Métal dans son aire de jeu,,Pioche commune,trash(1) / metal:2,
 visuels\V3\cartes\avancées,carte_28,Démolisseur,7,PP,Pioche 1 carte pour chaque 2 Pierre dans son aire de jeu,,Pioche commune,pioche(1) / pierre:2,
 visuels\V3\cartes\avancées,carte_29,Maison du commerce,6,MMM,Lvl up Économie,Paye 4 Or pour Lvl up Économie,Pioche commune,lvlup(economie),payer(or:4) > lvlup(economie)
 visuels\V3\cartes\avancées,carte_30,Archiviste royale,8,PE,Recherche 1 carte pour chaque 2 Érudits dans son aire de jeu,,Pioche commune,recherche(1) / erudit:2,
 visuels\V3\cartes\avancées,carte_31,Cour du roi,3R,PPP,Prend 1 Privilège au choix parmi les 4 visibles,Paye 4 Or pour prendre 1 privilège au hasard dans la pioche,Pioche commune,privilege(choix),payer(or:4) > privilege(hasard)
-visuels\V3\cartes\avancées,carte_32,Ambassade,5R,PPE,Gagne 3 Or par carte dans son jeu,Gagne 1 Or par carte dans son jeu,Pioche commune,or+3 / carte:1,or+1 / carte:1
-visuels\V3\cartes\avancées,carte_33,Grand argentier,8,MME,Paye 3 Métal pour piocher 1 carte par Pile d’or,,Pioche commune,payer(metal:3) > pioche(1) / or:5,
-visuels\V3\cartes\avancées,carte_34,Chambellan,8,PPMM,Paye 5 Or pour révéler 1 carte par paire de carte,,Pioche commune,payer(or:5) > revele(1) / carte:2,
+visuels\V3\cartes\avancées,carte_32,Ambassade,5R,PPE,Gagne 3 Or par paire de cartes dans son jeu,Gagne 1 Or par paire de cartes dans son jeu,Pioche commune,or+3 / carte:2,or+1 / carte:2
+visuels\V3\cartes\avancées,carte_33,Grand argentier,8,MM,Paye 3 Métal pour piocher 1 carte par Pile d’or,,Pioche commune,payer(metal:3) > pioche(1) / or:5,
+visuels\V3\cartes\avancées,carte_34,Chambellan,8,PPMM,Paye 7 Or pour trasher 1 carte par paire de carte,,Pioche commune,payer(or:7) > trash(1) / carte:2,

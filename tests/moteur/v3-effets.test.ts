@@ -221,7 +221,7 @@ describe('rejouer 1 carte (décision QQ)', () => {
 
   it('les Privilèges 13 à 15 restent utilisables après la carte en plus', () => {
     const epicerie = preter(c('Épicerie'), 'joue(1)', '');
-    const etat = scene({ main: [epicerie, c('Cachot')], or: 6 });
+    const etat = scene({ main: [epicerie, c('Cachot')], or: 8 });
     alice(etat).privileges = [15];
     let apres = faire(etat, { type: 'jouer', carte: epicerie }, { type: 'jouer', carte: c('Cachot') });
     if (apres.attente?.type === 'payer') apres = faire(apres, { type: 'passer' });

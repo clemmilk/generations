@@ -52,6 +52,7 @@ export interface Vue {
   file: Tache[];
   toursSupplementaires: number;
   privilegesUtilises: number[];
+  riviereRenouvelee: boolean;
   /** Joueurs ayant déjà appliqué l'Effet Rouge de la carte jouée pendant ce tour. */
   effetRougeUtilisePar: number[];
   vainqueur: number | null;
@@ -108,6 +109,7 @@ export function getPlayerView(etat: Etat, moi: number): Vue {
     file: etat.file.map((tache) => ({ ...tache })),
     toursSupplementaires: etat.toursSupplementaires,
     privilegesUtilises: [...etat.privilegesUtilises],
+    riviereRenouvelee: etat.riviereRenouvelee ?? false,
     effetRougeUtilisePar: [...etat.effetRougeUtilisePar],
     vainqueur: etat.vainqueur,
     deckDuVainqueur: deckDuVainqueur(etat),

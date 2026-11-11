@@ -98,6 +98,8 @@ export interface Etat {
   toursSupplementaires: number;
   /** Les Privilèges d'action (13, 14, 15) déjà utilisés pendant ce tour. */
   privilegesUtilises: number[];
+  /** La Rivière a déjà été renouvelée pendant ce tour (décision FFF). */
+  riviereRenouvelee: boolean;
   /** Joueurs ayant déjà appliqué l'Effet Rouge de la carte en cours de résolution. */
   effetRougeUtilisePar: number[];
   vainqueur: number | null;

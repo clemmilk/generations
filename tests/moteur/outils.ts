@@ -131,8 +131,11 @@ export function verifierAucuneFuite(etat: Etat): void {
         throw new Error(`La vue de ${moi.nom} dépend d'une information cachée.`);
       }
     }
+    // Les cartes retirées de la Rivière lors d'un renouvellement sont glissées sous la pioche commune
+    // devant tout le monde (décision FFF) : elles ne sont pas secrètes.
+    const vuesSousLaPioche = etat.historique.flatMap((a) => (a.type === 'renouvelerRiviere' ? a.cartes : []));
     const secretes = [
-      ...etat.piocheCommune,
+      ...etat.piocheCommune.filter((id) => !vuesSousLaPioche.includes(id)),
       ...etat.asymetrieEcartees,
       ...etat.joueurs
         .filter((joueur) => joueur.id !== moi.id && joueur.id !== etat.vainqueur)

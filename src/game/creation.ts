@@ -54,6 +54,7 @@ export function createGame(inscriptions: Inscription[], graine: number): Etat {
     file: [],
     toursSupplementaires: 0,
     privilegesUtilises: [],
+    riviereRenouvelee: false,
     effetRougeUtilisePar: [],
     vainqueur: null,
     journal: [],

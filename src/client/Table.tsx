@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { ReactNode } from 'react';
 import type { Action } from '../game/actions.ts';
 import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
@@ -128,11 +129,14 @@ function BulleCarte(props: { carte: CarteDuJournal; onFermer: () => void }) {
   const gauche =
     x > window.innerWidth / 2 ? Math.max(marge, x - largeur - marge) : Math.min(x + marge, window.innerWidth - largeur - marge);
   const haut = Math.max(marge, Math.min(y - hauteur / 3, window.innerHeight - hauteur - marge));
-  return (
+  // Affichée directement dans la page, hors de la colonne du journal : sinon elle passerait sous le cadre
+  // de la question en cours, qui reste collé en haut de l'écran.
+  return createPortal(
     <div className="apercu bulle-carte" style={{ left: gauche, top: haut, width: largeur }}>
       <img src={urlImage(carte(id).image)} alt="" />
       <TexteCarte id={id} />
-    </div>
+    </div>,
+    document.body,
   );
 }
 

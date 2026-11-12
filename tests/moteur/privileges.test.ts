@@ -45,29 +45,74 @@ it('chaque tuile Privilège du csv a un effet défini', () => {
   expect(Object.keys(EFFETS_PRIVILEGES)).toHaveLength(MATERIEL.privileges.length);
 });
 
-describe('Privilège 1 : les cartes coûtent 3 Or de moins (décision KK)', () => {
-  const marche = (privileges: number[], or: number, riviere: string) => {
-    const etat = avec(privileges, { or });
-    etat.riviere = [c(riviere)];
-    return etat;
-  };
+const marche = (privileges: number[], or: number, riviere: string, aire: string[] = []) => {
+  const etat = avec(privileges, { or, aire });
+  etat.riviere = [c(riviere)];
+  return etat;
+};
+const achatsDe = (etat: Etat) => permises(etat).filter((a) => a.type === 'acheter');
 
-  it('rend achetable une carte à 4 Or avec 1 Or, et ne fait payer que 1 Or', () => {
-    expect(permises(marche([], 3, 'Assassin')).filter((a) => a.type === 'acheter')).toEqual([]);
-    const etat = marche([1], 3, 'Assassin');
-    const apres = faire(etat, { type: 'acheter', carte: c('Assassin'), paiement: [] }, { type: 'remplacerPioche' });
-    expect(apres.joueurs[0]!.or).toBe(2);
+describe('ancien Privilège 1 (gardé dans le code) : les cartes coûtent 3 Or de moins (décision KK)', () => {
+  const ancien: EffetPrivilege = { type: 'reductionAchat', or: 3 };
+
+  it('rend achetable une carte à 4 Or avec 1 Or, et ne fait payer que 1 Or', () =>
+    avecEffet(1, ancien, () => {
+      expect(achatsDe(marche([], 3, 'Assassin'))).toEqual([]);
+      const etat = marche([1], 3, 'Assassin');
+      const apres = faire(etat, { type: 'acheter', carte: c('Assassin'), paiement: [] }, { type: 'remplacerPioche' });
+      expect(apres.joueurs[0]!.or).toBe(2);
+    }));
+
+  it('ne fait jamais descendre le coût sous 0', () =>
+    avecEffet(1, ancien, () => {
+      const etat = marche([1], 0, 'Remouleur ambulant');
+      const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
+      expect(apres.joueurs[0]!.or).toBe(0);
+      expect(apres.joueurs[0]!.pioche[0]).toBe(c('Remouleur ambulant'));
+    }));
+
+  it('ne réduit pas le coût en Ressources', () =>
+    avecEffet(1, ancien, () => {
+      expect(achatsDe(marche([1], 10, 'Carrière'))).toEqual([]);
+    }));
+});
+
+describe('Privilège 1 : 3 Or ou 1 Ressource de moins, au choix à chaque achat (décision GGG)', () => {
+  it('sans le Privilège, les achats ne proposent aucune réduction', () => {
+    expect(achatsDe(marche([], 5, 'Assassin'))).toEqual([{ type: 'acheter', carte: c('Assassin'), paiement: [] }]);
   });
 
-  it('ne fait jamais descendre le coût sous 0', () => {
-    const etat = marche([1], 0, 'Remouleur ambulant');
-    const apres = faire(etat, { type: 'acheter', carte: c('Remouleur ambulant'), paiement: [] }, { type: 'remplacerPioche' });
+  it('carte qui ne coûte que de l\'Or (Assassin, 4 Or) : seulement la réduction sur l\'Or', () => {
+    const etat = marche([1], 1, 'Assassin');
+    expect(achatsDe(etat)).toEqual([{ type: 'acheter', carte: c('Assassin'), paiement: [], reduction: 'or' }]);
+    const apres = faire(etat, { type: 'acheter', carte: c('Assassin'), paiement: [], reduction: 'or' }, { type: 'remplacerPioche' });
     expect(apres.joueurs[0]!.or).toBe(0);
-    expect(apres.joueurs[0]!.pioche[0]).toBe(c('Remouleur ambulant'));
   });
 
-  it('ne réduit pas le coût en Ressources', () => {
-    expect(permises(marche([1], 10, 'Carrière')).filter((a) => a.type === 'acheter')).toEqual([]);
+  it('carte qui ne coûte qu\'une Ressource (Carrière, R) : achetable sans ressource grâce à la réduction', () => {
+    const etat = marche([1], 0, 'Carrière');
+    expect(achatsDe(etat)).toEqual([{ type: 'acheter', carte: c('Carrière'), paiement: [], reduction: 'ressource' }]);
+  });
+
+  it('carte qui coûte de l\'Or et une Ressource (Apothicairerie, 2R) : le joueur choisit la réduction', () => {
+    // 2 Or et Cachot (1 Ressource) en jeu : -3 Or (il paye le Cachot) ou -1 Ressource (il paye 2 Or).
+    const etat = marche([1], 2, 'Apothicairerie', [c('Cachot')]);
+    expect(achatsDe(etat)).toEqual([
+      { type: 'acheter', carte: c('Apothicairerie'), paiement: [c('Cachot')], reduction: 'or' },
+      { type: 'acheter', carte: c('Apothicairerie'), paiement: [], reduction: 'ressource' },
+    ]);
+    const parOr = faire(etat, { type: 'acheter', carte: c('Apothicairerie'), paiement: [c('Cachot')], reduction: 'or' });
+    expect(parOr.joueurs[0]!.or).toBe(2);
+    expect(parOr.joueurs[0]!.defausse).toContain(c('Cachot'));
+    const parRessource = faire(etat, { type: 'acheter', carte: c('Apothicairerie'), paiement: [], reduction: 'ressource' });
+    expect(parRessource.joueurs[0]!.or).toBe(0);
+    expect(parRessource.joueurs[0]!.aireDeJeu).toContain(c('Cachot'));
+  });
+
+  it('refuse une réduction qui ne change rien, ou un achat sans réduction', () => {
+    const etat = marche([1], 5, 'Assassin');
+    expect(() => faire(etat, { type: 'acheter', carte: c('Assassin'), paiement: [], reduction: 'ressource' })).toThrow();
+    expect(() => faire(etat, { type: 'acheter', carte: c('Assassin'), paiement: [] })).toThrow();
   });
 });
 
@@ -260,8 +305,8 @@ describe('Privilèges 5, 6 et 19 : Or en début de lignée', () => {
       expect(orApresNouvelleLignee([6])).toBe(3);
       // 3 Or du niveau + 3 Or du Privilège 19 = 6 Or : 1 stock.
       expect(orApresNouvelleLignee([6, 19])).toBe(6 + 2);
-      // Avec le Privilège 18, l'Or gardé compte aussi : 7 + 3 = 10 Or, 2 stocks.
-      expect(orApresNouvelleLignee([6, 18], (e) => (e.joueurs[0]!.or = 7))).toBe(10 + 4);
+      // Avec le Privilège 18, l'Or gardé compte aussi : 7 + 1 (Privilège 18, décision JJJ) + 3 = 11 Or, 2 stocks.
+      expect(orApresNouvelleLignee([6, 18], (e) => (e.joueurs[0]!.or = 7))).toBe(11 + 4);
     });
   });
 });
@@ -297,8 +342,16 @@ describe('Privilège 8 : 1 carte de moins, puis 1 carte au choix', () => {
   });
 });
 
-describe('Privilège 12 : révéler 1 carte en début de lignée', () => {
+describe('Privilège 12 : révéler 1 carte et payer 3 Or en début de lignée', () => {
   const pioche = [c('Épicerie'), c('Cachot'), c('Marché'), c('Forgeron'), c('Imprimeur')];
+
+  it('fait payer 3 Or, obligatoirement, une fois l\'Or de la lignée reçu (décision HHH)', () => {
+    // 3 Or du niveau 0 d'Économie, moins 3 Or.
+    const apres = finirLignee(avec([12], { pioche: [...pioche] }));
+    expect(apres.joueurs[0]!.or).toBe(0);
+    expect(finirLignee(avec([], { pioche: [...pioche] })).joueurs[0]!.or).toBe(3);
+    expect(apres.journal.some((e) => e.texte === 'Alice paye 3 Or pour son Privilège 12.')).toBe(true);
+  });
 
   it('révèle 1 carte après la pioche : elle va dans l\'aire de jeu', () => {
     const apres = finirLignee(avec([12], { pioche: [...pioche] }));
@@ -494,19 +547,19 @@ describe('ancien Privilège 10 (gardé dans le code) : acheter 1 carte une fois 
   });
 });
 
-describe('Privilège 6 : 1 Or chaque fois que le joueur joue une carte avec un Effet Rouge (décision AAA)', () => {
-  it('rapporte 1 Or en jouant une carte qui a un Effet Rouge, en plus de son effet', () => {
+describe('Privilège 6 : 2 Or chaque fois que le joueur joue une carte avec un Effet Rouge (décision AAA, 2 Or depuis le 12/11)', () => {
+  it('rapporte 2 Or en jouant une carte qui a un Effet Rouge, en plus de son effet', () => {
     // Épicerie : Gagne 4 Or ; Effet Rouge : Gagne 2 Or.
     const apres = faire(avec([6], { main: [c('Épicerie')] }), { type: 'jouer', carte: c('Épicerie') });
-    expect(apres.joueurs[0]!.or).toBe(4 + 1);
+    expect(apres.joueurs[0]!.or).toBe(4 + 2);
   });
 
-  it('rapporte 1 Or même si personne n\'applique l\'Effet Rouge', () => {
+  it('rapporte 2 Or même si personne n\'applique l\'Effet Rouge', () => {
     // Tour de guet : Effet Rouge « Paye 5 Or pour trasher 1 carte » ; Bob n'a pas d'Or.
     const etat = avec([6], { main: [c('Tour de guet')] });
     installer(etat, 1, { or: 0 });
     const apres = faire(etat, { type: 'jouer', carte: c('Tour de guet') });
-    expect(apres.joueurs[0]!.or).toBe(1);
+    expect(apres.joueurs[0]!.or).toBe(2);
   });
 
   it('ne rapporte rien pour une carte sans Effet Rouge', () => {
@@ -533,7 +586,7 @@ describe('Privilège 6 : 1 Or chaque fois que le joueur joue une carte avec un E
       { type: 'remplacerPioche' },
       { type: 'jouer', carte: c('Épicerie') },
     );
-    expect(apres.joueurs[0]!.or).toBe(8 + 4 + 1);
+    expect(apres.joueurs[0]!.or).toBe(8 + 4 + 2);
   });
 });
 
@@ -599,16 +652,57 @@ describe('Privilège 10 : après chaque achat, révéler 1 carte (décision BBB)
   });
 });
 
-describe('Privilège 11 : 8 Or pour trasher 1 carte, en plus de son action', () => {
-  it('suit les mêmes règles que les Privilèges 13 à 15', () => {
-    const etat = avec([11], { main: [c('Épicerie'), c('Marché')], or: 8 });
-    expect(permises(avec([11], { main: [c('Épicerie')], or: 7 })).filter((a) => a.type === 'utiliserPrivilege')).toEqual([]);
-    let apres = faire(etat, { type: 'utiliserPrivilege', numero: 11, paiement: [] });
+describe('ancien Privilège 11 (gardé dans le code) : 8 Or pour trasher 1 carte, en plus de son action', () => {
+  it('suit les mêmes règles que les Privilèges 13 à 15', () =>
+    avecEffet(11, { type: 'actionTrash', cout: { or: 8, pierre: 0, metal: 0 }, cartes: 1 }, () => {
+      const etat = avec([11], { main: [c('Épicerie'), c('Marché')], or: 8 });
+      expect(permises(avec([11], { main: [c('Épicerie')], or: 7 })).filter((a) => a.type === 'utiliserPrivilege')).toEqual([]);
+      let apres = faire(etat, { type: 'utiliserPrivilege', numero: 11, paiement: [] });
+      expect(apres.joueurs[0]!.or).toBe(0);
+      expect(apres.attente).toMatchObject({ type: 'trashPrivilege', avantAction: true });
+      apres = faire(apres, { type: 'trasher', carte: c('Marché') });
+      expect(apres.attente).toEqual({ type: 'tour', joueur: 0 });
+      expect(permises(apres)).not.toContainEqual({ type: 'finLignee' });
+    }));
+});
+
+describe('Privilège 11 : 7 Or pour révéler 1 carte, en plus de son action (12/11)', () => {
+  const onze = { type: 'utiliserPrivilege' as const, numero: 11, paiement: [] as string[] };
+  const privileges = (etat: Etat) => permises(etat).filter((a) => a.type === 'utiliserPrivilege');
+
+  it('révèle la carte du dessus de la pioche pour 7 Or ; le joueur doit encore faire son action', () => {
+    expect(privileges(avec([11], { main: [c('Épicerie')], or: 6 }))).toEqual([]);
+    const etat = avec([11], { main: [c('Épicerie')], or: 7, pioche: [c('Cachot'), c('Forgeron')] });
+    const apres = faire(etat, onze);
     expect(apres.joueurs[0]!.or).toBe(0);
-    expect(apres.attente).toMatchObject({ type: 'trashPrivilege', avantAction: true });
-    apres = faire(apres, { type: 'trasher', carte: c('Marché') });
+    expect(apres.joueurs[0]!.aireDeJeu).toEqual([c('Cachot')]);
+    expect(apres.joueurs[0]!.pioche).toEqual([c('Forgeron')]);
     expect(apres.attente).toEqual({ type: 'tour', joueur: 0 });
-    expect(permises(apres)).not.toContainEqual({ type: 'finLignee' });
+    expect(privileges(apres)).toEqual([]);
+  });
+
+  it('se joue aussi après son action', () => {
+    const etat = avec([11], { main: [c('Épicerie')], or: 7, pioche: [c('Cachot'), c('Forgeron')] });
+    const apres = faire(etat, { type: 'jouer', carte: c('Épicerie') });
+    expect(apres.attente).toEqual({ type: 'apresAction', joueur: 0 });
+    expect(privileges(apres)).toEqual([onze]);
+  });
+
+  it('n\'est pas proposé avec une pioche vide', () => {
+    expect(privileges(avec([11], { main: [c('Épicerie')], or: 7, pioche: [] }))).toEqual([]);
+  });
+
+  it('est interdit avant l\'action s\'il laisse le joueur sans action, sauf s\'il révèle sa dernière carte', () => {
+    // Main vide, Rivière à 2 Or : après avoir payé 7 Or, il reste 1 Or, plus rien d'achetable.
+    const etat = avec([11], { main: [], or: 8, pioche: [c('Cachot'), c('Forgeron')] });
+    etat.riviere = [c('Remouleur ambulant')];
+    etat.privilegesUtilises = [];
+    expect(privileges(etat)).toEqual([]);
+    // Avec 1 seule carte en pioche, la révéler fait gagner : c'est permis.
+    etat.joueurs[0]!.pioche = [c('Cachot')];
+    expect(privileges(etat)).toEqual([onze]);
+    const apres = faire(etat, onze);
+    expect(apres.vainqueur).toBe(0);
   });
 });
 
@@ -774,30 +868,34 @@ describe('Privilège 17 : 1 Or par carte trashée (décision KK)', () => {
   });
 });
 
-describe('Privilège 18 : conserver son Or en fin de lignée', () => {
-  it('garde l\'Or restant, auquel s\'ajoute l\'Or de la nouvelle lignée', () => {
-    expect(finirLignee(avec([18], { or: 1 })).joueurs[0]!.or).toBe(4);
+describe('Privilège 18 : conserver son Or en fin de lignée, et gagner 1 Or (décision JJJ)', () => {
+  it('garde l\'Or restant et gagne 1 Or, puis s\'ajoute l\'Or de la nouvelle lignée', () => {
+    expect(finirLignee(avec([18], { or: 1 })).joueurs[0]!.or).toBe(1 + 1 + 3);
     expect(finirLignee(avec([], { or: 1 })).joueurs[0]!.or).toBe(3);
+  });
+
+  it('gagne 1 Or même s\'il ne lui reste plus d\'Or', () => {
+    expect(finirLignee(avec([18], { or: 0 })).joueurs[0]!.or).toBe(1 + 3);
   });
 
   it('garde ce qui reste après avoir payé la montée en Économie', () => {
     const apres = faire(avec([18], { or: 5 }), { type: 'finLignee' }, { type: 'monter', piste: 'economie' });
-    // 5 Or - 2 Or (niveau 1) = 3 Or conservés, + 4 Or de la nouvelle lignée au niveau 1.
-    expect(apres.joueurs[0]!.or).toBe(7);
+    // 5 Or - 2 Or (niveau 1) = 3 Or conservés, + 1 Or du Privilège, + 4 Or de la nouvelle lignée au niveau 1.
+    expect(apres.joueurs[0]!.or).toBe(3 + 1 + 4);
   });
 });
 
-describe('Privilège 20 : 2 Or chaque fois que le joueur joue une carte Avancée (décisions EE et GG)', () => {
-  it('rapporte 1 Or en plus de l\'effet de la carte Avancée', () => {
+describe('Privilège 20 : 3 Or chaque fois que le joueur joue une carte Avancée (décisions EE et GG, 3 Or depuis le 12/11)', () => {
+  it('rapporte 3 Or en plus de l\'effet de la carte Avancée', () => {
     // Carrière : Gagne 3 Or.
     const apres = faire(avec([20], { main: [c('Carrière')] }), { type: 'jouer', carte: c('Carrière') });
-    expect(apres.joueurs[0]!.or).toBe(3 + 2);
+    expect(apres.joueurs[0]!.or).toBe(3 + 3);
   });
 
-  it('rapporte 2 Or même si le joueur n\'applique pas l\'effet de la carte', () => {
+  it('rapporte 3 Or même si le joueur n\'applique pas l\'effet de la carte', () => {
     // Mine : Paye 9 Or pour trasher 2 cartes ; le joueur renonce à payer.
     const apres = faire(avec([20], { main: [c('Mine')], or: 9 }), { type: 'jouer', carte: c('Mine') }, { type: 'passer' });
-    expect(apres.joueurs[0]!.or).toBe(9 + 2);
+    expect(apres.joueurs[0]!.or).toBe(9 + 3);
   });
 
   it('ne rapporte rien pour une carte de départ ou une carte Assymétrie', () => {

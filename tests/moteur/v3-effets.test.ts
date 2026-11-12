@@ -122,14 +122,15 @@ describe('révéler 1 carte (décision RR)', () => {
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
   });
 
-  it('envoie dans la défausse une carte sans ressource', () => {
+  it('pose aussi dans l\'aire de jeu une carte sans ressource (décision III)', () => {
     const epicerie = preter(c('Épicerie'), 'revele(1)');
     const cachot = carte(c('Cachot'));
     const ressources = cachot.ressources;
     cachot.ressources = { pierre: 0, metal: 0, erudit: 0 };
     try {
       const apres = faire(scene({ main: [epicerie], pioche: [c('Cachot'), c('Forgeron')] }), { type: 'jouer', carte: epicerie });
-      expect(alice(apres).defausse).toEqual([c('Cachot')]);
+      expect(alice(apres).aireDeJeu).toContain(c('Cachot'));
+      expect(alice(apres).defausse).not.toContain(c('Cachot'));
     } finally {
       cachot.ressources = ressources;
     }
@@ -186,7 +187,7 @@ describe('rejouer 1 carte (décision QQ)', () => {
     const etat = scene({ main: [epicerie, remouleur] });
     alice(etat).privileges = [20];
     const apres = faire(etat, { type: 'jouer', carte: epicerie }, { type: 'jouer', carte: remouleur });
-    expect(alice(apres).or).toBe(1 + 2);
+    expect(alice(apres).or).toBe(1 + 3);
   });
 
   it('s\'enchaîne si la 2e carte permet elle aussi de rejouer', () => {

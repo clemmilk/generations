@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { carte } from '../../src/game/cartes.ts';
 import { applyAction, getLegalActions } from '../../src/game/index.ts';
-import { c, faire, permises, scene, typesPermis } from './outils.ts';
+import { avecReglage, c, faire, permises, scene, typesPermis } from './outils.ts';
 
 describe('le tour de jeu', () => {
   it('propose de jouer chaque carte de la main', () => {
@@ -49,6 +50,37 @@ describe('jouer une carte', () => {
     expect(alice.main).toEqual([c('Cachot')]);
     expect(apres.joueurActif).toBe(1);
     expect(apres.attente).toEqual({ type: 'tour', joueur: 1 });
+  });
+
+  describe('une carte sans ressource (décision III)', () => {
+    const sansRessource = (test: () => void) => {
+      const cachot = carte(c('Cachot'));
+      const ressources = cachot.ressources;
+      cachot.ressources = { pierre: 0, metal: 0, erudit: 0 };
+      try {
+        test();
+      } finally {
+        cachot.ressources = ressources;
+      }
+    };
+
+    it('va dans l\'aire de jeu, comme les autres', () =>
+      sansRessource(() => {
+        const apres = faire(scene({ main: [c('Cachot')], or: 0 }), { type: 'jouer', carte: c('Cachot') });
+        expect(apres.joueurs[0]!.aireDeJeu).toEqual([c('Cachot')]);
+        expect(apres.joueurs[0]!.defausse).toEqual([]);
+      }));
+
+    describe('avant le 12/11 (règle gardée dans les paramètres)', () => {
+      avecReglage('carteSansRessourceVa', 'defausse');
+
+      it('allait dans la défausse', () =>
+        sansRessource(() => {
+          const apres = faire(scene({ main: [c('Cachot')], or: 0 }), { type: 'jouer', carte: c('Cachot') });
+          expect(apres.joueurs[0]!.aireDeJeu).toEqual([]);
+          expect(apres.joueurs[0]!.defausse).toEqual([c('Cachot')]);
+        }));
+    });
   });
 
   it('revient au premier joueur après le dernier', () => {

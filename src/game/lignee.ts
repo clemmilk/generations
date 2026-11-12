@@ -1,6 +1,8 @@
 import { carte, nomsDesCartes } from './cartes.ts';
 import type { Etat, Joueur } from './etat.ts';
 import { MATERIEL } from './materiel/index.ts';
+import type { Carte } from './materiel/index.ts';
+import { PARAMETRES } from './parametres.ts';
 import { effetsPrivilege, totalPrivilege } from './privileges.ts';
 import { compter } from './ressources.ts';
 
@@ -56,9 +58,15 @@ export function piocher(etat: Etat, joueur: Joueur, nombre: number): string[] {
   return piochees;
 }
 
+/** La carte porte-t-elle au moins une ressource (Pierre, Métal ou Érudit) ? */
+export function aUneRessource(c: Carte): boolean {
+  const r = c.ressources;
+  return r.pierre + r.metal + r.erudit > 0;
+}
+
 /**
  * Révèle jusqu'à « nombre » cartes du dessus de la pioche (décision RR) : chacune est posée face visible
- * dans l'aire de jeu, sans effet ni Effet Rouge (sans ressource, elle va dans la défausse).
+ * dans l'aire de jeu, sans effet ni Effet Rouge, même sans ressource (décision III, paramètre carteSansRessourceVa).
  * Une carte révélée compte comme une carte piochée : révéler la dernière carte du deck fait gagner.
  */
 export function revelerCartes(etat: Etat, joueur: Joueur, nombre: number): string[] {
@@ -68,8 +76,7 @@ export function revelerCartes(etat: Etat, joueur: Joueur, nombre: number): strin
     const id = joueur.pioche.shift();
     if (id === undefined) break;
     const c = carte(id);
-    const r = c.ressources;
-    if (r.pierre + r.metal + r.erudit > 0) joueur.aireDeJeu.push(id);
+    if (aUneRessource(c) || PARAMETRES.carteSansRessourceVa === 'aireDeJeu') joueur.aireDeJeu.push(id);
     else joueur.defausse.push(id);
     // Une carte Assymétrie révélée est désormais connue de tous.
     if (c.origine === 'asymetrie' && !etat.cartesRevelees.includes(id)) etat.cartesRevelees.push(id);
@@ -146,4 +153,11 @@ export function debuterLignee(etat: Etat, joueur: Joueur): void {
   // Privilège 8 : moins de cartes piochées ; la recherche qui les remplace est gérée par le moteur.
   piocher(etat, joueur, gains.cartesPiochees);
   if (etat.vainqueur === null) revelerCartes(etat, joueur, gains.cartesRevelees);
+  // Privilège 12 (décision HHH) : il révèle 1 carte (ci-dessus) et paye 3 Or, obligatoirement.
+  for (const effet of effetsPrivilege(joueur, 'reveleDebutLignee')) {
+    const paye = Math.min(effet.or, joueur.or);
+    if (paye <= 0) continue;
+    joueur.or -= paye;
+    noter(etat, joueur, `${joueur.nom} paye ${paye} Or pour son Privilège ${effet.numero}.`);
+  }
 }

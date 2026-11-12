@@ -3,6 +3,7 @@ import { carte } from '../game/cartes.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
 import type { Etape, Gain, Piste } from '../game/materiel/index.ts';
 import { coutDAchat, coutDeLEtape, coutEnOr, coutEnOrDuNiveau, etapeDe, peutMonterEnFinDeLignee } from '../game/moteur.ts';
+import type { Reduction } from '../game/actions.ts';
 import { PARAMETRES } from '../game/parametres.ts';
 import { effetsPrivilege, totalPrivilege } from '../game/privileges.ts';
 import { compter, ressourcesDe, ressourcesEnJeu } from '../game/ressources.ts';
@@ -244,20 +245,20 @@ function valeurDuRemplacement(moi: VueJoueur, p: Poids): number {
   return valeurs.length > 0 ? Math.min(...valeurs) : 0;
 }
 
-function noteAchat(moi: VueJoueur, id: string, paiement: string[] | null, p: Poids): number {
-  const cout = coutEnOr(moi, id);
+function noteAchat(moi: VueJoueur, id: string, paiement: string[] | null, p: Poids, reduction: Reduction = 'or'): number {
+  const cout = coutEnOr(moi, id, reduction);
   if (PARAMETRES.carteAcheteeVa === 'remplacement') {
     // Le deck ne grossit pas : la carte achetée remplace la moins utile, trashée gratuitement.
     let note = valeurPourMoi(moi, id, p) - valeurDuRemplacement(moi, p) - cout * p.or;
     note += totalPrivilege(moi, 'orParTrash', (effet) => effet.or) * p.or;
     if (paiement) for (const carteDonnee of paiement) note -= valeurRessources(moi, carteDonnee, p);
-    else note -= coutDAchat(moi, id).ressource * Math.min(p.pierre, p.metal);
+    else note -= coutDAchat(moi, id, reduction).ressource * Math.min(p.pierre, p.metal);
     return note;
   }
   // Une carte de plus dans le deck…
   let note = valeurPourMoi(moi, id, p) + p.achat - cout * p.or;
   if (paiement) for (const carteDonnee of paiement) note -= valeurRessources(moi, carteDonnee, p);
-  else note -= coutDAchat(moi, id).ressource * Math.min(p.pierre, p.metal);
+  else note -= coutDAchat(moi, id, reduction).ressource * Math.min(p.pierre, p.metal);
   // … sauf que, pour 1 Or de plus, l'achat permet de trasher une carte : le deck ne grossit pas.
   // Ce trash vaut autant qu'un trash obtenu par un effet de carte, pour bien moins cher.
   if (carteARemplacer(moi, p, moi.or - cout) !== null) {
@@ -308,7 +309,7 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
       return note;
     }
     case 'acheter':
-      return noteAchat(moi, action.carte, action.paiement, p);
+      return noteAchat(moi, action.carte, action.paiement, p, action.reduction);
     case 'renouvelerRiviere': {
       // L'espoir de meilleures cartes, moins le prix, moins l'intérêt des cartes qu'il fait disparaître.
       // Il faut encore pouvoir acheter après avoir payé, sinon le renouvellement ne sert à rien.
@@ -321,8 +322,15 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
     case 'utiliserPrivilege': {
       const pioche = effetsPrivilege(moi, 'actionPioche').find((e) => e.numero === action.numero);
       const trash = effetsPrivilege(moi, 'actionTrash').find((e) => e.numero === action.numero);
+      const revele = effetsPrivilege(moi, 'actionRevele').find((e) => e.numero === action.numero);
       let note: number;
-      if (pioche) {
+      if (revele) {
+        const cartes = Math.min(revele.cartes, moi.nbCartesPioche);
+        if (cartes <= 0) return -Infinity;
+        if (cartes >= moi.nbCartesPioche) return VICTOIRE;
+        note = -revele.cout.or * p.or;
+        for (let i = 0; i < cartes; i++) note += p.revele + p.piocheProche / Math.max(1, moi.nbCartesPioche - i);
+      } else if (pioche) {
         if (pioche.cartes >= moi.nbCartesPioche) return VICTOIRE;
         note = valeurDesPioches(moi, pioche.cartes, 'pioche', p) - pioche.cout.or * p.or;
       } else if (trash) {
@@ -449,7 +457,7 @@ function choisir(vue: Vue, actions: Action[], p: Poids, hasard: () => number): A
         }
         case 'achat': {
           const choix: Choix[] = actions.flatMap((action) =>
-            action.type === 'acheter' ? [{ action, note: noteAchat(moi, action.carte, action.paiement, p) }] : [],
+            action.type === 'acheter' ? [{ action, note: noteAchat(moi, action.carte, action.paiement, p, action.reduction) }] : [],
           );
           const rentables = choix.filter((c) => c.note > 0);
           return rentables.length > 0 ? meilleur(rentables, hasard) : (passer ?? actions[0]!);
@@ -513,7 +521,7 @@ function choisir(vue: Vue, actions: Action[], p: Poids, hasard: () => number): A
     case 'achatEnPlus': {
       // Privilège 10 : un achat en début de lignée, s'il en vaut la peine.
       const choix: Choix[] = actions.flatMap((action) =>
-        action.type === 'acheter' ? [{ action, note: noteAchat(moi, action.carte, action.paiement, p) }] : [],
+        action.type === 'acheter' ? [{ action, note: noteAchat(moi, action.carte, action.paiement, p, action.reduction) }] : [],
       );
       const rentables = choix.filter((c) => c.note > 0);
       return rentables.length > 0 ? meilleur(rentables, hasard) : (passer ?? actions[0]!);

@@ -1,9 +1,9 @@
-import type { Action, Attente, RefEtape, Tache } from './actions.ts';
+import type { Action, Attente, Reduction, RefEtape, Tache } from './actions.ts';
 import { carte, nomsDesCartes, privilege } from './cartes.ts';
 import { ordreDuTour } from './creation.ts';
 import type { Etat, Joueur } from './etat.ts';
 import { melanger } from './hasard.ts';
-import { debuterLignee, noter, piocher, revelerCartes } from './lignee.ts';
+import { aUneRessource, debuterLignee, noter, piocher, revelerCartes } from './lignee.ts';
 import { MATERIEL } from './materiel/index.ts';
 import type { Cout, CoutEffet, Etape, Piste } from './materiel/index.ts';
 import { effetsPrivilege, totalPrivilege } from './privileges.ts';
@@ -214,17 +214,36 @@ function rechercher(etat: Etat, joueur: Joueur, id: string, supplementaire: bool
   }
 }
 
-/** Le coût en Or d'une carte de la Rivière pour ce joueur (Privilège 1 : réduction, jamais sous 0). */
-export function coutEnOr(joueur: Pick<Joueur, 'privileges'>, id: string): number {
-  const reduction = totalPrivilege(joueur, 'reductionAchat', (effet) => effet.or);
+/**
+ * Le coût en Or d'une carte de la Rivière pour ce joueur, réductions des Privilèges déduites (jamais sous 0).
+ * « choix » : la réduction choisie pour cet achat avec le Privilège 1 (décision GGG) ; par défaut, celle sur l'Or.
+ */
+export function coutEnOr(joueur: Pick<Joueur, 'privileges'>, id: string, choix: Reduction = 'or'): number {
+  let reduction = totalPrivilege(joueur, 'reductionAchat', (effet) => effet.or);
+  if (choix === 'or') reduction += totalPrivilege(joueur, 'reductionAchatAuChoix', (effet) => effet.or);
   return Math.max(0, carte(id).cout.or - reduction);
 }
 
 /** Le coût complet d'une carte de la Rivière pour ce joueur, réductions des Privilèges déduites (jamais sous 0). */
-export function coutDAchat(joueur: Pick<Joueur, 'privileges'>, id: string): Cout {
+export function coutDAchat(joueur: Pick<Joueur, 'privileges'>, id: string, choix: Reduction = 'or'): Cout {
   const cout = carte(id).cout;
-  const reduction = totalPrivilege(joueur, 'reductionRessource', (effet) => effet.ressource);
-  return { ...cout, or: coutEnOr(joueur, id), ressource: Math.max(0, cout.ressource - reduction) };
+  let reduction = totalPrivilege(joueur, 'reductionRessource', (effet) => effet.ressource);
+  if (choix === 'ressource') reduction += totalPrivilege(joueur, 'reductionAchatAuChoix', (effet) => effet.ressource);
+  return { ...cout, or: coutEnOr(joueur, id, choix), ressource: Math.max(0, cout.ressource - reduction) };
+}
+
+/**
+ * Les réductions entre lesquelles le joueur peut choisir pour acheter cette carte (Privilège 1, décision GGG).
+ * Sans ce Privilège : [null], aucun choix. Avec : seulement celles qui changent quelque chose
+ * (moins d'Or si la carte coûte de l'Or, moins de Ressources si elle en coûte), au moins une.
+ */
+function reductionsPossibles(joueur: Pick<Joueur, 'privileges'>, id: string): (Reduction | null)[] {
+  if (effetsPrivilege(joueur, 'reductionAchatAuChoix').length === 0) return [null];
+  const cout = carte(id).cout;
+  const choix: Reduction[] = [];
+  if (cout.or > 0) choix.push('or');
+  if (cout.ressource > 0) choix.push('ressource');
+  return choix.length > 0 ? choix : ['or'];
 }
 
 /**
@@ -317,17 +336,23 @@ function paiementsDeLEtape(joueur: Joueur, etape: Etape): string[][] {
   });
 }
 
-function paiementsDeLAchat(joueur: Joueur, id: string): string[][] {
-  if (joueur.or < coutEnOr(joueur, id)) return [];
-  return optionsDePaiement(joueur, coutDAchat(joueur, id));
+function paiementsDeLAchat(joueur: Joueur, id: string, choix: Reduction = 'or'): string[][] {
+  if (joueur.or < coutEnOr(joueur, id, choix)) return [];
+  return optionsDePaiement(joueur, coutDAchat(joueur, id, choix));
 }
 
-/** Tous les achats possibles dans la Rivière, avec chaque façon de payer. */
+/** Tous les achats possibles dans la Rivière, avec chaque façon de payer (et chaque réduction du Privilège 1). */
 function achatsPossibles(etat: Etat, joueur: Joueur): Action[] {
   const actions: Action[] = [];
   for (const id of etat.riviere) {
-    for (const paiement of paiementsDeLAchat(joueur, id)) {
-      actions.push({ type: 'acheter', joueur: joueur.id, carte: id, paiement });
+    for (const reduction of reductionsPossibles(joueur, id)) {
+      for (const paiement of paiementsDeLAchat(joueur, id, reduction ?? 'or')) {
+        actions.push(
+          reduction === null
+            ? { type: 'acheter', joueur: joueur.id, carte: id, paiement }
+            : { type: 'acheter', joueur: joueur.id, carte: id, paiement, reduction },
+        );
+      }
     }
   }
   return actions;
@@ -383,9 +408,9 @@ function remplacer(etat: Etat, joueur: Joueur, achetee: string, remplacee: strin
   trasher(etat, joueur, remplacee);
 }
 
-function acheter(etat: Etat, joueur: Joueur, id: string, paiement: string[]): void {
+function acheter(etat: Etat, joueur: Joueur, id: string, paiement: string[], reduction: Reduction = 'or'): void {
   const c = carte(id);
-  joueur.or -= coutEnOr(joueur, c.id);
+  joueur.or -= coutEnOr(joueur, c.id, reduction);
   defausserDeLAire(joueur, paiement);
   retirer(etat.riviere, c.id);
   // En remplacement, la carte attend que le joueur choisisse la carte qu'elle remplace (remplacementAchat).
@@ -459,6 +484,21 @@ function actionsDePrivilege(etat: Etat, joueur: Joueur, avantAction: boolean): A
         copie.or -= effet.cout.or;
         defausserDeLAire(copie, paiement);
         if (choixDuTrashPrivilege(etat, copie, true).length === 0) continue;
+      }
+      actions.push({ type: 'utiliserPrivilege', joueur: j, numero: effet.numero, paiement });
+    }
+  }
+  for (const effet of effetsPrivilege(joueur, 'actionRevele')) {
+    if (!disponible(effet.numero)) continue;
+    for (const paiement of paiementsDuPrivilege(joueur, effet.cout, joueur.pioche.length > 0)) {
+      // Avant l'action, comme pour le trash : interdit s'il laisse le joueur sans aucune action possible,
+      // sauf s'il révèle la dernière carte de sa pioche (il gagne). La carte révélée n'est pas connue
+      // d'avance : on ne compte pas les ressources qu'elle apportera.
+      if (avantAction && joueur.pioche.length > effet.cartes) {
+        const copie = copieDesCartes(joueur);
+        copie.or -= effet.cout.or;
+        defausserDeLAire(copie, paiement);
+        if (!peutFaireSonAction(etat, copie)) continue;
       }
       actions.push({ type: 'utiliserPrivilege', joueur: j, numero: effet.numero, paiement });
     }
@@ -643,6 +683,7 @@ function cle(action: Action): string {
     'cartes' in action ? [...action.cartes].sort() : null,
     'numero' in action ? action.numero : null,
     'piste' in action ? action.piste : null,
+    'reduction' in action ? (action.reduction ?? null) : null,
   ]);
 }
 
@@ -656,9 +697,11 @@ function utiliserPrivilege(
   avantAction: boolean,
   ensuite: Tache,
 ): void {
-  const effet = [...effetsPrivilege(joueur, 'actionPioche'), ...effetsPrivilege(joueur, 'actionTrash')].find(
-    (e) => e.numero === action.numero,
-  );
+  const effet = [
+    ...effetsPrivilege(joueur, 'actionPioche'),
+    ...effetsPrivilege(joueur, 'actionTrash'),
+    ...effetsPrivilege(joueur, 'actionRevele'),
+  ].find((e) => e.numero === action.numero);
   if (!effet) return;
   joueur.or -= effet.cout.or;
   defausserDeLAire(joueur, action.paiement);
@@ -666,6 +709,9 @@ function utiliserPrivilege(
   noter(etat, joueur, `${joueur.nom} utilise son Privilège ${effet.numero}.`);
   if (effet.type === 'actionPioche') {
     joueur.statistiques.piochesSupplementaires += piocher(etat, joueur, effet.cartes).length;
+    etat.file.unshift(ensuite);
+  } else if (effet.type === 'actionRevele') {
+    revelerCartes(etat, joueur, effet.cartes);
     etat.file.unshift(ensuite);
   } else {
     etat.file.unshift({ type: 'trashPrivilege', joueur: joueur.id, restant: effet.cartes, avantAction }, ensuite);
@@ -680,9 +726,8 @@ function jouerCarte(etat: Etat, joueur: Joueur, id: string): Tache[] {
   const j = joueur.id;
   const c = carte(id);
   retirer(joueur.main, c.id);
-  const r = c.ressources;
-  // Une carte sans ressource va directement dans la défausse.
-  if (r.pierre + r.metal + r.erudit > 0) joueur.aireDeJeu.push(c.id);
+  // Décision III : toute carte jouée va dans l'aire de jeu, même sans ressource (paramètre carteSansRessourceVa).
+  if (aUneRessource(c) || PARAMETRES.carteSansRessourceVa === 'aireDeJeu') joueur.aireDeJeu.push(c.id);
   else joueur.defausse.push(c.id);
   reveler(etat, c.id);
   joueur.statistiques.cartesJouees++;
@@ -741,7 +786,7 @@ function executerTour(etat: Etat, joueur: Joueur, action: Action): void {
       etat.file = [...jouerCarte(etat, joueur, action.carte), { type: 'apresAction', joueur: j }, { type: 'finDeTour' }];
       return;
     case 'acheter':
-      acheter(etat, joueur, action.carte, action.paiement);
+      acheter(etat, joueur, action.carte, action.paiement, action.reduction);
       etat.file = [{ type: 'apresAction', joueur: j }, { type: 'finDeTour' }];
       apresAchat(etat, joueur, action.carte);
       return;
@@ -812,7 +857,7 @@ function executerGain(
       noter(etat, joueur, `${joueur.nom} rejouera après ce tour.`);
       break;
     case 'acheter':
-      acheter(etat, joueur, action.carte, action.paiement);
+      acheter(etat, joueur, action.carte, action.paiement, action.reduction);
       break;
     default:
       return; // « passer » : le joueur s'arrête là.
@@ -910,7 +955,7 @@ function executer(etat: Etat, attente: Attente, action: Action): void {
     }
     case 'achatEnPlus':
       if (action.type !== 'acheter') return;
-      acheter(etat, joueur, action.carte, action.paiement);
+      acheter(etat, joueur, action.carte, action.paiement, action.reduction);
       apresAchat(etat, joueur, action.carte);
       return;
   }
@@ -1090,10 +1135,17 @@ function traiter(etat: Etat, tache: Tache): void {
       return;
     case 'defausserOr': {
       const joueur = etat.joueurs[tache.joueur]!;
-      // Le reste de l'Or est défaussé une fois les jauges réglées (sauf Privilège 18).
-      if (joueur.or > 0 && effetsPrivilege(joueur, 'conserveOr').length === 0) {
-        noter(etat, joueur, `${joueur.nom} défausse ses ${joueur.or} Or restants.`);
+      // Le reste de l'Or est défaussé une fois les jauges réglées, sauf avec le Privilège 18,
+      // qui fait garder l'Or et en ajoute (décision JJJ).
+      const garde = effetsPrivilege(joueur, 'conserveOr');
+      if (garde.length === 0) {
+        if (joueur.or > 0) noter(etat, joueur, `${joueur.nom} défausse ses ${joueur.or} Or restants.`);
         joueur.or = 0;
+      }
+      for (const effet of garde) {
+        if (effet.or <= 0) continue;
+        joueur.or += effet.or;
+        noter(etat, joueur, `${joueur.nom} garde son Or et gagne ${effet.or} Or grâce à son Privilège ${effet.numero}.`);
       }
       return;
     }

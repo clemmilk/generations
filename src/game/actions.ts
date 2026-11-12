@@ -1,10 +1,17 @@
 import type { Piste } from './materiel/index.ts';
 
+/** Privilège 1 (décision GGG) : à chaque achat, la carte coûte moins d'Or, ou moins de Ressources. */
+export type Reduction = 'or' | 'ressource';
+
 /** Tout ce qu'un joueur peut demander au moteur. « joueur » est le numéro de siège de celui qui agit. */
 export type Action =
   // Les actions du tour
   | { type: 'jouer'; joueur: number; carte: string }
-  | { type: 'acheter'; joueur: number; carte: string; paiement: string[] }
+  /**
+   * « reduction » : seulement avec le Privilège 1 (décision GGG), la réduction choisie pour cet achat :
+   * moins d'Or, ou moins de Ressources.
+   */
+  | { type: 'acheter'; joueur: number; carte: string; paiement: string[]; reduction?: Reduction }
   | { type: 'finLignee'; joueur: number }
   /** Privilèges d'action (13, 14, 15) : payer pour piocher ou trasher, en plus de l'action du tour, 1 fois par tuile et par tour. */
   | { type: 'utiliserPrivilege'; joueur: number; numero: number; paiement: string[] }

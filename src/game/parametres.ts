@@ -18,6 +18,11 @@ export const PARAMETRES = {
    * le joueur paye « cout » Or pour remplacer exactement « cartes » cartes de la Rivière de son choix.
    */
   renouvellementRiviere: { cout: 2, cartes: 2 },
+  /**
+   * Où va une carte jouée ou révélée qui ne porte aucune ressource (décision III, 12/11) :
+   * « aireDeJeu » (elle y reste jusqu'à la fin de la lignée, comme les autres) ou « defausse » (avant le 12/11).
+   */
+  carteSansRessourceVa: 'aireDeJeu' as 'aireDeJeu' | 'defausse',
   /** Nombre maximum de cartes en main pour pouvoir mettre fin à sa lignée. */
   mainMaxPourFinDeLignee: 1,
   /** Or à payer en plus du coût d'une carte pour trasher 1 carte lors d'un achat. */

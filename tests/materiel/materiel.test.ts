@@ -69,11 +69,10 @@ describe('matériel importé', () => {
     }
   });
 
-  it('donne au moins une ressource et un effet à chaque carte', () => {
+  it('donne au moins une ressource ou un effet à chaque carte (12/11 : certaines n\'ont que l\'un ou l\'autre)', () => {
     for (const carte of cartes) {
       const { pierre, metal, erudit } = carte.ressources;
-      expect(pierre + metal + erudit, carte.id).toBeGreaterThan(0);
-      expect(carte.effet.length, carte.id).toBeGreaterThan(0);
+      expect(pierre + metal + erudit + carte.effet.length, carte.id).toBeGreaterThan(0);
     }
   });
 

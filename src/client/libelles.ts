@@ -86,10 +86,14 @@ export function libelleAction(action: Action, attente: Attente | null): string {
   switch (action.type) {
     case 'jouer':
       return `Jouer ${carte(action.carte).nom}`;
-    case 'acheter':
+    case 'acheter': {
+      // Privilège 1 (décision GGG) : la réduction choisie pour cet achat.
+      const reduction =
+        action.reduction === 'or' ? ' (réduction sur l’Or)' : action.reduction === 'ressource' ? ' (réduction sur la Ressource)' : '';
       return action.paiement.length > 0
-        ? `Acheter ${carte(action.carte).nom} en défaussant ${nomsDesCartes(action.paiement)}`
-        : `Acheter ${carte(action.carte).nom}`;
+        ? `Acheter ${carte(action.carte).nom}${reduction} en défaussant ${nomsDesCartes(action.paiement)}`
+        : `Acheter ${carte(action.carte).nom}${reduction}`;
+    }
     case 'finLignee':
       return 'Mettre fin à ma lignée';
     case 'remplacer':
@@ -97,7 +101,8 @@ export function libelleAction(action: Action, attente: Attente | null): string {
     case 'remplacerPioche':
       return 'Remplacer la première carte de ma pioche';
     case 'utiliserPrivilege': {
-      const verbe = EFFETS_PRIVILEGES[action.numero]?.type === 'actionTrash' ? 'trasher' : 'piocher';
+      const type = EFFETS_PRIVILEGES[action.numero]?.type;
+      const verbe = type === 'actionTrash' ? 'trasher' : type === 'actionRevele' ? 'révéler' : 'piocher';
       return action.paiement.length > 0
         ? `Privilège ${action.numero} : ${verbe} en défaussant ${nomsDesCartes(action.paiement)}`
         : `Privilège ${action.numero} : payer pour ${verbe}`;

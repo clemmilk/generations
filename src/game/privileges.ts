@@ -10,6 +10,11 @@ export type EffetPrivilege =
   | { type: 'reductionAchat'; or: number }
   /** Les cartes de la Rivière coûtent moins de Ressources (R, Pierre ou Métal au choix), jamais moins de 0. */
   | { type: 'reductionRessource'; ressource: number }
+  /**
+   * À chaque achat dans la Rivière, au choix du joueur : la carte coûte « or » Or de moins,
+   * ou « ressource » Ressource de moins (décision GGG). Jamais moins de 0.
+   */
+  | { type: 'reductionAchatAuChoix'; or: number; ressource: number }
   /** Chaque carte qui porte au moins 1 « si » apporte 1 « donne » de plus. */
   | {
       type: 'bonusRessource';
@@ -28,8 +33,8 @@ export type EffetPrivilege =
   | { type: 'piocheEtDefausseDebutLignee'; cartes: number }
   /** Début de lignée, une fois tout l'Or reçu : « or » Or de plus par tranche de « tranche » Or en réserve. (Ancien Privilège 6.) */
   | { type: 'orParStockDebutLignee'; or: number; tranche: number }
-  /** Début de lignée, après la pioche : révèle des cartes en plus. */
-  | { type: 'reveleDebutLignee'; cartes: number }
+  /** Début de lignée, après la pioche : révèle des cartes en plus, et paye « or » Or (obligatoire, décision HHH). */
+  | { type: 'reveleDebutLignee'; cartes: number; or: number }
   /** Début de lignée, une fois toute la mise en place faite : le joueur peut acheter 1 carte. (Ancien Privilège 10.) */
   | { type: 'achatDebutLignee' }
   /**
@@ -43,6 +48,8 @@ export type EffetPrivilege =
   | { type: 'actionPioche'; cout: CoutEffet; cartes: number }
   /** En plus de l'action de son tour, 1 fois par tour : payer pour trasher. */
   | { type: 'actionTrash'; cout: CoutEffet; cartes: number }
+  /** En plus de l'action de son tour, 1 fois par tour : payer pour révéler. */
+  | { type: 'actionRevele'; cout: CoutEffet; cartes: number }
   | { type: 'orParTrash'; or: number }
   /** Or gagné chaque fois que le joueur joue une carte Avancée (même sans appliquer son effet). */
   | { type: 'orParCarteAvanceeJouee'; or: number }
@@ -53,13 +60,15 @@ export type EffetPrivilege =
    * Même moment que le Privilège 9, et avant lui.
    */
   | { type: 'reveleApresAchat'; cartes: number }
-  /** Fin de lignée : l'Or restant n'est pas défaussé. */
-  | { type: 'conserveOr' }
+  /** Fin de lignée : l'Or restant n'est pas défaussé, et le joueur gagne « or » Or de plus. */
+  | { type: 'conserveOr'; or: number }
   /** Or gagné chaque fois que le joueur applique l'Effet Rouge d'un adversaire. */
   | { type: 'orParEffetRouge'; or: number };
 
 export const EFFETS_PRIVILEGES: Record<number, EffetPrivilege> = {
-  1: { type: 'reductionAchat', or: 3 },
+  // 12/11 : 3 Or ou 1 Ressource de moins, au choix à chaque achat (décision GGG).
+  // Ancien effet : { type: 'reductionAchat', or: 3 }.
+  1: { type: 'reductionAchatAuChoix', or: 3, ressource: 1 },
   2: { type: 'bonusRessource', si: 'avancee', donne: 'erudit' },
   3: { type: 'bonusRessource', si: 'avancee', donne: 'pierre' },
   4: { type: 'bonusRessource', si: 'avancee', donne: 'metal' },
@@ -67,21 +76,23 @@ export const EFFETS_PRIVILEGES: Record<number, EffetPrivilege> = {
   5: { type: 'orDebutLignee', or: 2, par: 'tuile_privilege' },
   // 11/11 : nouvelles tuiles 6 et 10 (décisions AAA et BBB). Les anciens effets restent disponibles :
   // 6 : { type: 'orParStockDebutLignee', or: 2, tranche: 5 } ; 10 : { type: 'achatDebutLignee' }.
-  6: { type: 'orParCarteRougeJouee', or: 1 },
+  6: { type: 'orParCarteRougeJouee', or: 2 },
   7: { type: 'reductionPopulation', or: 5 },
   8: { type: 'rechercheDebutLignee', cartes: 1 },
   9: { type: 'joueApresAchat' },
   10: { type: 'reveleApresAchat', cartes: 1 },
-  11: { type: 'actionTrash', cout: { or: 8, pierre: 0, metal: 0 }, cartes: 1 },
-  12: { type: 'reveleDebutLignee', cartes: 1 },
+  // 12/11 : la tuile 11 fait révéler pour 7 Or (avant : trasher pour 8 Or, type 'actionTrash').
+  11: { type: 'actionRevele', cout: { or: 7, pierre: 0, metal: 0 }, cartes: 1 },
+  // 12/11 : la tuile 12 fait aussi payer 3 Or (décision HHH).
+  12: { type: 'reveleDebutLignee', cartes: 1, or: 3 },
   13: { type: 'actionTrash', cout: { or: 0, pierre: 3, metal: 0 }, cartes: 1 },
   14: { type: 'actionPioche', cout: { or: 0, pierre: 0, metal: 2 }, cartes: 1 },
   15: { type: 'actionPioche', cout: { or: 8, pierre: 0, metal: 0 }, cartes: 1 },
   16: { type: 'erudit', nombre: 1 },
   17: { type: 'orParTrash', or: 1 },
-  18: { type: 'conserveOr' },
+  18: { type: 'conserveOr', or: 1 },
   19: { type: 'orDebutLignee', or: 3, par: null },
-  20: { type: 'orParCarteAvanceeJouee', or: 2 },
+  20: { type: 'orParCarteAvanceeJouee', or: 3 },
 };
 
 type EffetDeType<T extends EffetPrivilege['type']> = Extract<EffetPrivilege, { type: T }>;

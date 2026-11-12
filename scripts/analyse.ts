@@ -417,9 +417,9 @@ const avecEffetRouge = [...new Set(MATERIEL.cartes.filter((c) => c.effetRouge.le
 const fois = (liste: { carte: string }[], n: string) => liste.filter((e) => nom(e.carte) === n).length;
 section(
   'Effets Rouges par carte',
-  "Combien de fois les adversaires profitent de l'Effet Rouge d'une carte, quand elle est jouée. " +
-    "Une carte jouée à 4 joueurs peut servir jusqu'à 3 fois (une par adversaire). " +
-    "« Choisi » : l'adversaire a payé ou fait un choix ; sinon, c'est un gain automatique.",
+  "Combien de fois le voisin de droite profite de l'Effet Rouge d'une carte, quand elle est jouée. " +
+    'Seul le joueur de droite peut l’appliquer : au plus 1 fois par carte jouée. ' +
+    "« Choisi » : le voisin a payé ou fait un choix ; sinon, c'est un gain automatique.",
   tableau(
     [
       'Carte',

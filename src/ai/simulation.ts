@@ -33,6 +33,8 @@ export interface ResultatPartie {
   asymetrieDeDepart: string[][];
   /** Les cartes Avancée achetées, par siège. */
   achatsParSiege: string[][];
+  /** Les tuiles Privilège possédées à la fin, par siège. */
+  privilegesParSiege?: number[][];
 }
 
 /** Fait jouer une partie complète aux bots donnés (un par siège). La même graine redonne la même partie. */
@@ -77,6 +79,7 @@ export function simulerPartie(bots: Bot[], graine: number): ResultatPartie {
     achatsParSiege: etat.joueurs.map((joueur) =>
       etat.historique.flatMap((action) => (action.type === 'acheter' && action.joueur === joueur.id ? [action.carte] : [])),
     ),
+    privilegesParSiege: etat.joueurs.map((joueur) => [...joueur.privileges]),
   };
 }
 

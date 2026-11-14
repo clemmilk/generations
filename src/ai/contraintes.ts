@@ -1,32 +1,41 @@
 import type { Action } from '../game/actions.ts';
 import type { Bot } from './bot.ts';
 
-// Consignes imposées à un bot pour mesurer la force d'une carte Avancée (npm run force-cartes) :
+// Consignes imposées à un bot pour mesurer la force d'une carte Avancée ou d'une tuile Privilège (npm run force-cartes) :
 // on compare ses victoires avec et sans la consigne, sur les mêmes parties.
 
 export type TypeDeConsigne = 'interdit' | 'prioritaire';
 
-export interface Consigne {
-  /** « interdit » : le bot n'achète jamais la carte. « prioritaire » : il l'achète dès qu'il le peut. */
-  type: TypeDeConsigne;
-  /** Identifiant de la carte Avancée concernée. */
-  carte: string;
+/**
+ * « interdit » : le bot n'achète jamais la carte (ne prend jamais la tuile).
+ * « prioritaire » : il l'achète (la prend) dès qu'il le peut.
+ */
+export type Consigne =
+  | { type: TypeDeConsigne; /** Identifiant de la carte Avancée concernée. */ carte: string }
+  | { type: TypeDeConsigne; /** Numéro de la tuile Privilège concernée. */ privilege: number };
+
+/** L'action est-elle celle que vise la consigne (acheter cette carte, prendre cette tuile) ? */
+function vise(action: Action, consigne: Consigne): boolean {
+  if ('carte' in consigne) return action.type === 'acheter' && action.carte === consigne.carte;
+  return action.type === 'prendrePrivilege' && action.numero === consigne.privilege;
 }
 
-const achete = (action: Action, carte: string) => action.type === 'acheter' && action.carte === carte;
+/** Le nom court de la cible d'une consigne. */
+export const cibleDeConsigne = (consigne: Consigne): string =>
+  'carte' in consigne ? consigne.carte : `privilege_${consigne.privilege}`;
 
 /** Le même bot, qui respecte la consigne. Pour tout le reste (paiement, carte remplacée…), il joue comme d'habitude. */
 export function avecConsigne(bot: Bot, consigne: Consigne): Bot {
   return {
-    nom: `${bot.nom} (${consigne.type} : ${consigne.carte})`,
+    nom: `${bot.nom} (${consigne.type} : ${cibleDeConsigne(consigne)})`,
     choisir(vue, actions, hasard) {
       if (consigne.type === 'interdit') {
-        const autorisees = actions.filter((action) => !achete(action, consigne.carte));
+        const autorisees = actions.filter((action) => !vise(action, consigne));
         return bot.choisir(vue, autorisees.length > 0 ? autorisees : actions, hasard);
       }
       // Plusieurs façons de payer la carte peuvent exister : le bot choisit laquelle.
-      const achats = actions.filter((action) => achete(action, consigne.carte));
-      return bot.choisir(vue, achats.length > 0 ? achats : actions, hasard);
+      const visees = actions.filter((action) => vise(action, consigne));
+      return bot.choisir(vue, visees.length > 0 ? visees : actions, hasard);
     },
   };
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Bot } from '../../src/ai/bot.ts';
 import { avecConsigne } from '../../src/ai/contraintes.ts';
-import { ecartApparie, fourchette, jouerPartieJumelle, siegeTeste } from '../../src/ai/forceCartes.ts';
+import { ecartApparie, fourchette, jouerPartieJumelle, jouerPartieJumelleAvecPrivileges, siegeTeste } from '../../src/ai/forceCartes.ts';
 import { BOTS } from '../../src/ai/index.ts';
 import { simulerPartie } from '../../src/ai/simulation.ts';
 import type { Action } from '../../src/game/actions.ts';
@@ -62,6 +62,51 @@ describe('consignes imposées à un bot', () => {
     const bot = espion();
     avecConsigne(bot, { type: 'prioritaire', carte: c('Remouleur ambulant') }).choisir(vue, actions, hasard);
     expect(bot.proposees).toEqual(actions);
+  });
+});
+
+describe('consignes sur les tuiles Privilège', () => {
+  const prendre = (numero: number): Action => ({ type: 'prendrePrivilege', joueur: 0, numero });
+  const passer: Action = { type: 'passer', joueur: 0 };
+  const vue = situation(0).vue;
+
+  it('« interdit » retire seulement la prise de cette tuile', () => {
+    const bot = espion();
+    avecConsigne(bot, { type: 'interdit', privilege: 7 }).choisir(vue, [prendre(7), prendre(1), passer], hasard);
+    expect(bot.proposees).toEqual([prendre(1), passer]);
+  });
+
+  it('« prioritaire » ne propose que cette tuile quand elle est visible', () => {
+    const bot = espion();
+    avecConsigne(bot, { type: 'prioritaire', privilege: 1 }).choisir(vue, [prendre(7), prendre(1), passer], hasard);
+    expect(bot.proposees).toEqual([prendre(1)]);
+  });
+
+  it('« prioritaire » laisse jouer normalement quand la tuile n\'est pas proposée', () => {
+    const bot = espion();
+    avecConsigne(bot, { type: 'prioritaire', privilege: 18 }).choisir(vue, [prendre(7), passer], hasard);
+    expect(bot.proposees).toEqual([prendre(7), passer]);
+  });
+
+  it('une consigne sur une tuile ne touche pas aux achats de cartes', () => {
+    const { vue: v, actions } = situation(20);
+    const bot = espion();
+    avecConsigne(bot, { type: 'interdit', privilege: 7 }).choisir(v, actions, hasard);
+    expect(bot.proposees).toEqual(actions);
+  });
+
+  it('avec « interdit », le siège testé ne finit jamais avec la tuile s\'il ne l\'a pas tirée au hasard', () => {
+    // Une graine où le siège testé possède une tuile en temps normal.
+    let graine = 1;
+    let reference = jouerPartieJumelleAvecPrivileges(BOTS.entrainee, 3, graine, null);
+    while (reference.privilegesParSiege[siegeTeste(graine, 3)]!.length === 0) {
+      graine++;
+      reference = jouerPartieJumelleAvecPrivileges(BOTS.entrainee, 3, graine, null);
+    }
+    const teste = siegeTeste(graine, 3);
+    const cible = reference.privilegesParSiege[teste]![0]!;
+    const avec = jouerPartieJumelleAvecPrivileges(BOTS.entrainee, 3, graine, { type: 'interdit', privilege: cible });
+    expect(avec.privilegesParSiege[teste]).not.toContain(cible);
   });
 });
 

@@ -9,15 +9,17 @@
 //   --bot nom         entrainee (par défaut) ou planificatrice
 //   --simulations N   pour le bot planificatrice : parties simulées par décision (40 par défaut)
 //   --cartes a,b      seulement ces cartes Avancée (par leur nom) ; sinon toutes
+//   --privileges      teste les tuiles Privilège au lieu des cartes (« --privileges 1,6,18 » : seulement celles-ci)
 //   --coeurs N        nombre de cœurs du processeur utilisés (12 par défaut)
 //   --graine N        graine de la première partie (1 par défaut)
-// Le rapport est écrit dans rapports/force-cartes-<bot>-<joueurs>j-<date>.md.
+// Le rapport est écrit dans rapports/force-cartes-<bot>-<joueurs>j-<date>.md (force-privileges-… avec --privileges).
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { Worker, isMainThread, parentPort, workerData } from 'node:worker_threads';
 import type { Bot } from '../src/ai/bot.ts';
+import { cibleDeConsigne } from '../src/ai/contraintes.ts';
 import type { Consigne, TypeDeConsigne } from '../src/ai/contraintes.ts';
-import { ecartApparie, fourchette, jouerPartieJumelle, siegeTeste } from '../src/ai/forceCartes.ts';
+import { ecartApparie, fourchette, jouerPartieJumelleAvecPrivileges, siegeTeste } from '../src/ai/forceCartes.ts';
 import type { Ecart } from '../src/ai/forceCartes.ts';
 import { BOTS } from '../src/ai/index.ts';
 import { creerBotPlanificateur } from '../src/ai/planification.ts';
@@ -39,7 +41,7 @@ interface Paquet {
 
 interface Resultat {
   consigne: Consigne | null;
-  parties: { graine: number; vainqueur: number | null; asymetrie: string[][]; achats: string[][] }[];
+  parties: { graine: number; vainqueur: number | null; asymetrie: string[][]; achats: string[][]; privileges: number[][] }[];
 }
 
 // ───────────────────────── Côté chef d'orchestre ─────────────────────────
@@ -73,9 +75,20 @@ async function principal(): Promise<void> {
   }
   const testees = demandees ? avancees.filter((c) => demandees.includes(c.nom)) : avancees;
 
-  // Les paquets : la référence, puis chaque carte avec chaque consigne. Des paquets assez petits pour bien répartir le travail.
+  // --privileges : on teste les tuiles Privilège (toutes, ou seulement celles données) au lieu des cartes.
+  const modePrivileges = process.argv.includes('--privileges');
+  const listePrivileges = option('privileges', '');
+  const numeros = MATERIEL.privileges.map((p) => p.numero);
+  const privilegesTestes =
+    listePrivileges && !listePrivileges.startsWith('--') ? listePrivileges.split(',').map((n) => Number(n.trim())) : numeros;
+  for (const n of privilegesTestes) if (!numeros.includes(n)) quitter(`Privilège inconnu : « ${n} ».`);
+
+  // Les paquets : la référence, puis chaque carte (ou tuile) avec chaque consigne. Des paquets assez petits pour bien répartir le travail.
   const consignes: (Consigne | null)[] = [null];
-  for (const c of testees) for (const type of ['interdit', 'prioritaire'] as TypeDeConsigne[]) consignes.push({ type, carte: c.id });
+  for (const type of ['interdit', 'prioritaire'] as TypeDeConsigne[]) {
+    if (modePrivileges) for (const n of privilegesTestes) consignes.push({ type, privilege: n });
+    else for (const c of testees) consignes.push({ type, carte: c.id });
+  }
   const taille = bot === 'planificatrice' ? 2 : 250;
   const paquets: Paquet[] = [];
   for (const consigne of consignes) {
@@ -117,13 +130,15 @@ async function principal(): Promise<void> {
   });
 
   const secondes = Math.round((Date.now() - debut) / 1000);
-  const fichier = ecrireRapport({ resultats, joueurs, parties, bot, simulations, premiere, testees: testees.map((c) => c.id), secondes });
+  const fichier = modePrivileges
+    ? ecrireRapportPrivileges({ resultats, joueurs, parties, bot, simulations, premiere, testes: privilegesTestes, secondes })
+    : ecrireRapport({ resultats, joueurs, parties, bot, simulations, premiere, testees: testees.map((c) => c.id), secondes });
   console.log(`Rapport écrit dans ${fichier} (${secondes} s).`);
 }
 
 // ───────────────────────── Rapport ─────────────────────────
 
-const cle = (consigne: Consigne | null) => (consigne ? `${consigne.type}:${consigne.carte}` : 'reference');
+const cle = (consigne: Consigne | null) => (consigne ? `${consigne.type}:${cibleDeConsigne(consigne)}` : 'reference');
 const signe = (x: number) => `${x > 0 ? '+' : x < 0 ? '−' : ''}${Math.abs(x).toFixed(1)}`;
 /** « ! » quand la fourchette ne contient pas zéro : l'écart ne peut pas venir du seul hasard. */
 const ecartTexte = (e: Ecart) => `${signe(e.points)} (${signe(e.basse)} à ${signe(e.haute)})${e.basse > 0 || e.haute < 0 ? ' !' : ''}`;
@@ -253,6 +268,91 @@ function ecrireRapport(r: {
   return nom;
 }
 
+/** Le rapport du bilan de force des tuiles Privilège (option --privileges). */
+function ecrireRapportPrivileges(r: {
+  resultats: Resultat[];
+  joueurs: number;
+  parties: number;
+  bot: string;
+  simulations: number;
+  premiere: number;
+  testes: number[];
+  secondes: number;
+}): string {
+  const parExperience = new Map<string, Resultat['parties']>();
+  for (const resultat of r.resultats) {
+    const k = cle(resultat.consigne);
+    parExperience.set(k, [...(parExperience.get(k) ?? []), ...resultat.parties]);
+  }
+  const reference = new Map((parExperience.get('reference') ?? []).map((p) => [p.graine, p]));
+  const nonTerminees = [...parExperience.values()].flat().filter((p) => p.vainqueur === null).length;
+  const possede = (p: Resultat['parties'][number], n: number) => p.privileges[siegeTeste(p.graine, r.joueurs)]!.includes(n);
+
+  const mesurer = (type: TypeDeConsigne, n: number) => {
+    const avec = parExperience.get(cle({ type, privilege: n })) ?? [];
+    const paires = avec.map((p) => {
+      const s = siegeTeste(p.graine, r.joueurs);
+      return { avec: p.vainqueur === s, sans: reference.get(p.graine)!.vainqueur === s };
+    });
+    return { ecart: ecartApparie(paires), prise: avec.filter((p) => possede(p, n)).length, parties: avec.length };
+  };
+
+  const tuiles = r.testes.map((n) => {
+    const tuile = MATERIEL.privileges.find((p) => p.numero === n)!;
+    return {
+      numero: n,
+      texte: tuile.texte.length > 70 ? `${tuile.texte.slice(0, 67)}…` : tuile.texte,
+      enTempsNormal: [...reference.values()].filter((p) => possede(p, n)).length,
+      interdite: mesurer('interdit', n),
+      prioritaire: mesurer('prioritaire', n),
+    };
+  });
+  const rangPrioritaire = new Map(
+    [...tuiles].sort((a, b) => b.prioritaire.ecart.points - a.prioritaire.ecart.points).map((t, i) => [t.numero, i + 1]),
+  );
+  tuiles.sort((a, b) => a.interdite.ecart.points - b.interdite.ecart.points);
+
+  const nomBot = r.bot === 'planificatrice' ? `IA qui planifie (${r.simulations} simulations)` : 'IA entraînée';
+  const date = new Date();
+  const jour = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  const attendu = 100 / r.joueurs;
+  const lignes: string[] = [
+    `# Force des Privilèges — ${jour}`,
+    '',
+    `Bot : **${nomBot}** à tous les sièges. Parties à **${r.joueurs} joueurs**, ${r.parties} parties par expérience (graines ${r.premiere} à ${r.premiere + r.parties - 1}). Calcul : ${Math.round(r.secondes / 60)} min.`,
+    '',
+    '## Comment lire ce rapport',
+    '',
+    'Chaque graine est jouée plusieurs fois : une partie de **référence**, où tout le monde joue normalement, puis une partie par expérience, où **un seul joueur** reçoit une consigne. Ce joueur change de siège d\'une graine à l\'autre.',
+    '',
+    '- **Interdite** : ce joueur n\'a pas le droit de choisir la tuile. Si l\'écart est très négatif, la tuile lui manque : elle est forte.',
+    '- **Prioritaire** : ce joueur prend la tuile dès qu\'elle lui est proposée (parmi les tuiles visibles). Si l\'écart est positif, la viser est une bonne stratégie ; s\'il est négatif, la prendre à tout prix fait perdre.',
+    '',
+    `L'écart est en **points de victoire** : « −3.0 » veut dire que ce joueur gagne 3 parties de moins sur 100 (à ${r.joueurs} joueurs, un joueur gagne en moyenne ${attendu.toFixed(1)} parties sur 100). Entre parenthèses, la fourchette à 95 % ; un **!** signale un écart qui ne peut pas venir du seul hasard.`,
+    '',
+    '« Possédée en temps normal » : part des parties de référence où ce joueur finit avec la tuile. Une tuile rarement prise en temps normal ne peut pas beaucoup manquer quand on l\'interdit : c\'est alors l\'écart « Prioritaire » qui renseigne.',
+    '',
+    'Une tuile tirée « au hasard dans la pioche » (effet de certaines cartes) n\'est pas choisie : la consigne ne s\'y applique pas.',
+    '',
+    '> Ces chiffres mesurent les tuiles telles que ce bot les joue. Une tuile qu\'il utilise mal paraîtra plus faible qu\'elle ne l\'est.',
+    '',
+    '| Privilège | Effet | Possédée en temps normal | Interdite : écart | Prioritaire : écart | Rang en prioritaire | Possédée quand prioritaire |',
+    '|---|---|---:|---:|---:|---:|---:|',
+  ];
+  for (const t of tuiles) {
+    lignes.push(
+      `| ${t.numero} | ${t.texte} | ${pc(t.enTempsNormal, reference.size)} | ${ecartTexte(t.interdite.ecart)} | ${ecartTexte(t.prioritaire.ecart)} | ${rangPrioritaire.get(t.numero)} | ${pc(t.prioritaire.prise, t.prioritaire.parties)} |`,
+    );
+  }
+  lignes.push('');
+  if (nonTerminees > 0) lignes.push(`Parties non terminées (comptées sans vainqueur) : ${nonTerminees}.`, '');
+
+  mkdirSync(new URL('../rapports/', import.meta.url), { recursive: true });
+  const nom = `rapports/force-privileges-${r.bot}-${r.joueurs}j-${jour}.md`;
+  writeFileSync(new URL(`../${nom}`, import.meta.url), lignes.join('\n'), 'utf8');
+  return nom;
+}
+
 // ───────────────────────── Côté cœur de calcul ─────────────────────────
 
 if (!isMainThread) {
@@ -263,8 +363,14 @@ if (!isMainThread) {
       : BOTS.entrainee;
   parentPort!.on('message', (paquet: Paquet) => {
     const parties = Array.from({ length: paquet.nombre }, (_, i) => {
-      const p = jouerPartieJumelle(bot, reglages.joueurs, paquet.premiere + i, paquet.consigne);
-      return { graine: p.graine, vainqueur: p.vainqueur, asymetrie: p.asymetrieDeDepart, achats: p.achatsParSiege };
+      const p = jouerPartieJumelleAvecPrivileges(bot, reglages.joueurs, paquet.premiere + i, paquet.consigne);
+      return {
+        graine: p.graine,
+        vainqueur: p.vainqueur,
+        asymetrie: p.asymetrieDeDepart,
+        achats: p.achatsParSiege,
+        privileges: p.privilegesParSiege,
+      };
     });
     parentPort!.postMessage({ consigne: paquet.consigne, parties } satisfies Resultat);
   });

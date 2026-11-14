@@ -23,10 +23,21 @@ export interface PartieJumelle {
 
 /** Joue une partie : tous les sièges ont le même bot, sauf le siège testé, qui respecte la consigne s'il y en a une. */
 export function jouerPartieJumelle(bot: Bot, joueurs: number, graine: number, consigne: Consigne | null): PartieJumelle {
+  const { privilegesParSiege: _, ...partie } = jouerPartieJumelleAvecPrivileges(bot, joueurs, graine, consigne);
+  return partie;
+}
+
+/** La même partie jumelle, avec en plus les tuiles Privilège possédées à la fin par chaque siège. */
+export function jouerPartieJumelleAvecPrivileges(
+  bot: Bot,
+  joueurs: number,
+  graine: number,
+  consigne: Consigne | null,
+): PartieJumelle & { privilegesParSiege: number[][] } {
   const teste = siegeTeste(graine, joueurs);
   const bots = Array.from({ length: joueurs }, (_, siege) => (consigne && siege === teste ? avecConsigne(bot, consigne) : bot));
-  const { vainqueur, asymetrieDeDepart, achatsParSiege } = simulerPartie(bots, graine);
-  return { graine, vainqueur, asymetrieDeDepart, achatsParSiege };
+  const { vainqueur, asymetrieDeDepart, achatsParSiege, privilegesParSiege } = simulerPartie(bots, graine);
+  return { graine, vainqueur, asymetrieDeDepart, achatsParSiege, privilegesParSiege: privilegesParSiege ?? [] };
 }
 
 export interface Ecart {

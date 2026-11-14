@@ -130,6 +130,13 @@ const perdants = joueurs.filter((j) => !j.gagne);
 // ───────────────────────── Outils de calcul ─────────────────────────
 
 const nom = (id: string) => carte(id).nom;
+/** Le numéro du fichier image d'une carte (carte_18.jpg → 18), pour la retrouver facilement. */
+const numero = (id: string) => Number(/(\d+)\.\w+$/.exec(carte(id).image)?.[1] ?? 0);
+/** Le numéro d'une carte d'après son nom, sauf pour les cartes de départ (même nom dans les 4 couleurs). */
+const numeroDuNom = (n: string) => {
+  const c = MATERIEL.cartes.find((x) => x.nom === n && x.origine !== 'depart');
+  return c ? String(numero(c.id)) : 'départ';
+};
 const moyenne = (liste: Joueur[], valeur: (j: Joueur) => number) =>
   liste.length === 0 ? 0 : liste.reduce((total, j) => total + valeur(j), 0) / liste.length;
 const part = (liste: Joueur[], condition: (j: Joueur) => boolean) =>
@@ -185,6 +192,18 @@ section(
         ...tables.map((t) => dec(moyenne(vainqueurs.filter((j) => j.table === t), (j) => j.statistiques.tours - j.statistiques.toursRejoues))),
       ],
       ['Lignées du vainqueur', ...tables.map((t) => dec(moyenne(vainqueurs.filter((j) => j.table === t), (j) => j.statistiques.lignees)))],
+      [
+        'Tours joués par partie (tous les joueurs)',
+        ...tables.map((t) => dec(joueurs.filter((j) => j.table === t).reduce((s, j) => s + j.statistiques.tours, 0) / Math.max(1, parTable.get(t)!.terminees))),
+      ],
+      [
+        'Renouvellements de la Rivière par joueur',
+        ...tables.map((t) => dec(moyenne(joueurs.filter((j) => j.table === t), (j) => j.statistiques.renouvellementsRiviere), 2)),
+      ],
+      [
+        'Renouvellements de la Rivière par partie',
+        ...tables.map((t) => dec(joueurs.filter((j) => j.table === t).reduce((s, j) => s + j.statistiques.renouvellementsRiviere, 0) / Math.max(1, parTable.get(t)!.terminees), 2)),
+      ],
       ...[0, 1, 2, 3].filter((place) => place < Math.max(...tables)).map((place) => [
         `Victoires du ${place + 1}${place === 0 ? 'er' : 'e'} joueur`,
         ...tables.map((t) => (place < t ? pc(part(vainqueurs.filter((j) => j.table === t), (j) => j.place === place)) : '—')),
@@ -192,6 +211,7 @@ section(
     ],
   ),
   'À force égale, chaque joueur gagnerait 50 %, 33,3 % ou 25 % des parties selon la taille de la table.',
+  '« Tours joués par partie » additionne les tours de tous les joueurs (un tour = une action : jouer, acheter ou finir sa lignée). « Renouvellements » : le joueur paye 2 Or pour remplacer toute la Rivière.',
 );
 
 // ───────────────────────── 2. Profil des vainqueurs ─────────────────────────
@@ -203,6 +223,7 @@ const profil: [string, (j: Joueur) => number, number?][] = [
   ['Cartes jouées par lignée', (j) => j.jouees.length / j.statistiques.lignees],
   ['Tours par lignée', (j) => j.statistiques.tours / j.statistiques.lignees],
   ['Tours gagnés par Rejouer', (j) => j.statistiques.toursRejoues],
+  ['Renouvellements de la Rivière (2 Or)', (j) => j.statistiques.renouvellementsRiviere],
   ['Pioches supplémentaires', (j) => j.statistiques.piochesSupplementaires],
   ['Effets Rouges choisis', (j) => j.statistiques.effetsRougesChoisis],
   ['Effets Rouges automatiques', (j) => j.statistiques.effetsRougesAutomatiques],
@@ -225,7 +246,7 @@ section(
   'Cartes Assymétrie reçues au départ',
   'Ces cartes sont distribuées au hasard : c\'est la mesure la plus fiable de ce rapport, car elle ne dépend d\'aucun choix du joueur.',
   tableau(
-    ['Carte', 'Joueurs l\'ayant reçue', 'Indice de victoire', ...tables.map((t) => `À ${t}`), 'Encore dans le deck des vainqueurs'],
+    ['N°', 'Carte', 'Joueurs l\'ayant reçue', 'Indice de victoire', ...tables.map((t) => `À ${t}`), 'Encore dans le deck des vainqueurs'],
     MATERIEL.cartes
       .filter((c) => c.origine === 'asymetrie')
       .map((c) => {
@@ -234,6 +255,7 @@ section(
         return {
           tri: tous.indice ?? 0,
           ligne: [
+            numero(c.id),
             c.nom,
             tous.nombre,
             afficherIndice(tous),
@@ -266,11 +288,12 @@ section(
   'Cartes Avancée achetées',
   `En moyenne, un vainqueur achète ${dec(moyenne(vainqueurs, (j) => j.achats.length), 2)} carte(s) et un perdant ${dec(moyenne(perdants, (j) => j.achats.length), 2)}.`,
   tableau(
-    ['Carte', 'Coût', 'Achats pour 100 joueurs', 'Indice de victoire des acheteurs', 'Dans le deck final des vainqueurs', 'Dans le deck final des perdants'],
+    ['N°', 'Carte', 'Coût', 'Achats pour 100 joueurs', 'Indice de victoire des acheteurs', 'Dans le deck final des vainqueurs', 'Dans le deck final des perdants'],
     avancees
       .filter((a) => a.acheteurs.nombre > 0)
       .sort((a, b) => b.achatsPour100 - a.achatsPour100)
       .map((a) => [
+        numero(a.c.id),
         a.c.nom,
         `${a.c.cout.or > 0 ? a.c.cout.or : ''}${'R'.repeat(a.c.cout.ressource)}`,
         dec(a.achatsPour100),
@@ -279,7 +302,7 @@ section(
         pc(a.chezPerdants),
       ]),
   ),
-  `Jamais achetées : ${avancees.filter((a) => a.acheteurs.nombre === 0).map((a) => a.c.nom).join(', ') || 'aucune'}.`,
+  `Jamais achetées : ${avancees.filter((a) => a.acheteurs.nombre === 0).map((a) => `${a.c.nom} (n° ${numero(a.c.id)})`).join(', ') || 'aucune'}.`,
   'Un indice suivi de « ? » repose sur trop peu de parties pour être fiable.',
 );
 
@@ -321,7 +344,7 @@ section(
       .filter((c) => c.origine === 'asymetrie')
       .map((c) => {
         const proprietaires = vainqueurs.filter((j) => j.asymetrie.includes(c.id));
-        return { nom: c.nom, part: part(proprietaires, (j) => j.trashs.includes(c.id)) };
+        return { nom: `${c.nom} (n° ${numero(c.id)})`, part: part(proprietaires, (j) => j.trashs.includes(c.id)) };
       })
       .sort((a, b) => b.part - a.part)
       .map((x) => `${x.nom} ${pc(x.part)}`)
@@ -398,7 +421,7 @@ const nomsJoues = [...new Set(joueurs.flatMap((j) => j.jouees.map(nom)))];
 section(
   'Cartes les plus jouées',
   tableau(
-    ['Carte', 'Fois jouée par partie (vainqueurs)', 'Fois jouée par partie (perdants)'],
+    ['N°', 'Carte', 'Fois jouée par partie (vainqueurs)', 'Fois jouée par partie (perdants)'],
     nomsJoues
       .map((n) => ({
         n,
@@ -407,7 +430,7 @@ section(
       }))
       .sort((a, b) => b.v - a.v)
       .slice(0, 20)
-      .map((x) => [x.n, dec(x.v, 2), dec(x.p, 2)]),
+      .map((x) => [numeroDuNom(x.n), x.n, dec(x.v, 2), dec(x.p, 2)]),
   ),
 );
 
@@ -419,10 +442,14 @@ section(
   'Effets Rouges par carte',
   "Combien de fois le voisin de droite profite de l'Effet Rouge d'une carte, quand elle est jouée. " +
     'Seul le joueur de droite peut l’appliquer : au plus 1 fois par carte jouée. ' +
-    "« Choisi » : le voisin a payé ou fait un choix ; sinon, c'est un gain automatique.",
+    "« Choisi » : le voisin a payé ou fait un choix ; sinon, c'est un gain automatique. " +
+    "« Utilisé par partie » : combien de fois, en moyenne, l'Effet Rouge de cette carte est appliqué dans une partie (tous joueurs confondus). " +
+    'Les cartes de départ portent le même nom dans les 4 couleurs : elles sont comptées ensemble (N° « départ »).',
   tableau(
     [
+      'N°',
       'Carte',
+      ...tables.map((t) => `Utilisé par partie à ${t}`),
       'Fois jouée (toutes parties)',
       'Effet Rouge utilisé, pour 1 carte jouée',
       'dont choisi',
@@ -433,8 +460,13 @@ section(
       .map((n) => {
         const jouee = joueurs.reduce((t, j) => t + j.jouees.filter((id) => nom(id) === n).length, 0);
         const utilisations = joueurs.flatMap((j) => j.effetsRouges.filter((e) => nom(e.carte) === n));
+        const parPartie = tables.map((t) => {
+          const total = joueurs.filter((j) => j.table === t).reduce((s, j) => s + fois(j.effetsRouges, n), 0);
+          return total / Math.max(1, parTable.get(t)!.terminees);
+        });
         return {
           n,
+          parPartie,
           jouee,
           parCarte: jouee > 0 ? utilisations.length / jouee : 0,
           choisi: utilisations.length > 0 ? utilisations.filter((e) => e.choisi).length / utilisations.length : 0,
@@ -443,8 +475,8 @@ section(
         };
       })
       .filter((x) => x.jouee > 0)
-      .sort((a, b) => b.v - a.v)
-      .map((x) => [x.n, String(x.jouee), dec(x.parCarte, 2), pc(x.choisi), dec(x.v, 2), dec(x.p, 2)]),
+      .sort((a, b) => b.parPartie.reduce((s, v) => s + v, 0) - a.parPartie.reduce((s, v) => s + v, 0))
+      .map((x) => [numeroDuNom(x.n), x.n, ...x.parPartie.map((v) => dec(v, 2)), String(x.jouee), dec(x.parCarte, 2), pc(x.choisi), dec(x.v, 2), dec(x.p, 2)]),
   ),
 );
 

@@ -1,10 +1,10 @@
 {
-  "date": "2026-11-12",
+  "date": "2026-11-14",
   "generations": 60,
-  "championsSuccessifs": 7,
+  "championsSuccessifs": 6,
   "contreReglagesManuels": {
-    "victoiresA2": "79.8 %",
-    "victoiresA4": "64.5 %"
+    "victoiresA2": "76.3 %",
+    "victoiresA4": "53.3 %"
   },
   "poids": {
     "or": 1,

@@ -1,6 +1,6 @@
 # Force des Privilèges — 2026-11-14
 
-Bot : **IA entraînée** à tous les sièges. Parties à **3 joueurs**, 10000 parties par expérience (graines 1 à 10000). Calcul : 14 min.
+Bot : **IA entraînée** à tous les sièges. Parties à **3 joueurs**, 10000 parties par expérience (graines 1 à 10000). Calcul : 12 min.
 
 ## Comment lire ce rapport
 
@@ -19,23 +19,23 @@ Une tuile tirée « au hasard dans la pioche » (effet de certaines cartes) n'es
 
 | Privilège | Effet | Possédée en temps normal | Interdite : écart | Prioritaire : écart | Rang en prioritaire | Possédée quand prioritaire |
 |---|---|---:|---:|---:|---:|---:|
-| 7 | Progresser d’un niveau de population coûte 5 or de moins | 18.1 % | −2.5 (−3.0 à −2.1) ! | +2.4 (+2.0 à +2.8) ! | 2 | 25.3 % |
-| 10 | Après avoir acheté 1 carte, révélez 1 carte | 18.4 % | −1.8 (−2.2 à −1.4) ! | +0.8 (+0.3 à +1.2) ! | 8 | 27.2 % |
-| 9 | Après avoir acheté 1 carte, vous pouvez jouer 1 carte de votre main | 18.4 % | −1.4 (−1.9 à −1.0) ! | +0.7 (+0.2 à +1.1) ! | 9 | 29.6 % |
-| 2 | Chaque carte avancée rapporte également 1 Érudit | 18.0 % | −0.3 (−0.7 à +0.2) | +0.8 (+0.4 à +1.1) ! | 7 | 24.3 % |
-| 3 | Chaque carte avancée rapporte également 1 Pierre | 18.6 % | −0.3 (−0.7 à +0.2) | +0.4 (+0.1 à +0.7) ! | 10 | 23.3 % |
-| 19 | Au début de chaque nouvelle lignée, le joueur gagne 3 Or supplément… | 17.0 % | −0.2 (−0.6 à +0.1) | +0.4 (−0.2 à +0.9) | 12 | 34.4 % |
-| 5 | Au début de chaque nouvelle lignée, gagnez 2 Or par Privilège | 6.9 % | −0.1 (−0.3 à +0.2) | +1.0 (+0.4 à +1.7) ! | 4 | 43.9 % |
-| 4 | Chaque carte avancée rapporte également 1 Metal | 2.8 % | −0.0 (−0.1 à +0.1) | +0.9 (+0.2 à +1.7) ! | 6 | 45.6 % |
-| 1 | Après avoir acheté 1 carte, gagnez 5 Or | 0.7 % | 0.0 (0.0 à 0.0) | +4.1 (+3.3 à +4.8) ! | 1 | 46.8 % |
-| 6 | Chaque fois que le joueur joue 1 carte avec un effet rouge, il gagn… | 0.7 % | 0.0 (0.0 à 0.0) | +1.0 (+0.2 à +1.7) ! | 5 | 46.3 % |
-| 18 | Chaque fois que le joueur révèle 1 carte, il gagne 4 Or | 0.8 % | 0.0 (0.0 à 0.0) | +1.3 (+0.6 à +2.1) ! | 3 | 46.8 % |
-| 16 | 1 symbole Érudit, valable pour toutes les effets demandant des Érud… | 17.0 % | +0.0 (−0.4 à +0.4) | +0.1 (−0.4 à +0.7) | 13 | 32.6 % |
-| 20 | Chaque fois que le joueur joue 1 carte avancée, il gagne 3 Or | 18.7 % | +0.0 (−0.4 à +0.5) | +0.4 (+0.1 à +0.6) ! | 11 | 21.7 % |
-| 15 | À son tour, en plus de son action, le joueur peut payer 8 Or pour p… | 13.4 % | +0.1 (−0.2 à +0.5) | −1.3 (−1.9 à −0.8) ! | 17 | 39.8 % |
-| 11 | À son tour, en plus de son action, le joueur peut payer 7 Or pour r… | 14.6 % | +0.5 (+0.2 à +0.8) ! | −2.4 (−3.0 à −1.9) ! | 19 | 36.7 % |
-| 14 | À son tour, en plus de son action, le joueur peut payer 2 Métal pou… | 10.2 % | +0.6 (+0.3 à +0.9) ! | −3.5 (−4.1 à −2.9) ! | 20 | 41.9 % |
-| 8 | Au début de chaque nouvelle lignée, le joueur pioche 1 carte de moi… | 18.0 % | +0.7 (+0.2 à +1.1) ! | +0.0 (−0.1 à +0.1) | 14 | 19.0 % |
-| 12 | Au début de chaque nouvelle lignée, révélez 1 carte et payez 3 Or | 17.8 % | +0.7 (+0.2 à +1.2) ! | 0.0 (0.0 à 0.0) | 15 | 17.8 % |
-| 17 | Chaque fois que le joueur trash 1 carte, il gagne 1 Or | 18.2 % | +1.0 (+0.6 à +1.4) ! | −1.7 (−2.2 à −1.2) ! | 18 | 31.3 % |
-| 13 | À son tour, en plus de son action, le joueur peut payer 3 Pierres p… | 18.1 % | +2.3 (+1.8 à +2.7) ! | −0.1 (−0.3 à +0.0) | 16 | 20.0 % |
+| 1 | Après avoir acheté 1 carte, gagnez 5 Or | 18.6 % | −2.1 (−2.6 à −1.6) ! | +0.2 (+0.1 à +0.3) ! | 5 | 19.5 % |
+| 10 | Après avoir acheté 1 carte, révélez 1 carte | 16.7 % | −1.9 (−2.3 à −1.4) ! | +2.7 (+2.1 à +3.3) ! | 1 | 35.8 % |
+| 7 | Progresser d’un niveau de population coûte 5 or de moins | 19.0 % | −1.6 (−2.1 à −1.1) ! | +0.3 (+0.1 à +0.6) ! | 4 | 22.1 % |
+| 18 | Chaque fois que le joueur révèle 1 carte, il gagne 4 Or | 18.5 % | −1.5 (−1.9 à −1.0) ! | +0.1 (−0.1 à +0.3) | 7 | 20.6 % |
+| 20 | Chaque fois que le joueur joue 1 carte avancée, il gagne 3 Or | 19.1 % | −0.8 (−1.3 à −0.3) ! | +0.1 (−0.2 à +0.5) | 6 | 24.9 % |
+| 4 | Chaque carte avancée rapporte également 1 Metal | 15.3 % | −0.4 (−0.8 à −0.0) ! | 0.0 (−0.6 à +0.6) | 8 | 38.4 % |
+| 9 | Après avoir acheté 1 carte, vous pouvez jouer 1 carte de votre main | 17.8 % | −0.4 (−0.8 à +0.1) | +0.5 (−0.0 à +1.0) | 3 | 31.3 % |
+| 5 | Au début de chaque nouvelle lignée, gagnez 2 Or par Privilège | 6.8 % | −0.3 (−0.5 à −0.0) ! | −0.3 (−1.0 à +0.4) | 12 | 45.1 % |
+| 3 | Chaque carte avancée rapporte également 1 Pierre | 18.9 % | −0.1 (−0.5 à +0.4) | −0.2 (−0.8 à +0.4) | 10 | 35.2 % |
+| 2 | Chaque carte avancée rapporte également 1 Érudit | 18.9 % | 0.0 (−0.5 à +0.5) | −0.3 (−0.7 à +0.1) | 11 | 27.1 % |
+| 15 | À son tour, en plus de son action, le joueur peut payer 8 Or pour p… | 0.8 % | 0.0 (0.0 à 0.0) | −3.9 (−4.6 à −3.1) ! | 20 | 47.6 % |
+| 16 | 1 symbole Érudit, valable pour toutes les effets demandant des Érud… | 0.9 % | 0.0 (0.0 à 0.0) | −1.1 (−1.9 à −0.4) ! | 15 | 47.5 % |
+| 17 | Chaque fois que le joueur trash 1 carte, il gagne 1 Or | 0.7 % | 0.0 (0.0 à 0.0) | −3.8 (−4.5 à −3.1) ! | 19 | 47.6 % |
+| 11 | À son tour, en plus de son action, le joueur peut payer 7 Or pour r… | 3.1 % | +0.0 (−0.1 à +0.1) | −3.1 (−3.9 à −2.4) ! | 17 | 46.9 % |
+| 14 | À son tour, en plus de son action, le joueur peut payer 2 Métal pou… | 11.0 % | +0.2 (−0.1 à +0.5) | −3.2 (−3.9 à −2.5) ! | 18 | 43.7 % |
+| 19 | Au début de chaque nouvelle lignée, le joueur gagne 3 Or supplément… | 12.9 % | +0.3 (−0.0 à +0.5) | −0.9 (−1.6 à −0.3) ! | 14 | 39.8 % |
+| 6 | Chaque fois que le joueur joue 1 carte avec un effet rouge, il gagn… | 18.3 % | +0.5 (+0.1 à +1.0) ! | +0.5 (+0.1 à +1.0) ! | 2 | 29.8 % |
+| 12 | Au début de chaque nouvelle lignée, révélez 1 carte et payez 3 Or | 18.6 % | +0.9 (+0.4 à +1.3) ! | 0.0 (0.0 à 0.0) | 9 | 18.6 % |
+| 8 | Au début de chaque nouvelle lignée, le joueur pioche 1 carte de moi… | 18.3 % | +1.5 (+1.0 à +2.0) ! | −0.9 (−1.2 à −0.6) ! | 13 | 23.0 % |
+| 13 | À son tour, en plus de son action, le joueur peut payer 3 Pierres p… | 18.7 % | +2.9 (+2.4 à +3.3) ! | −2.3 (−2.7 à −1.8) ! | 16 | 27.7 % |

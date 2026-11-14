@@ -2,6 +2,7 @@ import type { Action, Attente } from '../game/actions.ts';
 import { carte, nomsDesCartes, privilege } from '../game/cartes.ts';
 import { coutDeLEtape, coutEnOrDuNiveau } from '../game/moteur.ts';
 import { MATERIEL } from '../game/materiel/index.ts';
+import { PARAMETRES } from '../game/parametres.ts';
 import { EFFETS_PRIVILEGES } from '../game/privileges.ts';
 import type { CoutEffet, Etape } from '../game/materiel/index.ts';
 import type { Vue } from '../game/vue.ts';
@@ -108,7 +109,9 @@ export function libelleAction(action: Action, attente: Attente | null): string {
         : `Privilège ${action.numero} : payer pour ${verbe}`;
     }
     case 'renouvelerRiviere':
-      return `Renouveler la Rivière : remplacer ${nomsDesCartes(action.cartes)}`;
+      return action.cartes.length >= PARAMETRES.tailleRiviere
+        ? 'Renouveler toute la Rivière'
+        : `Renouveler la Rivière : remplacer ${nomsDesCartes(action.cartes)}`;
     case 'defausser':
       return `Défausser ${carte(action.carte).nom}`;
     case 'payer':

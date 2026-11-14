@@ -202,6 +202,8 @@ function valeurEtape(etape: Etape, joueur: VueJoueur, vue: Vue, p: Poids): numbe
       // Révéler la dernière carte de sa pioche fait gagner, comme la piocher.
       if (cartes >= joueur.nbCartesPioche) return VICTOIRE;
       for (let i = 0; i < cartes; i++) valeur += p.revele + p.piocheProche / Math.max(1, joueur.nbCartesPioche - i);
+      // Privilège 18 : de l'Or pour chaque carte révélée.
+      valeur += cartes * totalPrivilege(joueur, 'orParRevele', (effet) => effet.or) * p.or;
       break;
     }
     case 'joue': {
@@ -246,7 +248,9 @@ function valeurDuRemplacement(moi: VueJoueur, p: Poids): number {
 }
 
 function noteAchat(moi: VueJoueur, id: string, paiement: string[] | null, p: Poids, reduction: Reduction = 'or'): number {
-  const cout = coutEnOr(moi, id, reduction);
+  const prix = coutEnOr(moi, id, reduction);
+  // Privilège 1 : l'Or gagné après l'achat diminue d'autant son prix réel.
+  const cout = prix - totalPrivilege(moi, 'orApresAchat', (effet) => effet.or);
   if (PARAMETRES.carteAcheteeVa === 'remplacement') {
     // Le deck ne grossit pas : la carte achetée remplace la moins utile, trashée gratuitement.
     let note = valeurPourMoi(moi, id, p) - valeurDuRemplacement(moi, p) - cout * p.or;
@@ -261,7 +265,8 @@ function noteAchat(moi: VueJoueur, id: string, paiement: string[] | null, p: Poi
   else note -= coutDAchat(moi, id, reduction).ressource * Math.min(p.pierre, p.metal);
   // … sauf que, pour 1 Or de plus, l'achat permet de trasher une carte : le deck ne grossit pas.
   // Ce trash vaut autant qu'un trash obtenu par un effet de carte, pour bien moins cher.
-  if (carteARemplacer(moi, p, moi.or - cout) !== null) {
+  // (L'Or du Privilège 1 arrive après l'achat : il ne paye pas ce surcoût.)
+  if (carteARemplacer(moi, p, moi.or - prix) !== null) {
     note += p.trash - PARAMETRES.surcoutTrashAchat * p.or;
   }
   return note;
@@ -330,6 +335,7 @@ function noterActionDeTour(action: Action, moi: VueJoueur, vue: Vue, p: Poids): 
         if (cartes >= moi.nbCartesPioche) return VICTOIRE;
         note = -revele.cout.or * p.or;
         for (let i = 0; i < cartes; i++) note += p.revele + p.piocheProche / Math.max(1, moi.nbCartesPioche - i);
+        note += cartes * totalPrivilege(moi, 'orParRevele', (effet) => effet.or) * p.or;
       } else if (pioche) {
         if (pioche.cartes >= moi.nbCartesPioche) return VICTOIRE;
         note = valeurDesPioches(moi, pioche.cartes, 'pioche', p) - pioche.cout.or * p.or;

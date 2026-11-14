@@ -681,8 +681,17 @@ export function Table(props: {
           ) : (
             <div className="boutons">
               {renouvellements.length > 0 && (
-                <button type="button" onClick={() => setRenouvellement([])}>
-                  Renouveler la Rivière ({PARAMETRES.renouvellementRiviere.cout} Or)
+                <button
+                  type="button"
+                  onClick={() =>
+                    // Toute la Rivière (décision MMM) : il n'y a rien à choisir.
+                    nombreARenouveler >= vue.riviere.length && renouvellements.length === 1
+                      ? appliquer(renouvellements[0]!)
+                      : setRenouvellement([])
+                  }
+                >
+                  {nombreARenouveler >= vue.riviere.length ? 'Renouveler toute la Rivière' : 'Renouveler la Rivière'} (
+                  {PARAMETRES.renouvellementRiviere.cout} Or)
                 </button>
               )}
               {actions

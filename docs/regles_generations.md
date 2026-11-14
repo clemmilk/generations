@@ -72,7 +72,8 @@ Si cette pioche lui fait piocher la dernière carte de son deck, il remporte imm
 
 ## Tour de jeu
 En commençant par le premier joueur, chaque joueur effectue son tour, puis on passe au joueur suivant, dans l'ordre du tour.
-Il est interdit de passer son tour. À son tour, le joueur effectue 1 action parmi 3 possibles :
+Il est interdit de passer son tour. Avant son action, il peut d'abord **renouveler la Rivière** (au plus 1 fois par tour) : il paye 2 Or et remplace les 4 cartes de la Rivière par les 4 premières cartes de la pioche commune ; les 4 cartes retirées sont glissées sous la pioche commune. Impossible s'il reste moins de 4 cartes dans la pioche commune, ou s'il n'a ni carte en main ni fin de lignée possible.
+À son tour, le joueur effectue 1 action parmi 3 possibles :
 - **Acheter 1 carte :** il achète une des 4 cartes de la rivière en s'acquittant de son coût. L'or vient de sa réserve personnelle. S'il doit également dépenser des ressources, il doit défausser des cartes de son aire de jeu contenant le bon nombre de ressources correspondantes. Il peut défausser 1 ou plusieurs cartes pour cela. La carte achetée **remplace obligatoirement une carte du deck du joueur**, qui est trashée gratuitement. La carte achetée prend la place de la carte trashée :
   - une carte de sa **main** : la carte achetée va dans sa main, et il pourra la jouer lors d'un prochain tour ;
   - une carte de son **aire de jeu** : la carte achetée va dans son aire de jeu. Ses ressources sont disponibles (celles de la carte trashée sont perdues), mais son effet ne se déclenche pas ;
@@ -84,7 +85,7 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 - **Mettre fin à sa lignée :** si le joueur possède 0 ou 1 carte en main, il peut mettre fin à sa lignée. Il applique alors les étapes suivantes, dans cet ordre :
   1. **Noblesse :** il regarde s'il possède suffisamment d'Érudits dans son aire de jeu pour recevoir un nouveau Privilège. Le nombre d'Érudits requis est celui indiqué sur le premier emplacement libre de sa piste Noblesse (1 pour le premier Privilège, 2 pour le deuxième, 3 pour le troisième, 4 pour le quatrième). Les Érudits ne sont pas dépensés. Si c'est le cas, il peut en prendre un parmi les 4 disponibles et l'ajouter à son plateau. Ce n'est pas obligatoire. Il ne peut prendre qu'1 seul Privilège par fin de lignée. Le Privilège qu'il a choisi est remplacé par le premier de la pioche Privilège afin qu'il y ait 4 choix pour le prochain joueur.
   2. **Population :** il regarde s'il dispose de suffisamment d'Or pour augmenter son niveau en Population (le coût est indiqué sur la piste). Si c'est le cas, il peut dépenser l'Or et avancer son marqueur d'une case sur la jauge de Population. Ce n'est pas obligatoire. Il ne peut gagner qu'1 seul niveau par fin de lignée.
-  3. **Économie :** il regarde s'il possède suffisamment de Ressources (Pierre ou Métal) sur les cartes dans son aire de jeu pour augmenter son niveau en Économie. Les Ressources ne sont pas dépensées. Si c'est le cas, il peut avancer son marqueur d'une case sur la jauge d'Économie. Ce n'est pas obligatoire. Il ne peut gagner qu'1 seul niveau par fin de lignée. Puis il défausse le reste de son Or (sauf Privilège 18).
+  3. **Économie :** il regarde s'il possède suffisamment de Ressources (Pierre ou Métal) sur les cartes dans son aire de jeu pour augmenter son niveau en Économie. Les Ressources ne sont pas dépensées. Si c'est le cas, il peut avancer son marqueur d'une case sur la jauge d'Économie. Ce n'est pas obligatoire. Il ne peut gagner qu'1 seul niveau par fin de lignée. Puis il défausse le reste de son Or.
   4. Le joueur reforme son deck en mélangeant, face cachée, les cartes de sa main, de sa défausse et de son aire de jeu, puis il débute une nouvelle lignée. À son prochain tour, il pourra Acheter 1 carte ou Jouer 1 carte.
 
 
@@ -115,10 +116,11 @@ Il est interdit de passer son tour. À son tour, le joueur effectue 1 action par
 - Le Privilège 16 compte comme 1 Érudit dans l'aire de jeu, y compris pour obtenir un Privilège en fin de lignée.
 - Privilèges 2, 3 et 4 : chaque carte Avancée de l'aire de jeu du joueur rapporte 1 Érudit (2), 1 Pierre (3) ou 1 Métal (4) de plus. Ces ressources comptent partout (paiements, jauges, Privilèges, effets par tranche). Une même carte peut recevoir le bonus de plusieurs de ces Privilèges.
 - Privilège 20 : chaque fois que le joueur joue une carte Avancée, il gagne 3 Or, même s'il n'applique pas l'effet de la carte.
-- Privilège 18 : en fin de lignée, l'Or qui reste n'est pas défaussé, et le joueur gagne 1 Or.
+- Privilège 18 : chaque fois que le joueur révèle 1 carte, quelle qu'en soit l'origine (jauge de Population, carte, Privilèges 10, 11 et 12), il gagne 4 Or.
+- Privilège 6 : chaque fois que le joueur joue 1 carte qui a un Effet Rouge, il gagne 3 Or.
 - Privilège 8 : prendre 1 carte dans son deck est obligatoire. Privilège 12 : défausser 1 carte est obligatoire. Les ressources et Érudits qu'ils ajoutent comptent partout : pour payer, pour augmenter sa Population, pour obtenir un Privilège et pour les effets des cartes.
 - Privilèges 13, 14 et 15 : à son tour, en plus de son action, le joueur peut en payer le coût pour trasher 1 carte (Privilège 13) ou piocher 1 carte (Privilèges 14 et 15). Il peut le faire avant ou après son action, et après l'Effet Rouge de la carte jouée. Chaque tuile sert 1 fois par tour. Ces Privilèges ne déclenchent aucun Effet Rouge. Un tour où le joueur met fin à sa lignée n'en comporte aucun, ni avant ni après. Un Privilège qui laisserait le joueur sans aucune action possible est interdit, sauf s'il lui fait gagner la partie.
-- Privilège 1 : à chaque achat, le joueur choisit de payer 3 Or de moins ou 1 Ressource de moins. Le coût ne peut pas descendre sous 0.
+- Privilège 1 : après chaque achat, quelle qu'en soit l'origine (action Acheter, carte, Privilège), le joueur gagne 5 Or. Cet Or arrive après l'achat : il ne sert pas à le payer.
 - Le Privilège 17 s'applique à chaque carte trashée, y compris la carte remplacée lors d'un achat.
 - Le Privilège 12 fait défausser 1 carte (elle n'est pas trashée).
 

@@ -16,8 +16,9 @@ export const PARAMETRES = {
   /**
    * Renouveler la Rivière (décision FFF) : à son tour, avant son action et au plus 1 fois par tour,
    * le joueur paye « cout » Or pour remplacer exactement « cartes » cartes de la Rivière de son choix.
+   * Depuis le 14/11 (décision MMM) : toute la Rivière (4 cartes). Avant : 2 cartes au choix.
    */
-  renouvellementRiviere: { cout: 2, cartes: 2 },
+  renouvellementRiviere: { cout: 2, cartes: 4 } as { cout: number; cartes: number },
   /**
    * Où va une carte jouée ou révélée qui ne porte aucune ressource (décision III, 12/11) :
    * « aireDeJeu » (elle y reste jusqu'à la fin de la lignée, comme les autres) ou « defausse » (avant le 12/11).

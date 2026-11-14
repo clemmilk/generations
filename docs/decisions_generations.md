@@ -168,5 +168,13 @@ Nouveaux csv et visuels : decks de départ de 10 cartes (nouvelle carte Alchimis
 - KKK. Valeurs changées : Privilège 6 à 2 Or, Privilège 11 = payer 7 Or pour révéler 1 carte (avant : 8 Or pour trasher ; même règle que les autres Privilèges d'action, 1 fois par tour, avant ou après l'action, interdit avant l'action s'il laisse le joueur sans action, sauf s'il révèle sa dernière carte et gagne), Privilège 20 à 3 Or.
 - LLL. Écarts csv / visuels corrigés d'après les visuels : decks Jaune, Rouge et Vert identiques au Bleu (Tour de guet 4 / 5 Or, Épicerie 4 Or, Ferrailleur 2 Or par Métal) ; Capitaine 6 Or + 1 Ressource (6R) ; images d'Hôpital et du Cardinal rangées avec les cartes avancées (elles étaient dans le dossier des Domaines).
 
+## V5, mise à jour du 14/11
+Nouveaux csv et visuels : cartes de départ revues (Marché et Docteur), cartes avancées revues, plateau revu (Économie : 2 Pierre / Métal par niveau, pour 5 / 7 / 9 / 12 Or ; Population : 5 Or par niveau, et le dernier niveau révèle 1 carte), Privilèges 1, 6 et 18 modifiés.
+- MMM. Renouveler la Rivière (remplace FFF) : pour 2 Or, le joueur remplace toute la Rivière (les 4 cartes). On pioche d'abord les 4 remplaçantes, puis on glisse les 4 cartes retirées sous la pioche commune. Interdit s'il reste moins de 4 cartes dans la pioche commune. Toujours au plus 1 fois par tour, avant l'action. Comme aucune carte de l'ancienne Rivière ne reste, il faut, pour avoir le droit de renouveler, une carte en main ou une fin de lignée possible (les nouvelles cartes sont inconnues avant de payer). L'ancienne règle (2 cartes au choix) reste disponible : `renouvellementRiviere` dans `src/game/parametres.ts`.
+- NNN. Privilège 1 : après chaque achat, quelle qu'en soit l'origine (action Acheter, carte, Privilège 10…), le joueur gagne 5 Or. L'Or arrive après l'achat : il ne rend pas achetable une carte trop chère. Les anciens effets restent disponibles dans `src/game/privileges.ts`.
+- OOO. Privilège 18 : 4 Or pour chaque carte révélée, quelle qu'en soit l'origine (jauge de Population, cartes, Privilèges 10, 11, 12), y compris en début de lignée. L'ancien effet (garder son Or, JJJ) reste disponible dans `src/game/privileges.ts`.
+- PPP. Écarts csv / visuels corrigés d'après les visuels : Capitaine 6 Or + 1 Ressource (6R) ; Docteur avec 1 Érudit (E).
+- QQQ. Valeurs changées : Privilège 6 à 3 Or.
+
 ## Questions en attente
 - F. `carte_1` (Remouleur ambulant) est un personnage sans Effet Rouge, mais son visuel a un bandeau noir. Sans effet sur le jeu ; visuel à corriger ? → Réglé le 18/10 : nouveau visuel sans bandeau.

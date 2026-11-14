@@ -82,6 +82,11 @@ export function revelerCartes(etat: Etat, joueur: Joueur, nombre: number): strin
     if (c.origine === 'asymetrie' && !etat.cartesRevelees.includes(id)) etat.cartesRevelees.push(id);
     revelees.push(id);
     noter(etat, joueur, `${joueur.nom} révèle ${c.nom}.`, null, [id]);
+    // Privilège 18 (décision OOO) : de l'Or pour chaque carte révélée, quelle qu'en soit l'origine.
+    for (const effet of effetsPrivilege(joueur, 'orParRevele')) {
+      joueur.or += effet.or;
+      noter(etat, joueur, `${joueur.nom} gagne ${effet.or} Or grâce à son Privilège ${effet.numero}.`);
+    }
     if (joueur.pioche.length === 0 && etat.vainqueur === null) {
       etat.vainqueur = joueur.id;
       victoire = true;

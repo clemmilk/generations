@@ -1,10 +1,10 @@
 Dossier,Identifiant,Effet
-visuels\V3\tuiles,privilege_1,Toutes les cartes de la pioche commune coûtent 3 Or de moins ou 1 ressource de moins
+visuels\V3\tuiles,privilege_1,"Après avoir acheté 1 carte, gagnez 5 Or"
 visuels\V3\tuiles,privilege_2,Chaque carte avancée rapporte également 1 Érudit
 visuels\V3\tuiles,privilege_3,Chaque carte avancée rapporte également 1 Pierre
 visuels\V3\tuiles,privilege_4,Chaque carte avancée rapporte également 1 Metal
 visuels\V3\tuiles,privilege_5,"Au début de chaque nouvelle lignée, gagnez 2 Or par Privilège"
-visuels\V3\tuiles,privilege_6,"Chaque fois que le joueur joue 1 carte avec un effet rouge, il gagne 2 Or"
+visuels\V3\tuiles,privilege_6,"Chaque fois que le joueur joue 1 carte avec un effet rouge, il gagne 3 Or"
 visuels\V3\tuiles,privilege_7,Progresser d’un niveau de population coûte 5 or de moins
 visuels\V3\tuiles,privilege_8,"Au début de chaque nouvelle lignée, le joueur pioche 1 carte de moins que prévu, puis prend 1 carte de son choix dans son deck, avant de le remélanger"
 visuels\V3\tuiles,privilege_9,"Après avoir acheté 1 carte, vous pouvez jouer 1 carte de votre main"
@@ -16,6 +16,6 @@ visuels\V3\tuiles,privilege_14,"À son tour, en plus de son action, le joueur pe
 visuels\V3\tuiles,privilege_15,"À son tour, en plus de son action, le joueur peut payer 8 Or pour piocher 1 carte (1 fois par tour)"
 visuels\V3\tuiles,privilege_16,"1 symbole Érudit, valable pour toutes les effets demandant des Érudit, comme si elle était sur une carte de sa zone de jeu"
 visuels\V3\tuiles,privilege_17,"Chaque fois que le joueur trash 1 carte, il gagne 1 Or"
-visuels\V3\tuiles,privilege_18,"Chaque fois que le joueur met fin à sa lignée, après avoir augmenté sa jauge d'Économie, il conserve son Or restant  et gagne 1 Or"
+visuels\V3\tuiles,privilege_18,"Chaque fois que le joueur révèle 1 carte, il gagne 4 Or"
 visuels\V3\tuiles,privilege_19,"Au début de chaque nouvelle lignée, le joueur gagne 3 Or supplémentaires"
 visuels\V3\tuiles,privilege_20,"Chaque fois que le joueur joue 1 carte avancée, il gagne 3 Or"

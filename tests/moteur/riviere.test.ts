@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getLegalActions, getPlayerView } from '../../src/game/index.ts';
 import type { Etat } from '../../src/game/index.ts';
-import { c, faire, permises, scene, verifierAucuneFuite } from './outils.ts';
+import { avecReglage, c, faire, permises, scene, verifierAucuneFuite } from './outils.ts';
 
 // Renouveler la Rivière (décision FFF) : à son tour, avant son action et au plus 1 fois par tour,
 // le joueur paye 2 Or pour remplacer exactement 2 cartes de la Rivière de son choix.
@@ -19,7 +19,39 @@ function prete(or: number, pioche: string[] = PIOCHE): Etat {
 
 const renouvellements = (etat: Etat) => permises(etat).filter((a) => a.type === 'renouvelerRiviere');
 
-describe('Renouveler la Rivière (décision FFF)', () => {
+describe('Renouveler toute la Rivière pour 2 Or (décision MMM, 14/11)', () => {
+  const toute = { type: 'renouvelerRiviere' as const, cartes: [...RIVIERE] };
+  const pioche4 = [c('Mine'), c('Roi'), c('Forge'), c('Cardinal')];
+
+  it('propose une seule action : remplacer les 4 cartes', () => {
+    expect(renouvellements(prete(2, pioche4))).toEqual([toute]);
+  });
+
+  it('n\'est pas proposé s\'il reste moins de 4 cartes dans la pioche commune', () => {
+    expect(renouvellements(prete(5, pioche4.slice(0, 3)))).toEqual([]);
+  });
+
+  it('remplace les 4 cartes, puis les glisse sous la pioche commune', () => {
+    const apres = faire(prete(5, [...pioche4, c('Banque')]), toute);
+    expect(apres.joueurs[0]!.or).toBe(3);
+    expect(apres.riviere).toEqual(pioche4);
+    expect(apres.piocheCommune).toEqual([c('Banque'), ...RIVIERE]);
+    expect(apres.attente).toEqual({ type: 'tour', joueur: 0 });
+    expect(renouvellements(apres)).toEqual([]);
+  });
+
+  it('est interdit sans carte en main ni fin de lignée possible : les nouvelles cartes sont inconnues', () => {
+    const etat = prete(10, pioche4);
+    etat.joueurs[0]!.main = [];
+    etat.joueurs[0]!.privileges = [15];
+    etat.privilegesUtilises = [15];
+    expect(renouvellements(etat)).toEqual([]);
+  });
+});
+
+describe('Renouveler 2 cartes de la Rivière (décision FFF, règle du 11/11 gardée dans les paramètres)', () => {
+  avecReglage('renouvellementRiviere', { cout: 2, cartes: 2 });
+
   it('propose chaque paire de cartes de la Rivière, pour 2 Or', () => {
     // 4 cartes : 6 paires possibles.
     expect(renouvellements(prete(2))).toHaveLength(6);

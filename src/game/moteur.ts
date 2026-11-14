@@ -418,6 +418,11 @@ function acheter(etat: Etat, joueur: Joueur, id: string, paiement: string[], red
   else if (PARAMETRES.carteAcheteeVa === 'main') joueur.main.push(c.id);
   joueur.statistiques.cartesAchetees++;
   noter(etat, joueur, `${joueur.nom} achète ${c.nom}.`, null, [c.id]);
+  // Privilège 1 (décision NNN) : de l'Or après chaque achat, quelle qu'en soit l'origine.
+  for (const effet of effetsPrivilege(joueur, 'orApresAchat')) {
+    joueur.or += effet.or;
+    noter(etat, joueur, `${joueur.nom} gagne ${effet.or} Or grâce à son Privilège ${effet.numero}.`);
+  }
   const suivante = etat.piocheCommune.shift();
   if (suivante !== undefined) etat.riviere.push(suivante);
 }
